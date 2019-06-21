@@ -1,0 +1,185 @@
+/*
+ * PROJECTION WIZARD
+ * Map Projection Selection Tool (update)
+ * 
+ * Author: Bojan Savric
+ * Date: October, 2014
+ * 
+ */
+
+@font-face {
+    font-family: TitleFont;
+    src: url(fonts/OpenSans-Semibold.ttf);
+}
+
+@font-face {
+    font-family: TextFont;
+    src: url(fonts/OpenSans-Regular.ttf);
+}
+
+body {
+	font-family: TextFont;
+	font-size: small;
+}
+
+#container {
+	max-width: 1024px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#title {
+	font-family: TitleFont;
+	font-size: 32px;
+	text-align: center;
+	vertical-align: bottom;
+	margin-bottom: 10px;
+}
+
+#inputUIarea {
+	background-color: #F2F2F2;
+}
+
+#map {
+	height: 400px;
+	margin-left: 240px;
+}
+
+.inputUI {
+	margin-left: 10px;
+	margin-top: -5px;
+	margin-bottom: 5px;
+	width: 213px;
+	float: left;
+	height: 400px;
+	position: relative;
+}
+
+.inputBox {
+	max-width: 123px;
+}
+
+#help {
+	vertical-align: top;
+	margin-top: -29px;
+	margin-left: 0px;
+}
+
+#buttons {
+	max-width: 210px;
+	margin-top: 20px;
+	text-align: center;
+}
+
+#credits {
+	/*text-align: center;*/
+	font-size: 9px;
+	position: absolute;
+	bottom: 0;
+}
+
+.ui-button {
+	font-size: small;
+}
+
+.extend {
+	display: inline-block;
+	width: 3.5em;
+}
+
+.dialogtext {
+	font-family: TextFont;
+	font-size: small;
+	margin: 0;
+	position: relative;
+	z-index: 101;
+}
+
+.leaflet-div-newicon {
+	background: #f00;
+	border: 1px solid #600;
+}
+
+#output {
+	width: 100%;
+	float: left;
+	margin-top: 10px;
+}
+
+.outputText {
+	font-family: TextFont;
+	font-size: small;
+	margin: 0;
+}
+
+.linkPROJ4 {
+	font-size: x-small;
+}
+
+.leaflet-top, .leaflet-bottom {
+	z-index: 100;
+}
+
+.leaflet-control-attribution {
+	width: 155px;
+	text-align: left;
+}
+
+.ui-tooltip {
+	font-size: 12px;
+}
+
+
+.results {
+	width: 55%;
+	float: left;
+}
+
+
+#mapText {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#previewMap {
+	width: 45%;
+	font-size: small;
+	text-align: center;
+	position: relative;
+	float:right;
+	
+}
+
+canvas {
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+.outputContainer {
+	width: 49%;
+}
+
+.stroke {
+	fill: none;
+	stroke: #000;
+	stroke-width: 3px;
+}
+.fill {
+	fill: #000;
+}
+.graticule {
+	fill: none;
+	stroke: #fff;
+	stroke-width: .5px;
+	stroke-opacity: .5;
+}
+.land {
+	fill: #fff;
+	stroke: #777;
+	stroke-width: .75px;
+}
+.boundary {
+	fill: none;
+	stroke: #fff;
+	stroke-width: .5px;
+}

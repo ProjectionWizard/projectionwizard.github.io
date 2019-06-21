@@ -1,0 +1,99 @@
+<!--
+	PROJECTION WIZARD
+	Map Projection Selection Tool (update)
+	
+	Author: Bojan Savric
+	Date: October, 2014
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Projection Wizard</title>
+		<!--JQUERY-UI-->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<!--LEAFLET-->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+		<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+		<!--LEAFLET.draw-->
+		<script src="lib/Edit.SimpleShape.js"></script>
+		<script src="lib/Edit.Rectangle.js"></script>
+		<!--D3-->
+		<script src="lib/D3.v3.min.js"></script>
+  		<script src="lib/D3.geo.projection.v0.min.js"></script>
+  		<script src="lib/D3.topojson.v1.min.js"></script>
+  		<script src="lib/transverseCylindricalEqualArea.js" ></script>
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+		<![endif]-->
+		<meta charset="utf-8" />
+		<meta name="description" content="Projection Wizard is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The Projection Wizard is based on John P. Snyder’s selection guideline and on the extension to this guideline for world and hemisphere maps written by the Cartography and Geovisualization Group at Oregon State University. If available, there is a PROJ.4 link next to each proposed projection that opens a popup window with a PROJ.4 library code available for copying to the clipboard. The Projection Wizard displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look. The map preview is created using D3. How to choose a map projection? What map projection should I use? How to select an appropriate map projection?" />
+		<meta name="keywords" content="Projection Wizard, Map Projection Selection Tool, choose a map projection, " />
+		<meta name="author" content="Bojan Šavrič">
+		<link rel="stylesheet" href="page.css" />
+		<script src="map.js" ></script>
+		<script src="DDvsDMSconverter.js" ></script>
+		<script src="outputFormat.js" ></script>
+		<script src="previewMap.js" ></script>
+	</head>
+	<body>
+		<div id="container">
+			<div id="title">
+				Projection&nbsp;&nbsp;Wizard
+			</div>
+			<div id="inputUIarea">
+				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
+				<div class="inputUI">
+					<form id="distortion" onchange="makeOutput()">
+						<h4>Distortion Property</h4>
+						<input type="radio" name="distortion" id="Equalarea" value="Equalarea" checked="checked" onchange="makeOutput()"/>
+						<label for="Equalarea">Equal-area
+							<br>
+						</label>
+						<input type="radio" name="distortion" id="Conformal" value="Conformal" onchange="makeOutput()"/>
+						<label id="Label2" for="Conformal">Conformal
+							<br>
+						</label>
+						<input type="radio" name="distortion" id="Equidistant" value="Equidistant" onchange="makeOutput()"/>
+						<label for="Equidistant">Equidistant
+							<br>
+						</label>
+						<input type="radio" name="distortion" id="Compromise" value="Compromise" onchange="makeOutput()"/>
+						<label id="Label4" for="Compromise">Compromise</label>
+					</form>
+
+					<h4>Rectangle</h4>
+					<label class="extend" for="latmax">North: </label>
+					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
+					<label class="extend" for="latmin">South: </label>
+					<input class="inputBox" type="text" id="latmin" value="-45.000" onchange="changeInput()" size="18"/>
+					<label class="extend" for="lonmax">East: </label>
+					<input class="inputBox" type="text" id="lonmax" value="90.000" onchange="changeInput()" size="18"/>
+					<label class="extend" for="lonmin">West: </label>
+					<input class="inputBox" type="text" id="lonmin" value="-90.000" onchange="changeInput()" size="18"/>
+
+					<div id="buttons">
+						<button id="reset" title="Select All"><img src="figures/SelectAll.png" height="23" align="center">
+						</button>
+						<button id="fit" title="Fit Area"><img src="figures/FitArea.png" height="23" align="center">
+						</button>
+						<button id="view" title="Full View"><img src="figures/GlobeView.png" height="23" align="center">
+						</button>
+					</div>
+					<div id="credits">
+						&copy; 2015 <a target="_top" href="BojanSavric/index.html">Bojan &#352;avri&#269;</a><br>
+						Maps created with <a href="http://leafletjs.com/">Leaflet</a> and <a href='http://d3js.org/'>D3</a>. Tiles: &copy; Esri.
+					</div>
+				</div>
+				<div id="map"></div>
+			</div>
+			<div id="output">
+				<div id="printout"></div>
+				<div id="result" class="results"></div>
+				<div id="previewMap"></div>
+			</div>
+		</div>
+	</body>
+</html>
