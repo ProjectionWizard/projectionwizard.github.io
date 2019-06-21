@@ -87,42 +87,35 @@ function makeOutput() {
 /***PRINTING WOLRD MAP PROJECTIONS***/
 
 /*Global list of world map projections*/
-var listWorld = [{//Equal-area world map projections with poles represented as points
+var listWorld = [
+//Equal-area world map projections with poles represented as points
+{
 	projection : "Mollweide",
 	PROJ4 : "+proj=moll"
 }, {
 	projection : "Hammer (or Hammer-Aitoff)",
 	PROJ4 : "+proj=hammer"
-}, {
-	projection : "Boggs Eumorphic",
-	PROJ4 : "+proj=boggs"
-}, {
-	projection : "Sinusoidal",
-	PROJ4 : "+proj=sinu"
 },
 //Equal-area world map projections with poles represented as lines
 {
 	projection : "Eckert IV",
 	PROJ4 : "+proj=eck4"
 }, {
+	projection : "Equal Earth",
+	PROJ4 : "+proj=eqearth"
+}, {
 	projection : "Wagner IV (or Putnins P2')",
 	PROJ4 : "+proj=wag4"
 }, {
 	projection : "Wagner VII (or Hammer-Wagner)",
 	PROJ4 : "+proj=wag7"
-}, {
-	projection : "McBryde-Thomas flat-polar quartic",
-	PROJ4 : "+proj=mbtfpq"
-}, {
-	projection : "Eckert VI",
-	PROJ4 : "+proj=eck6"
 },
 //Equal-area interrupted projections for world maps with poles represented as points
 {
 	projection : "Mollweide",
 	PROJ4 : "nocode"
 }, {
-	projection : "Boggs Emorphic",
+	projection : "Boggs emorphic",
 	PROJ4 : "nocode"
 }, {
 	projection : "Goode homolosine",
@@ -146,9 +139,6 @@ var listWorld = [{//Equal-area world map projections with poles represented as p
 }, {
 	projection : "Robinson",
 	PROJ4 : "+proj=robin"
-}, {
-	projection : "Wagner V",
-	PROJ4 : "+proj=wag5"
 }, {
 	projection : "Patterson",
 	PROJ4 : "+proj=patterson"
@@ -175,27 +165,27 @@ function printWorld(property, center) {
 	
 	//formating the output text
 	if (property == 'Equalarea') {
-		addWorldMapPreview(center, "Mollweide", "Wagner IV");
+		addWorldMapPreview(center, "Mollweide", "Equal Earth");
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as points</b></p>");
 		//loop through global data
-		for (var i = 0; i < 4; i++) {
+		for (var i = 0; i < 2; i++) {
 			worldHTML(listWorld[i].projection, listWorld[i].PROJ4 + " +lon_0=" + center.lng, outputTEXT);
 		}
 
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as lines</b></p>");
 		//loop through global data
-		for (var i = 4; i < 9; i++) {
+		for (var i = 2; i < 6; i++) {
 			worldHTML(listWorld[i].projection, listWorld[i].PROJ4 + " +lon_0=" + center.lng, outputTEXT);
 		}
 
 		outputTEXT.append("<p><b>Equal-area interrupted projections for world maps with poles represented as points</b></p>");
 		//loop through global data
-		for (var i = 9; i < 13; i++) {
+		for (var i = 6; i < 10; i++) {
 			worldHTML(listWorld[i].projection, listWorld[i].PROJ4, outputTEXT);
 		}
 
 		outputTEXT.append("<p><b>Equal-area interrupted projections for world maps with poles represented as lines</b></p>");
-		worldHTML(listWorld[13].projection, listWorld[13].PROJ4, outputTEXT);
+		worldHTML(listWorld[10].projection, listWorld[10].PROJ4, outputTEXT);
 		outputTEXT.append("<p class='outputText'>Any of the equal-area projections with a pole line mentioned above.</p>");
 		worldCM(center.lng, outputTEXT);
 	} else if (property == 'Equidistant') {
@@ -208,12 +198,12 @@ function printWorld(property, center) {
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
 		addWorldMapPreview(center, "Natural Earth", "Winkel Tripel");
 		//loop through global data
-		for (var i = 14; i < 18; i++) {
+		for (var i = 11; i < 14; i++) {
 			worldHTML(listWorld[i].projection, listWorld[i].PROJ4 + " +lon_0=" + center.lng, outputTEXT);
 		}
 		outputTEXT.append("<p><b>Compromise rectangular world map projections</b></p>");
 		//loop through global data
-		for (var i = 18; i < 21; i++) {
+		for (var i = 14; i < 17; i++) {
 			worldHTML(listWorld[i].projection, listWorld[i].PROJ4 + " +lon_0=" + center.lng, outputTEXT);
 		}
 		worldCM(center.lng, outputTEXT);

@@ -52,10 +52,10 @@
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About the Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University.</p>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. Projection Wizard&nbsp;2.0 also considers a research published in <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. 2015</a>.</p>
 					<p>If available, there is a PROJ.4 link next to  each proposed projection that opens a popup window with a <a target="_top" href="https://trac.osgeo.org/proj/">PROJ.4 library</a> code available for copying to the clipboard. "PROJ.4 is a library for performing conversions between cartographic projections" (<a target="_top" href="http://en.wikipedia.org/wiki/PROJ.4">Wikipedia</a>) and is used in many cartographic and GIS applications.</p>
 					<p>The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not show the correct geographic extent. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
-					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: Šavrič, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
+					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 					
 					
 					<h3>How to Use the Tool?</h3>
@@ -117,32 +117,35 @@
 					
 					
 					<h3>Update History</h3>
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;v2.0</b> (June, 2019)</p>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2019)</p>
 					<ul class="dialogtext">
 						<li>The extent of the geographic area determined with spherical surface equations.</li>
 						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
 						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
-						<li>The help content and the list of publications updated.</li>
+						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
+						<li>Projections that excessively buldge outwards removed from world maps lists.</li>
+						<li>The help content updated.</li>
 					</ul>
 					
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;v2.0</b> (May, 2017)</p>
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
 					<ul class="dialogtext">
 						<li>PROJ.4 code fixed for the Lambert azimuthal projection.</li>
+						<li>The help content updated.</li>
 					</ul>
 					
-					<p class="outputText"><br><b>Projection Wizard</b> (February, 2016)</p>
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1.1</b> (February, 2016)</p>
 					<ul class="dialogtext">
 						<li>The help content updated.</li>
 						<li>The list of publications and related articles about the Projection Wizard added.</li>
 					</ul>
 					
-					<p class="outputText"><br><b>Projection Wizard</b> (December, 2015)</p>
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1</b> (December, 2015)</p>
 					<ul class="dialogtext">
 						<li>The Patterson projection added to a list of compromise world map projections.</li>
 						<li>The help content updated.</li>
 					</ul>
 					
-					<p class="outputText"><br><b>Projection Wizard</b> (October, 2014)</p>
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.0</b> (October, 2014)</p>
 					<ul class="dialogtext">
 						<li>Map preview added to a list of appropriate map projections.</li>
 						<li>Selection criteria for a hemisphere map updated on one sixth of the full geographic extent.</li>
@@ -201,7 +204,7 @@
 						</button>
 					</div>
 					<div id="credits">
-						&copy; 2017 <a target="_top" href="BojanSavric/index.html">Bojan &#352;avri&#269;</a><br>
+						&copy; 2019 <a target="_top" href="BojanSavric/index.html">Bojan &#352;avri&#269;</a><br>
 						Maps created with <a href="http://leafletjs.com/">Leaflet</a> and <a href='http://d3js.org/'>D3</a>. Tiles: &copy; Esri.
 					</div>
 				</div>
