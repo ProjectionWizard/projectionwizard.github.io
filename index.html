@@ -1,9 +1,9 @@
 <!--
-	PROJECTION WIZARD
-	Map Projection Selection Tool (update)
+	PROJECTION WIZARD v2.0
+	Map Projection Selection Tool
 	
 	Author: Bojan Savric
-	Date: September, 2016
+	Date: June, 2019
 -->
 
 <!DOCTYPE html>
@@ -55,7 +55,7 @@
 					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University.</p>
 					<p>If available, there is a PROJ.4 link next to  each proposed projection that opens a popup window with a <a target="_top" href="https://trac.osgeo.org/proj/">PROJ.4 library</a> code available for copying to the clipboard. "PROJ.4 is a library for performing conversions between cartographic projections" (<a target="_top" href="http://en.wikipedia.org/wiki/PROJ.4">Wikipedia</a>) and is used in many cartographic and GIS applications.</p>
 					<p>The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not show the correct geographic extent. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
-					<p>All publications about <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: Šavrič, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
+					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: Šavrič, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 					
 					
 					<h3>How to Use the Tool?</h3>
@@ -72,14 +72,14 @@
 					
 					
 					<h3>Selection Criteria Derived from the Map Extent</h3>
-					<p><b>The geographic extent:</b>
+					<p><b>The extent of the geographic area:</b>
 					<br><i>World map</i> &#8211; shows at least two thirds of the full extent
 					<br><i>Map showing a hemisphere</i> &#8211; shows between one sixth and two thirds of the full extent
 					<br><i>Map showing a continent or smaller areas</i> &#8211; shows less than one sixth of the full extent</p>
 					
-					<p><b>The aspect ratio and the orientation of the area shown on the map:</b>
-					<br><i>An east-west extent, resulting in a landscape-oriented map</i> &#8211; the ratio between the north-south extent and the east-west extent is less than 0.8
-					<br><i>A north-south extent, resulting in a portrait-oriented map</i> &#8211; the ratio between the north-south extent and the east-west extent is more than 1.25
+					<p><b>The predominant extent and the orientation of the area shown on the map:</b>
+					<br><i>An east-west extent, resulting in a landscape-oriented map</i> &#8211; the ratio between the central meridian and the longest parallel lengths is less than 0.8
+					<br><i>A north-south extent, resulting in a portrait-oriented map</i> &#8211; the ratio between the central meridian and the longest parallel lengths is more than 1.25
 					<br><i>An equal extent, resulting in a square-shaped map</i> &#8211; other ratio values</p>
 					
 					<p><b>The latitude of the mapped area of a square-shaped map:</b>
@@ -117,9 +117,29 @@
 					
 					
 					<h3>Update History</h3>
-					<p class="outputText"><b>Map Projection Selection Tool</b> (June, 2013)</p>
-					<ul class="outputText">
-						<li>Original web application</li>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;v2.0</b> (June, 2019)</p>
+					<ul class="dialogtext">
+						<li>The extent of the geographic area determined with spherical surface equations.</li>
+						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
+						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
+						<li>The help content and the list of publications updated.</li>
+					</ul>
+					
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;v2.0</b> (May, 2017)</p>
+					<ul class="dialogtext">
+						<li>PROJ.4 code fixed for the Lambert azimuthal projection.</li>
+					</ul>
+					
+					<p class="outputText"><br><b>Projection Wizard</b> (February, 2016)</p>
+					<ul class="dialogtext">
+						<li>The help content updated.</li>
+						<li>The list of publications and related articles about the Projection Wizard added.</li>
+					</ul>
+					
+					<p class="outputText"><br><b>Projection Wizard</b> (December, 2015)</p>
+					<ul class="dialogtext">
+						<li>The Patterson projection added to a list of compromise world map projections.</li>
+						<li>The help content updated.</li>
 					</ul>
 					
 					<p class="outputText"><br><b>Projection Wizard</b> (October, 2014)</p>
@@ -129,16 +149,9 @@
 						<li>Updated criteria for the latitude of the mapped area of a landscape-oriented map. The map has a center at pole when the central latitude is more than 70&#186; N or 70&#186; S, or more than 67.5&#186; N or 67.5&#186; S for showing between one sixth and one eighth of the full geographic extent.</li>
 					</ul>
 					
-					<p class="outputText"><br><b>Projection Wizard</b> (December, 2015)</p>
-					<ul class="dialogtext">
-						<li>The Patterson projection is added to a list of compromise world map projections.</li>
-						<li>The help content is updated.</li>
-					</ul>
-					
-					<p class="outputText"><br><b>Projection Wizard</b> (February, 2016)</p>
-					<ul class="dialogtext">
-						<li>The help content is updated.</li>
-						<li>The list of publications and related articles about the Projection Wizard is added.</li>
+					<p class="outputText"><br><b>Map Projection Selection Tool</b> (June, 2013)</p>
+					<ul class="outputText">
+						<li>Original web application</li>
 					</ul><br><br>
 					
 					

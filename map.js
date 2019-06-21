@@ -1,9 +1,9 @@
 /*
- * PROJECTION WIZARD
- * Map Projection Selection Tool (update)
+ * PROJECTION WIZARD v2.0
+ * Map Projection Selection Tool
  * 
  * Author: Bojan Savric
- * Date: February, 2016
+ * Date: June, 2019
  * 
  */
 
