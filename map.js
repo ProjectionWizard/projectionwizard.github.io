@@ -168,7 +168,7 @@ function showCoords(event) {
 
 /*CREATES BACKGROUND LAYER*/
 function loadBaseLayer() {
-	var esriNatGeoURL = 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile//{z}/{y}/{x}.png';
+	var esriNatGeoURL = 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile//{z}/{y}/{x}.png';
 	var NatGeoLayer = new L.TileLayer(esriNatGeoURL, {
 		maxZoom : 10
 	});
