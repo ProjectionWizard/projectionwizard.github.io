@@ -1,7 +1,7 @@
 <!--
 	PROJECTION WIZARD v2.0
 	Map Projection Selection Tool
-	
+
 	Author: Bojan Savric
 	Date: June, 2019
 -->
@@ -14,14 +14,17 @@
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-		<!--LEAFLET-->
-		<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
-		<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>-->
-		<link rel="stylesheet" href="lib/leaflet.css" />
-		<script src="lib/leaflet.js"></script>
-		<!--LEAFLET.draw-->
-		<script src="lib/Edit.SimpleShape.js"></script>
-		<script src="lib/Edit.Rectangle.js"></script>
+
+		<!--Leaflet AND Leaflet.PM for editing -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+		crossorigin=""></script>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+    <script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+
 		<!--D3-->
 		<script src="lib/D3.v3.min.js"></script>
   		<script src="lib/D3.geo.projection.v0.min.js"></script>
@@ -56,8 +59,8 @@
 					<p>If available, there is a PROJ.4 link next to  each proposed projection that opens a popup window with a <a target="_top" href="https://trac.osgeo.org/proj/">PROJ.4 library</a> code available for copying to the clipboard. "PROJ.4 is a library for performing conversions between cartographic projections" (<a target="_top" href="http://en.wikipedia.org/wiki/PROJ.4">Wikipedia</a>) and is used in many cartographic and GIS applications.</p>
 					<p>The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not show the correct geographic extent. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
 					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
-					
-					
+
+
 					<h3>How to Use the Tool?</h3>
 					<p>Using <i>Projection Wizard</i> is easy and requires only two steps:</p>
 					<ol>
@@ -69,30 +72,30 @@
 					<p>The <i>Fit Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
 					<p>The <i>Full View</i> button zooms out to the full extent.</p>
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p><br>
-					
-					
+
+
 					<h3>Selection Criteria Derived from the Map Extent</h3>
 					<p><b>The extent of the geographic area:</b>
 					<br><i>World map</i> &#8211; shows at least two thirds of the full extent
 					<br><i>Map showing a hemisphere</i> &#8211; shows between one sixth and two thirds of the full extent
 					<br><i>Map showing a continent or smaller areas</i> &#8211; shows less than one sixth of the full extent</p>
-					
+
 					<p><b>The predominant extent and the orientation of the area shown on the map:</b>
 					<br><i>An east-west extent, resulting in a landscape-oriented map</i> &#8211; the ratio between the central meridian and the longest parallel lengths is less than 0.8
 					<br><i>A north-south extent, resulting in a portrait-oriented map</i> &#8211; the ratio between the central meridian and the longest parallel lengths is more than 1.25
 					<br><i>An equal extent, resulting in a square-shaped map</i> &#8211; other ratio values</p>
-					
+
 					<p><b>The latitude of the mapped area of a square-shaped map:</b>
 					<br><i>Center at pole</i> &#8211; the central latitude is more than 75&#186; N or 75&#186; S
 					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p>
-					
+
 					<p><b>The latitude of the mapped area of a landscape-oriented map:</b>
 					<br><i>Center at pole</i> &#8211; the central latitude is more than 70&#186; N or 70&#186; S, or more than 67.5&#186; N or 67.5&#186; S for showing between one sixth and one eighth of the full geographic extent.
 					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p><br>
-					
-					
+
+
 					<h3>Additional Notes and Tips</h3>
 					<p class="outputText"><b>For world maps:</b></p>
 					<ul class="outputText">
@@ -100,12 +103,12 @@
 						<li>Rectangular projections are not generally recommended for most world maps. However, there are some rare phenomena based on longitude that are best represented by a map with straight meridians, such as a map showing world time zones.</li>
 						<li>Small-scale world maps usually represent the world over a continuous space without interruptions. When cartographers map only land phenomena or only ocean phenomena, an interrupted projection is a possible choice. Interruption can be applied to most equal-area and compromise world map projections. Depending on the purpose of the map (i.e., whether showing land or ocean), the locations of intersections and central meridians are adjusted.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>For maps showing a hemisphere:</b></p>
 					<ul class="dialogtext">
 						<li>Conformal projections are not useful for hemisphere maps since they grossly distort shape and area along the border of the projected hemisphere. Preserving angles is rarely needed for hemisphere maps.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>For maps showing a continent or smaller areas:</b></p>
 					<ul class="dialogtext">
 						<li>Compromise projections are not useful for maps showing a continent or a smaller area.</li>
@@ -114,8 +117,8 @@
 						<li>In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</li>
 						<li>When mapping a specific country or state, the cartographer can also use the state's official projection. Often this projection not only minimizes the distortion of the mapped area, but it may also simplify the cartographer's work. A majority of the state's base data is available with the official projection. Most countries use a conformal projection for their official large-scale maps, which is preferred for surveying, navigation, and military use.</li>
 					</ul><br><br>
-					
-					
+
+
 					<h3>Update History</h3>
 					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2019)</p>
 					<ul class="dialogtext">
@@ -126,45 +129,45 @@
 						<li>Projections that excessively buldge outwards removed from world maps lists.</li>
 						<li>The help content updated.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
 					<ul class="dialogtext">
 						<li>PROJ.4 code fixed for the Lambert azimuthal projection.</li>
 						<li>The help content updated.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1.1</b> (February, 2016)</p>
 					<ul class="dialogtext">
 						<li>The help content updated.</li>
 						<li>The list of publications and related articles about the Projection Wizard added.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1</b> (December, 2015)</p>
 					<ul class="dialogtext">
 						<li>The Patterson projection added to a list of compromise world map projections.</li>
 						<li>The help content updated.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.0</b> (October, 2014)</p>
 					<ul class="dialogtext">
 						<li>Map preview added to a list of appropriate map projections.</li>
 						<li>Selection criteria for a hemisphere map updated on one sixth of the full geographic extent.</li>
 						<li>Updated criteria for the latitude of the mapped area of a landscape-oriented map. The map has a center at pole when the central latitude is more than 70&#186; N or 70&#186; S, or more than 67.5&#186; N or 67.5&#186; S for showing between one sixth and one eighth of the full geographic extent.</li>
 					</ul>
-					
+
 					<p class="outputText"><br><b>Map Projection Selection Tool</b> (June, 2013)</p>
 					<ul class="outputText">
 						<li>Original web application</li>
 					</ul><br><br>
-					
-					
+
+
 					<h3>Publications</h3>
 					<p>Jenny, B., Šavrič, B., Arnold, N. D., Marston, B. E. and Preppernau, C. A. (2017). A guide to selecting map projections for world and hemisphere maps. In: M. Lapaine and E. L. Usery (eds), <a href="https://link.springer.com/book/10.1007%2F978-3-319-51835-0">Choosing a Map Projection</a>, Lecture Notes in Geoinformation and Cartography (pp. 213–228). Berlin, Heidelberg, New York: Springer. Doi: <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">10.1007/978-3-319-51835-0_9</a></p>
 					<p>Šavrič, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. </br>The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a></p>
 					<p>Šavrič, B. (2016). Projection Wizard: A free web application for selecting a map projection. </br>ISPRS SC Newsletter, 9–4. p. 5. Available online: <a href="http://www.isprs-sc.org/material/isprs_sc_vol9_no4.pdf#page=7">http://www.isprs-sc.org/material/isprs_sc_vol9_no4.pdf</a></p>
-					<p>Šavrič, B., Jenny, B. and Jenny, H. (2014). <a href="https://www.researchgate.net/publication/281067096_Projection_Wizard_Map_Projection_Selection_Tool">Map projection selection tool</a>. </br>Presentation at the 34th Annual Meeting NACIS 2014, Pittsburgh, Pennsylvania, October 8–11.</p>	
+					<p>Šavrič, B., Jenny, B. and Jenny, H. (2014). <a href="https://www.researchgate.net/publication/281067096_Projection_Wizard_Map_Projection_Selection_Tool">Map projection selection tool</a>. </br>Presentation at the 34th Annual Meeting NACIS 2014, Pittsburgh, Pennsylvania, October 8–11.</p>
 					<p>Featured by <a href="http://www.gislounge.com/map-projection-tool/?utm_source=twitterfeed&utm_medium=twitter&utm_campaign=Feed%3A+gislounge+%28GIS+Lounge%29">GIS Lounge</a> and <a href="http://googlemapsmania.blogspot.com/2015/06/the-magnificent-maps-of-week.html">Maps Mania</a>.</p><br>
-					
+
 				</div>
 				<div class="inputUI">
 					<form id="distortion" onchange="makeOutput()">

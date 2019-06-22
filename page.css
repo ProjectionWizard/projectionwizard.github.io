@@ -1,10 +1,10 @@
 /*
  * PROJECTION WIZARD v2.0
  * Map Projection Selection Tool
- * 
+ *
  * Author: Bojan Savric
  * Date: June, 2019
- * 
+ *
  */
 
 @font-face {
@@ -147,7 +147,7 @@ body {
 	text-align: center;
 	position: relative;
 	float:right;
-	
+
 }
 
 canvas {
@@ -182,4 +182,12 @@ canvas {
 	fill: none;
 	stroke: #fff;
 	stroke-width: .5px;
+}
+
+.ui-dialog {
+	z-index: 500
+}
+
+.marker-icon:hover {
+	background-color: #ff7b1a;
 }

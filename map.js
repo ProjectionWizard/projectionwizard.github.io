@@ -1,22 +1,21 @@
 /*
  * PROJECTION WIZARD v2.0
  * Map Projection Selection Tool
- * 
+ *
  * Author: Bojan Savric
  * Date: June, 2019
- * 
+ *
  */
 
 window.onload = init;
 
 /*GLOBAL VARIABLES*/
 //map and layers
-var map, rectangle, attrubutionControl; 
+var map, rectangle, attributionControl;
 //bounds of the rectangle
 var latmax, latmin, lonmax, lonmin;
 //preview map variables
 var previewMapProjection, previewMapLat0;
-
 
 /*Updating rectangle bounds*/
 function updateMapArea (N, S, E, W) {
@@ -61,12 +60,14 @@ function updateRectangle() {
 	var SouthWest = new L.LatLng(latmin, lonmin),
     NorthEast = new L.LatLng(latmax, lonmax),
     bounds = new L.LatLngBounds(SouthWest, NorthEast);
-    
-    //setting new boud to the rectangle
-    rectangle.editing.disable();
+
+	// new bounds for the rectangle
+	rectangle.pm.disable()
 	rectangle.setBounds(bounds);
-	rectangle.editing.enable();
-	
+	rectangle.pm.enable({
+		allowSelfIntersection: false,
+	});
+
 	//Display the output
 	makeOutput();
 }
@@ -86,7 +87,7 @@ function changeInput () {
 	}
 	var East = dms2ddLON(document.getElementById("lonmax").value);
 	var West = dms2ddLON(document.getElementById("lonmin").value);
-	
+
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);
 	updateRectangle();
@@ -94,21 +95,21 @@ function changeInput () {
 
 
 /*RESET BUTTON CALLBACK FUNCTION*/
-function resetUI(event) {
+function resetUI(map) {
 	//Updating Radio List
 	//document.getElementById("Equalarea").checked = true;
-	
+
 	//Updating the rectangle
 	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
 	updateRectangle();
-	
+
 	//Updating the map view
 	map.setView( [0.0, 0.0], 0);
 }
 
 
 /*FIT BUTTON CALLBACK FUNCTION*/
-function fitSquare(event) {
+function fitSquare(map) {
 	//getting bounds from the map
 	var zoomBounds = map.getBounds();
 	var zoomCenter = map.getCenter();
@@ -143,107 +144,87 @@ function fitSquare(event) {
 /*MAP MOUSEMOVE CALLBACK FUNTION*/
 //For every move, attribution displays mouse position
 function showCoords(event) {
-	var letter, deg, min, sec;
 	var stringPos = "";
-	
+
 	//LATITUDE STRING
 	stringPos = dd2dmsLAT(event.latlng.lat) + "  |  ";
-	
+
 	//LONGITUDE STRING
 	var lam = event.latlng.lng;
-	
+
 	while (lam < -180.0) {
 		lam += 360.0;
 	}
 	while (lam > 180.0) {
 		lam -= 360.0;
 	}
-	
-	stringPos += dd2dmsLON(lam);
-	
-	//CHANGING ATTRIBUTION CONTROL
-	attrubutionControl.setPrefix(stringPos);
-}
 
+	stringPos += dd2dmsLON(lam);
+
+	//CHANGING ATTRIBUTION CONTROL
+	attributionControl.setPrefix(stringPos);
+}
 
 /*CREATES BACKGROUND LAYER*/
-function loadBaseLayer() {
+function loadBaseLayer(map) {
 	var esriNatGeoURL = 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile//{z}/{y}/{x}.png';
-	var NatGeoLayer = new L.TileLayer(esriNatGeoURL, {
+	L.tileLayer(esriNatGeoURL, {
 		maxZoom : 10
-	});
-
-	//adding layer to the map
-	map.addLayer(NatGeoLayer);
+	}).addTo(map)
 }
 
-
 /*ADDS A SELECTED AREA RECTANGLE*/
-function addRectangle () {
+function addRectangle (map) {
 	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
-	
+
 	//Creating rectangle
 	rectangle = L.rectangle([[latmax, lonmax], [latmin, lonmin]]);
-	
+
 	// updating the bounds in the input form
 	setInputBoxes();
 
-	rectangle.editing.enable();
-	
-	//Event handler: Editing the rectangle
-	rectangle.on("edit", function(e) {
+	rectangle.on('pm:edit', function (e) {
 		// reading changed bounds
-		var newBounds = rectangle.getBounds();
+		var newBounds = e.sourceTarget.getBounds();
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
 		// updating the bounds
 		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
 		updateRectangle();
-	}); 
-	
+	});
+
 	//Event handler: Double click the rectangle
 	rectangle.on("dblclick", function(e) {
 		// reading bounds
-		var recBounds = rectangle.getBounds();
+		var recBounds = e.sourceTarget.getBounds();
 		//fitting view on rectangle extent
 		map.fitBounds(recBounds);
-	}); 
-	
+	});
+
 	//Event handler: Mouse over the rectangle
 	rectangle.on("mouseover", function(e) {
 		//Seting starting style
 		rectangle.setStyle({
-				color : "#03f",
-				fillColor : "#03f",
-				fillOpacity : 0.2,
-				dashArray : null
+				color : "#ff7b1a"
 			});
-		
-		//Changing the markers to red
-		var markers = $(".leaflet-div-icon");
-		markers.removeClass('leaflet-div-icon').addClass('leaflet-div-newicon');
-	}); 
-	
+	});
+
 	//Event handler: Mouse out the rectangle
 	rectangle.on("mouseout", function(e) {
 		//Seting starting style
 		rectangle.setStyle({
-				color : "#03f",
-				fillColor : "#03f",
-				fillOpacity : 0.2,
-				dashArray : null
-			});
-		
-		//Changing the markers bact to white
-		var markers = $(".leaflet-div-newicon");
-		markers.removeClass('leaflet-div-newicon').addClass('leaflet-div-icon');
-	}); 
+			color : "#3388ff"
+		});
+	});
 
 	//Adding layer to the map
 	map.addLayer(rectangle);
+	// rectangle.toggleEdit();
+	rectangle.pm.enable({
+		allowSelfIntersection: false,
+	});
 }
-
 
 /*MAIN FUNCTION*/
 function init() {
@@ -258,7 +239,7 @@ function init() {
 		var dWidth = $(window).width() * .5;
 		if (dWidth > 600) dWidth = 800;
 		var dHeight = $(window).height() * .7;
-		
+
 		//Setting dialog content
 		var NewDialog = $( "#dialog" );
 		//Setting dialog window
@@ -275,41 +256,47 @@ function init() {
 				}
 			}
 		});
-		
+
 		//Opening dialog window
 		NewDialog.dialog( "open" );
 	});
-	
+
+	//Tooltip call
+	$(function() {
+		$(document).tooltip();
+	});
+
+	//Creates a map
+	map = new L.Map('map', {
+		attributionControl : false,
+		// doubleClickZoom: false
+	});
+	//Centers map and default zoom level
+	map.setView([0.00, 0.00], 0);
+
+	//Fit bounds button
+	$("#fit").button();
+	$("#fit").click(function() {
+		fitSquare(map)
+	});
+
 	//Reset button
 	$("#reset").button();
-	$("#reset").click(resetUI);
+	$("#reset").click(function() {
+		resetUI(map)
+	});
 
 	//Reset button
 	$("#view").button();
 	$("#view").click(function() {
 		//Updating the map view
 		map.setView([0.0, rectangle.getBounds().getCenter().lng], 0);
-	}); 
-
-	//Fit bounds button
-	$("#fit").button();
-	$("#fit").click(fitSquare);
-
-	//Tooltip call
-	$(function() {
-		$(document).tooltip();
-	}); 
-
-	//Creates a map
-	map = new L.Map('map', {
-		attributionControl : false
 	});
-	//Centers map and default zoom level
-	map.setView([0.00, 0.00], 0);
+
 	//Event handlers of the map
 	map.on("mousemove", showCoords);
 	map.on("mouseout", function(e) {
-		attrubutionControl.setPrefix(false);
+		attributionControl.setPrefix(false);
 	});
 
 	//Resizing preview map
@@ -318,16 +305,16 @@ function init() {
 	});
 
 	//Adding attribution control to the map
-	attrubutionControl = new L.Control.Attribution({
-		"prefix" : false
+	attributionControl = new L.Control.Attribution({
+		prefix: false
 	}).addTo(map);
 
 	//Loading base layer
-	loadBaseLayer();
+	loadBaseLayer(map);
 
 	//Add the rectangle box to the map
-	addRectangle();
-	
+	addRectangle(map);
+
 	//Display the output
 	makeOutput();
 }
