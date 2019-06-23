@@ -242,7 +242,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.fillStyle = "#eee";
 		context.fill();
 		context.lineWidth = 0.3;
-		context.strokeStyle = "red";
+		context.strokeStyle = "#000";
 		context.stroke();
 		
 		// Style graticule
