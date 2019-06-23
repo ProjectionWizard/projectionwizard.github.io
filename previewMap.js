@@ -237,7 +237,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 	var path = d3.geoPath(projection, context);
 
-	d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json", function(error, data) {
+	d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then( function(data) {
 		land = topojson.feature(data, data.objects.countries); 
 		grid = graticule();
 		context.clearRect(0, 0, width, height);
@@ -263,6 +263,5 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.lineWidth = 0.5;
 		context.strokeStyle = "#ccc";
 		context.stroke();
-	
 	});
 }
