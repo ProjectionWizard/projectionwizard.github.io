@@ -239,7 +239,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		.projection(projection)
 		.context(context);
 
-	d3.json("data/countries_1e5.json", function(error, data) {
+	d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json", function(error, data) {
 		land = topojson.feature(data, data.objects.countries); 
 		grid = graticule();
 		context.clearRect(0, 0, width, height);
