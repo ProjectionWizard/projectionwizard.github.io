@@ -74,7 +74,7 @@
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p><br>
 					
 					
-					<h3>Selection Criteria Derived from the Map Extent</h3>
+					<h3>Selection Criteria Derived from the Geographic Extent</h3>
 					<p><b>The extent of the geographic area:</b>
 					<br><i>World map</i> &#8211; shows at least two thirds of the full extent
 					<br><i>Map showing a hemisphere</i> &#8211; shows between one sixth and two thirds of the full extent
@@ -126,7 +126,8 @@
 						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
 						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
 						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
-						<li>Projections that excessively buldge outwards removed from world maps lists.</li>
+						<li>Projections that excessively buldge outwards and interrupted projections removed from world maps lists.</li>
+						<li>User interface updated.</li>
 						<li>The help content updated.</li>
 					</ul>
 					
@@ -188,7 +189,7 @@
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>
 
-					<h4>Rectangle</h4>
+					<h4>Geographic Extent</h4>
 					<label class="extend" for="latmax">North: </label>
 					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
 					<label class="extend" for="latmin">South: </label>
@@ -199,11 +200,11 @@
 					<input class="inputBox" type="text" id="lonmin" value="-90.000" onchange="changeInput()" size="18"/>
 
 					<div id="buttons">
-						<button id="reset" title="Select All"><img src="figures/SelectAll.png" height="23" align="center">
+						<button id="fit" title="Select Currently Visible Area"><img src="figures/FitArea.png" height="19" align="center">
 						</button>
-						<button id="fit" title="Fit Area"><img src="figures/FitArea.png" height="23" align="center">
+						<button id="reset" title="Select Entire World"><img src="figures/SelectAll.png" height="19" align="center">
 						</button>
-						<button id="view" title="Full View"><img src="figures/GlobeView.png" height="23" align="center">
+						<button id="view" title="Show Entire World"><img src="figures/GlobeView.png" height="19" align="center">
 						</button>
 					</div>
 					<div id="credits">
