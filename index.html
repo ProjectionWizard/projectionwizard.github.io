@@ -17,18 +17,21 @@
 
 		<!--Leaflet AND Leaflet.PM for editing -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+		integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+		integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
 		crossorigin=""></script>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
-    <script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+		<script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
 
 		<!--D3-->
-		<script src="lib/D3.v3.min.js"></script>
-  		<script src="lib/D3.geo.projection.v0.min.js"></script>
-  		<script src="lib/D3.topojson.v1.min.js"></script>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<script src="https://d3js.org/d3-array.v1.min.js"></script>
+		<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+		<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+		<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+		<script src="https://unpkg.com/topojson-client@3"></script>
   		<script src="lib/transverseCylindricalEqualArea.js" ></script>
 		<!--[if lte IE 8]>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
@@ -74,7 +77,7 @@
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p><br>
 
 
-					<h3>Selection Criteria Derived from the Map Extent</h3>
+					<h3>Selection Criteria Derived from the Geographic Extent</h3>
 					<p><b>The extent of the geographic area:</b>
 					<br><i>World map</i> &#8211; shows at least two thirds of the full extent
 					<br><i>Map showing a hemisphere</i> &#8211; shows between one sixth and two thirds of the full extent
@@ -126,7 +129,9 @@
 						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
 						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
 						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
-						<li>Projections that excessively buldge outwards removed from world maps lists.</li>
+						<li>Projections that excessively buldge outwards and interrupted projections removed from world lists.</li>
+						<li>User interface updated.</li>
+						<li>Third-party libraries updated.</li>
 						<li>The help content updated.</li>
 					</ul>
 
@@ -188,7 +193,7 @@
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>
 
-					<h4>Rectangle</h4>
+					<h4>Geographic Extent</h4>
 					<label class="extend" for="latmax">North: </label>
 					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
 					<label class="extend" for="latmin">South: </label>
@@ -199,11 +204,11 @@
 					<input class="inputBox" type="text" id="lonmin" value="-90.000" onchange="changeInput()" size="18"/>
 
 					<div id="buttons">
-						<button id="reset" title="Select All"><img src="figures/SelectAll.png" height="23" align="center">
+						<button id="fit" title="Select Currently Visible Area"><img src="figures/FitArea.png" height="19" align="center">
 						</button>
-						<button id="fit" title="Fit Area"><img src="figures/FitArea.png" height="23" align="center">
+						<button id="reset" title="Select Entire World"><img src="figures/SelectAll.png" height="19" align="center">
 						</button>
-						<button id="view" title="Full View"><img src="figures/GlobeView.png" height="23" align="center">
+						<button id="view" title="Show Entire World"><img src="figures/GlobeView.png" height="19" align="center">
 						</button>
 					</div>
 					<div id="credits">
