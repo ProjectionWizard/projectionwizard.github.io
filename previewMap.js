@@ -8,14 +8,12 @@
  */
 
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
-function addWorldMapPreview(center, projection1, projection2) {
+function addWorldMapPreview(center, projection) {
 	var previewMap = $("#previewMap").empty();
 
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection1 + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection1 + "<br><br>");
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection2 + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection2 + "<br><br>");
+	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
+	previewMap.append("<br>" + projection + "<br><br>");
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -130,18 +128,8 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, 0])
 			.precision(.1);
 			
-	} else if (projectionString == 'Mollweide') {
-		return d3.geo.mollweide()
-			.rotate([-lon0, 0])
-			.precision(.1);
-			
 	} else if (projectionString == 'Natural Earth') {
 		return d3.geo.naturalEarth()
-			.rotate([-lon0, 0])
-			.precision(.1);
-			
-	} else if (projectionString == 'Winkel Tripel') {
-		return d3.geo.winkel3()
 			.rotate([-lon0, 0])
 			.precision(.1);
 			
