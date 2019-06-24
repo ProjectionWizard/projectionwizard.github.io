@@ -8,14 +8,12 @@
  */
 
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
-function addWorldMapPreview(center, projection1, projection2) {
+function addWorldMapPreview(center, projection) {
 	var previewMap = $("#previewMap").empty();
 
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection1 + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection1 + "<br><br>");
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection2 + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection2 + "<br><br>");
+	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
+	previewMap.append("<br>" + projection + "<br><br>");
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -40,45 +38,45 @@ function addMapPreview(center) {
 function pickProjection(lat0, lon0, projectionString) {
 	//Definding D3 projection
 	if (projectionString == 'AzimuthalEqualArea') {
-		return d3.geo.azimuthalEqualArea()
+		return d3.geoAzimuthalEqualArea()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
 			.rotate([-lon0, -lat0]);
-			
-	} else if (projectionString == 'AzimuthalEquidistant') {
-		return d3.geo.azimuthalEquidistant()
+	}
+	else if (projectionString == 'AzimuthalEquidistant') {
+		return d3.geoAzimuthalEquidistant()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
 			.rotate([-lon0, -lat0]);
-			
-	} else if (projectionString == 'Orthographic') {
-		return d3.geo.orthographic()
+	} 
+	else if (projectionString == 'Orthographic') {
+		return d3.geoOrthographic()
 			.clipAngle(90)
 			.rotate([-lon0, -lat0]);
-			
-	} else if (projectionString == 'Stereographic') {
-		return d3.geo.stereographic()
+	}
+	else if (projectionString == 'Stereographic') {
+		return d3.geoStereographic()
 			.rotate([-lon0, -lat0])
 			.clipAngle(90)
 			//.clipExtent([[0, 0], [width, height]])
 			.precision(.1);
-				
-	} else if (projectionString == 'PlateCarree') {
-		return d3.geo.equirectangular()
+	}
+	else if (projectionString == 'PlateCarree') {
+		return d3.geoEquirectangular()
 			.precision(.1)
 			.rotate([-lon0, 0]);
-			
-	} else if (projectionString == 'Mercator') {
-		return d3.geo.mercator()
+	}
+	else if (projectionString == 'Mercator') {
+		return d3.geoMercator()
 			.precision(.1)
 			.rotate([-lon0, 0]);
-			
-	} else if (projectionString == 'TransverseMercator') {
-		return d3.geo.transverseMercator()
+	}
+	else if (projectionString == 'TransverseMercator') {
+		return d3.geoTransverseMercator()
 			.precision(.1)
 			.rotate([-lon0, 0]);
-			
-	} else if (projectionString == 'CylindricalEqualArea') {
+	}
+	else if (projectionString == 'CylindricalEqualArea') {
 		var interval = (latmax - latmin) / 4.;
 		var latS1 = lat0 + interval, latS2 = lat0 - interval, latS;
 
@@ -88,64 +86,54 @@ function pickProjection(lat0, lon0, projectionString) {
 			latS = 0.;
 		}
 				
-		return d3.geo.cylindricalEqualArea()
+		return d3.geoCylindricalEqualArea()
 			.parallel(latS)
 			.precision(.1)
 			.rotate([-lon0, 0]);
-			
-	} else if (projectionString == 'TransverseCylindrical') {
+	}
+	else if (projectionString == 'TransverseCylindrical') {
 		var scale = 1.5;
-		return d3.geo.transverseCylindricalEqualArea()
+		return d3.geoTransverseCylindricalEqualArea()
 			.parallel(0)
 			.precision(.1)
 			.rotate([-lon0, 0, 90]);
-			
-	} else if (projectionString == 'ConicEquidistant') {
+	}
+	else if (projectionString == 'ConicEquidistant') {
 		var interval = (latmax - latmin) / 6;
-		return d3.geo.conicEquidistant()
+		return d3.geoConicEquidistant()
 			.parallels([latmin + interval, latmax - interval])
 			.center([0, lat0])
 			.precision(.1)
 			.rotate([-lon0, 0]);
-			
-	} else if (projectionString == 'ConicEqualArea') {
+	}
+	else if (projectionString == 'ConicEqualArea') {
 		var interval = (latmax - latmin) / 6;
-		return d3.geo.albers()
+		return d3.geoAlbers()
 			.rotate([-lon0, 0])
 			.center([0, lat0])
 			.parallels([latmin + interval, latmax - interval])
 			.precision(.1);
-			
-	} else if (projectionString == 'ConicConformal') {
+	}
+	else if (projectionString == 'ConicConformal') {
 		var interval = (latmax - latmin) / 6;
-		return d3.geo.conicConformal()
+		return d3.geoConicConformal()
 			.rotate([-lon0, 0])
 			//.clipAngle(90)			
 			.center([0, lat0])
 			.parallels([latmin + interval, latmax - interval])
 			.precision(.1);
-			
-	} else if (projectionString == 'Wagner IV') {
-		return d3.geo.wagner4()
+	}
+	else if (projectionString == 'Equal Earth') {
+		return d3.geoEqualEarth()
 			.rotate([-lon0, 0])
 			.precision(.1);
-			
-	} else if (projectionString == 'Mollweide') {
-		return d3.geo.mollweide()
+	}
+	else if (projectionString == 'Natural Earth') {
+		return d3.geoNaturalEarth()
 			.rotate([-lon0, 0])
 			.precision(.1);
-			
-	} else if (projectionString == 'Natural Earth') {
-		return d3.geo.naturalEarth()
-			.rotate([-lon0, 0])
-			.precision(.1);
-			
-	} else if (projectionString == 'Winkel Tripel') {
-		return d3.geo.winkel3()
-			.rotate([-lon0, 0])
-			.precision(.1);
-			
-	} else {
+	} 
+	else {
 		$("#previewMap").append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
 		return;
 	}
@@ -189,9 +177,9 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		projection.rotate([-lon0, 0])
 			.scale(scaleFactor)
 			.translate([width / 2, height / 2]);
-			
+	} 
 	//Computing scale factor and translation for other maps
-	} else {
+	else {
 		//Computing extent coordinates
 		var coord1 = projection([lonmin, latmax]),
 			coord2 = projection([lonmax, latmax]), 
@@ -226,7 +214,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 
 	//drawing map elements
-	var graticule = d3.geo.graticule(),
+	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
 	var canvas = d3.select("#previewMap").append("canvas")
@@ -235,11 +223,9 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 	var context = canvas.node().getContext("2d");
 
-	var path = d3.geo.path()
-		.projection(projection)
-		.context(context);
+	var path = d3.geoPath(projection, context);
 
-	d3.json("data/countries_1e5.json", function(error, data) {
+	d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then( function(data) {
 		land = topojson.feature(data, data.objects.countries); 
 		grid = graticule();
 		context.clearRect(0, 0, width, height);
@@ -265,7 +251,5 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.lineWidth = 0.5;
 		context.strokeStyle = "#ccc";
 		context.stroke();
-	
 	});
 }
-
