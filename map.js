@@ -61,8 +61,7 @@ function updateRectangle() {
     NorthEast = new L.LatLng(latmax, lonmax),
     bounds = new L.LatLngBounds(SouthWest, NorthEast);
 
-	// new bounds for the rectangle
-	rectangle.pm.disable()
+  rectangle.pm.disable();
 	rectangle.setBounds(bounds);
 	rectangle.pm.enable({
 		allowSelfIntersection: false,
@@ -184,14 +183,18 @@ function addRectangle (map) {
 	setInputBoxes();
 
 	rectangle.on('pm:edit', function (e) {
+		const rectangle = e.sourceTarget;
 		// reading changed bounds
-		var newBounds = e.sourceTarget.getBounds();
+		var newBounds = rectangle.getBounds();
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
 		// updating the bounds
 		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
-		updateRectangle();
+
+		// update the rest of the UI
+		setInputBoxes();
+		makeOutput();
 	});
 
 	//Event handler: Double click the rectangle
@@ -218,9 +221,21 @@ function addRectangle (map) {
 		});
 	});
 
+	rectangle.on('pm:dragstart', function (e) {
+		rectangle.pm.disable();
+	})
+
+	rectangle.on('pm:dragend', function (e) {
+		rectangle.pm.enable({
+			allowSelfIntersection: false,
+		});
+	})
+
 	//Adding layer to the map
 	map.addLayer(rectangle);
-	// rectangle.toggleEdit();
+
+	// allow both dragging and resizing the rectangle
+	map.pm.toggleGlobalDragMode();
 	rectangle.pm.enable({
 		allowSelfIntersection: false,
 	});
@@ -268,8 +283,7 @@ function init() {
 
 	//Creates a map
 	map = new L.Map('map', {
-		attributionControl : false,
-		// doubleClickZoom: false
+		attributionControl : false
 	});
 	//Centers map and default zoom level
 	map.setView([0.00, 0.00], 0);
