@@ -602,7 +602,7 @@ function printScaleFactorNote(outputTEXT, property) {
 /*Funtion that formats the PROJ.4 link*/
 function proj4link(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	var PROJstr = "+proj=" + prj;
-	var datum = "WGS84";
+	//var datum = "WGS84";
 	
 	// False easting
 	if ( !isNaN(x0) ) {
@@ -685,7 +685,7 @@ function proj4link(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	}
 	
 	// Appending datum
-	PROJstr += (" +datum=" + datum);
+	PROJstr += ( " +datum=" + document.getElementById("datum").value );
 	
 	// Closing the string
 	PROJstr += (" +no_defs");

@@ -140,7 +140,7 @@ function fitSquare(event) {
 }
 
 
-/*MAP MOUSEMOVE CALLBACK FUNTION*/
+/*MAP MOUSEMOVE CALLBACK FUNCTION*/
 //For every move, attribution displays mouse position
 function showCoords(event) {
 	var letter, deg, min, sec;
@@ -250,9 +250,35 @@ function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
 
+	//Options button
+	$( "#options_dialog" ).dialog({ autoOpen: false });
+	$( "#settings" ).button();
+	$( "#settings" ).click(function() {
+		//Setting dialog content
+		var NewDialog = $( "#options_dialog" );
+		//Setting dialog window
+		NewDialog.dialog({
+			modal : true,
+			show : 'puff',
+			hide : 'explode',
+			width : 300,
+			height : 300,
+			title : "Projection Wizard Options",
+			buttons : {
+				OK : function() {
+					$(this).dialog("close");
+					updateRectangle();
+				}
+			}
+		});
+		
+		//Opening dialog window
+		NewDialog.dialog( "open" );
+	});
+
 	//Help button
 	$( "#dialog" ).dialog({ autoOpen: false });
-	$("#help").button();
+	$( "#help" ).button();
 	$( "#help" ).click(function() {
 		//Defining window size
 		var dWidth = $(window).width() * .5;

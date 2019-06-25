@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
 		<!--LEAFLET-->
 		<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 		<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>-->
@@ -22,6 +23,7 @@
 		<!--LEAFLET.draw-->
 		<script src="lib/Edit.SimpleShape.js"></script>
 		<script src="lib/Edit.Rectangle.js"></script>
+
 		<!--D3-->
 		<script src="https://d3js.org/d3.v5.js"></script>
 		<script src="https://d3js.org/d3-array.v1.min.js"></script>
@@ -51,11 +53,36 @@
 				Projection&nbsp;&nbsp;Wizard
 			</div>
 			<div id="inputUIarea">
+				<img id="settings" src="figures/opts.png" height="22" align="left" title="Customize Projection Wizard">
+				<div id="options_dialog" class="dialogtext" title="Projection Wizard Options">
+					<form id="ang_format">
+						<h4>Angular units format</h4>
+						<input type="radio" name="ang_format" id="DMS" value="DMS" checked="checked" />
+						<label for="DMS">	DD&deg; MM' SS.SSS''<br></label>
+						<input type="radio" name="ang_format" id="DD" value="DD"/>
+						<label for="DD">	DD.DDD&deg;<br></label>
+					</form>
+
+					<h4>Geographic datum:&nbsp;&nbsp;
+						<select id="datum">
+							<option value="WGS84" selected>WGS84</option>
+							<option value="carthage">carthage</option>
+							<option value="GGRS87">GGRS87</option>
+							<option value="hermannskogel">hermannskogel</option>
+							<option value="ire65">ire65</option>
+							<option value="NAD27">NAD27</option>
+							<option value="NAD83">NAD83</option>
+							<option value="nzgd49">nzgd49</option>
+							<option value="OSGB36">OSGB36</option>
+							<option value="potsdam">potsdam</option>
+						</select>
+					</h4>
+				</div>
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About the Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. Projection Wizard&nbsp;2.0 also considers a research published in <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. 2015</a>.</p>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also considers a research published in <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. 2015</a>.</p>
 					<p>If available, there is a PROJ.4 link next to  each proposed projection that opens a popup window with a <a target="_top" href="https://trac.osgeo.org/proj/">PROJ.4 library</a> code available for copying to the clipboard. "PROJ.4 is a library for performing conversions between cartographic projections" (<a target="_top" href="http://en.wikipedia.org/wiki/PROJ.4">Wikipedia</a>) and is used in many cartographic and GIS applications.</p>
 					<p>The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not show the correct geographic extent. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
 					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
