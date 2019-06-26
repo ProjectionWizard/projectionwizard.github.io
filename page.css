@@ -59,10 +59,16 @@ body {
 	max-width: 123px;
 }
 
-#help {
+#settings {
 	vertical-align: top;
 	margin-top: -29px;
 	margin-left: 0px;
+}
+
+#help {
+	vertical-align: top;
+	margin-top: -29px;
+	margin-left: 29px;
 }
 
 #buttons {

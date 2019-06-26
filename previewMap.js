@@ -24,7 +24,7 @@ function addMapPreview(center) {
 	var previewMap = $("#previewMap").empty();
 
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 +");</script>");
+	previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
 	
 	if (previewMapProjection == 'ConicEquidistant') {
 		previewMap.append("<br>Equidistant conic<br><br>");
@@ -212,8 +212,16 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		projection.translate([width / 2, height / 2 - coordTran[1]]);
 	}
 
+	//Setting data layer
+	var jsonData;
+	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
+	
+	if (scale < 6)
+		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json";
+	else
+		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json";
 
-	//drawing map elements
+	//Drawing map elements
 	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
@@ -225,7 +233,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 	var path = d3.geoPath(projection, context);
 
-	d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then( function(data) {
+	d3.json(jsonData).then( function(data) {
 		land = topojson.feature(data, data.objects.countries); 
 		grid = graticule();
 		context.clearRect(0, 0, width, height);
@@ -233,7 +241,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		// Style sphere
 		context.beginPath();
 		path(sphere);
-		context.fillStyle = "#000";
+		context.fillStyle = "#add8e6";
 		context.fill();
 
 		// Style land
@@ -242,14 +250,15 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.fillStyle = "#eee";
 		context.fill();
 		context.lineWidth = 0.3;
-		context.strokeStyle = "#000";
+		context.strokeStyle = "#999";
 		context.stroke();
 		
 		// Style graticule
 		context.beginPath();
 		path(grid);
 		context.lineWidth = 0.5;
-		context.strokeStyle = "#ccc";
+		context.globalAlpha = 0.2;
+		context.strokeStyle = "#555";
 		context.stroke();
 	});
 }

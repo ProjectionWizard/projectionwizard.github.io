@@ -11,9 +11,9 @@
 	<head>
 		<title>Projection Wizard</title>
 		<!--JQUERY-UI-->
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.min.css" />
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 
 		<!--Leaflet AND Leaflet.PM for editing -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
@@ -54,11 +54,36 @@
 				Projection&nbsp;&nbsp;Wizard
 			</div>
 			<div id="inputUIarea">
+				<img id="settings" src="figures/opts.png" height="22" align="left" title="Customize Projection Wizard">
+				<div id="options_dialog" class="dialogtext" title="Projection Wizard Options">
+					<form id="ang_format">
+						<h4>Angular units format</h4>
+						<input type="radio" name="ang_format" id="DMS" value="DMS" checked="checked" />
+						<label for="DMS">	44&deg; 30' 15'' W<br></label>
+						<input type="radio" name="ang_format" id="DD" value="DD"/>
+						<label for="DD">	–44.754305<br></label>
+					</form>
+
+					<h4>Geographic datum:&nbsp;&nbsp;
+						<select id="datum">
+							<option value="WGS84" selected>WGS84</option>
+							<option value="carthage">carthage</option>
+							<option value="GGRS87">GGRS87</option>
+							<option value="hermannskogel">hermannskogel</option>
+							<option value="ire65">ire65</option>
+							<option value="NAD27">NAD27</option>
+							<option value="NAD83">NAD83</option>
+							<option value="nzgd49">nzgd49</option>
+							<option value="OSGB36">OSGB36</option>
+							<option value="potsdam">potsdam</option>
+						</select>
+					</h4>
+				</div>
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About the Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. Projection Wizard&nbsp;2.0 also considers a research published in <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. 2015</a>.</p>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The <i>Projection Wizard</i> is based on John P. Snyder’s selection guideline and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also considers a research published in <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. 2015</a>.</p>
 					<p>If available, there is a PROJ.4 link next to  each proposed projection that opens a popup window with a <a target="_top" href="https://trac.osgeo.org/proj/">PROJ.4 library</a> code available for copying to the clipboard. "PROJ.4 is a library for performing conversions between cartographic projections" (<a target="_top" href="http://en.wikipedia.org/wiki/PROJ.4">Wikipedia</a>) and is used in many cartographic and GIS applications.</p>
 					<p>The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not show the correct geographic extent. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
 					<p>All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
@@ -71,9 +96,9 @@
 						<li>Select the map extent by using the input boxes on the left side of the map or by changing the blue rectangle on the map. Red handlers on edges of the rectangle enable the user to resize the rectangle. The movement of the middle handler repositions the rectangle on the map. Any change to  the rectangle on the map is reflected in the input boxes and via versa.</li>
 					</ol>
 					<p>Any change of the rectangle or distortion property interactively updates the list of proposed map projections and map preview below the web map.</p>
-					<img src="figures/buttoms.png" width="35%" align="right"><p>The <i>Select All</i> button sets the rectangle size to the full extent.</p>
-					<p>The <i>Fit Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
-					<p>The <i>Full View</i> button zooms out to the full extent.</p>
+					<img src="figures/buttoms.png" width="35%" align="right"><p>The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
+					<p>The <i>Select Entire World</i> button sets the rectangle size to the full extent.</p>
+					<p>The <i>Show Entire World</i> button zooms out to the full extent.</p>
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p><br>
 
 
@@ -127,12 +152,12 @@
 					<ul class="dialogtext">
 						<li>The extent of the geographic area determined with spherical surface equations.</li>
 						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
-						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
+						<li>Additional suggestions added to a list of appropriate map projections for conformal property at very large map scales.</li>
 						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
 						<li>Projections that excessively buldge outwards and interrupted projections removed from world lists.</li>
-						<li>User interface updated.</li>
-						<li>Third-party libraries updated.</li>
-						<li>The help content updated.</li>
+						<li>PROJ strings values rounded on seven decimal places.</li>
+						<li><i>Customize Projection Wizard</i> button added. Users can now specify geographic datum for their output strings and toggle between decimal degrees and dms formats.</li>
+						<li>User interface, preview maps, third-party libraries, and help content updated.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
@@ -178,17 +203,11 @@
 					<form id="distortion" onchange="makeOutput()">
 						<h4>Distortion Property</h4>
 						<input type="radio" name="distortion" id="Equalarea" value="Equalarea" checked="checked" onchange="makeOutput()"/>
-						<label for="Equalarea">Equal-area
-							<br>
-						</label>
+						<label for="Equalarea">Equal-area<br></label>
 						<input type="radio" name="distortion" id="Conformal" value="Conformal" onchange="makeOutput()"/>
-						<label id="Label2" for="Conformal">Conformal
-							<br>
-						</label>
+						<label id="Label2" for="Conformal">Conformal<br></label>
 						<input type="radio" name="distortion" id="Equidistant" value="Equidistant" onchange="makeOutput()"/>
-						<label for="Equidistant">Equidistant
-							<br>
-						</label>
+						<label for="Equidistant">Equidistant<br></label>
 						<input type="radio" name="distortion" id="Compromise" value="Compromise" onchange="makeOutput()"/>
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>
