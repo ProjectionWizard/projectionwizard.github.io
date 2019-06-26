@@ -136,6 +136,10 @@ function printWorld(property, center) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
+	//formating coordinates of the center
+	var lng = Math.round(center.lng * 100.) / 100.
+	var lat = Math.round(center.lat * 100.) / 100.
+	
 	//formating the output text
 	if (property == 'Equalarea') {
 		addWorldMapPreview(center, "Equal Earth");
@@ -144,29 +148,29 @@ function printWorld(property, center) {
 		//loop through global data
 		for (var i = 0; i < 2; i++) {
 			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
+				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
 		}
 
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as lines</b></p>");
 		//loop through global data
 		for (var i = 2; i < 6; i++) {
 			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
+				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
 		}
 		
-		worldCM(center.lng, outputTEXT);
+		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
 		
 		outputTEXT.append("<p class='outputText'>Polar azimuthal equidistant (centered on a pole)" + 
-			proj4link("aeqd", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
+			proj4link("aeqd", NaN, 90.0, NaN, NaN, lng, NaN) + "</p>");
 			
 		outputTEXT.append("<p class='outputText'>Oblique azimuthal equidistant (centered on arbitrary point)" + 
-			proj4link("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) + "</p>");
+			proj4link("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</p>");
 			
 		outputTEXT.append("<p class='outputText'>Two-point equidistant (relative to two arbitrary points" + 
-			proj4link("tpeqd", NaN, center.lat, center.lng, 45.56, 90.56, NaN) + "</p>");
+			proj4link("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</p>");
 			
 		$("#previewMap").empty();
 	}
@@ -177,16 +181,16 @@ function printWorld(property, center) {
 		//loop through global data
 		for (var i = 6; i < 9; i++) {
 			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
+				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
 		}
 		outputTEXT.append("<p><b>Compromise rectangular world map projections</b></p>");
 		//loop through global data
 		for (var i = 9; i < 12; i++) {
 			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
+				proj4link(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
 		}
 		
-		worldCM(center.lng, outputTEXT);
+		worldCM(lng, outputTEXT);
 		outputTEXT.append("<p><b>Note:</b> Rectangular projections are not generally recommended for most world maps.</p>");
 	}
 }
@@ -197,25 +201,30 @@ function printHemisphere(property, center, scale) {
 	var outputTEXT = $("#result").empty();
 
 	//formating coordinates of the center
-	var lon = Math.round(center.lng * 10.) / 10., lat, lonS, latS;
+	var lon = Math.round(center.lng * 100.) / 100., lat, lonS, latS;
 
 	if (center.lat > 85.) {
 		lat = 90.0;
 	} else if (center.lat < -85.) {
 		lat = -90.0;
 	} else {
-		lat = Math.round(center.lat * 10.) / 10.;
+		lat = Math.round(center.lat * 100.) / 100.;
 	}
 
 	//formating coordinates of the center - strings
-	if (lat < 0)
-		latS = Math.abs(lat) + "º S";
-	else
-		latS = lat + "º N";
-	if (lon < 0)
-		lonS = Math.abs(lon) + "º W";
-	else
-		lonS = lon + "º E";
+	if  ( angUnit == "DMS" ){
+		if (lat < 0)
+			latS = Math.abs(lat) + "º S";
+		else
+			latS = lat + "º N";
+		if (lon < 0)
+			lonS = Math.abs(lon) + "º W";
+		else
+			lonS = lon + "º E";
+	} else {
+		latS = lat;
+		lonS = lon;
+	}	
 
 	//formating center text
 	var center_text = "Center latitude: " + latS + "<br>Center longitude: " + lonS;
@@ -248,7 +257,7 @@ function printSmallerArea(property, center, scale) {
 	//computing longitude extent
 	var dlon = (lonmax - lonmin);
 	//reading central meridian
-	var lng = dd2dmLON(center.lng);
+	var lng = outputLON(center.lng, false);
 
 	//formating the output text
 	if (property == 'Equidistant') {
@@ -283,9 +292,9 @@ function printSmallerArea(property, center, scale) {
 		else {
 			//computing standard paralles
 			var interval = (latmax - latmin) / 6;
-			var latOr = dd2dmLAT(center.lat);
-			var latS1 = dd2dmLAT(latmin + interval);
-			var latS2 = dd2dmLAT(latmax - interval);
+			var latOr = outputLAT(center.lat,        false);
+			var latS1 = outputLAT(latmin + interval, false);
+			var latS2 = outputLAT(latmax - interval, false);
 
 			//formating the output
 			outputTEXT.append("<p class='outputText'><b>Equidistant conic</b>" +
@@ -296,7 +305,7 @@ function printSmallerArea(property, center, scale) {
 			outputTEXT.append("<p class='outputText'><br><b>Oblique azimuthal equidistant</b>" + 
 				proj4link("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) +
 				" - distance correct along any line passing through the center of the map (i.e., great circle)</p>");
-			outputTEXT.append("<p class='outputText'>Center latitude: " + dd2dmLAT(center.lat) + "<br>Center longitude: " + lng + "</p>");
+			outputTEXT.append("<p class='outputText'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</p>");
 			
 			previewMapProjection = "ConicEquidistant";
 			previewMapLat0 = center.lat;
@@ -391,7 +400,7 @@ function printSquareFormat(property, center) {
 	var outputTEXT = $("#result").empty();
 
 	//computing central meridian
-	var lng = dd2dmLON(center.lng);
+	var lng = outputLON(center.lng, false);
 
 	//formating the output
 	if (property == "Conformal") {
@@ -439,7 +448,7 @@ function printSquareFormat(property, center) {
 	//case: between pole and equator
 	else {
 		//formating coordinates of the center
-		var center_text = "Center latitude: " + dd2dmLAT(center.lat) + "<br>Center longitude: " + lng;
+		var center_text = "Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng;
 		previewMapLat0 = center.lat;
 
 		if (property == "Conformal") {
@@ -460,7 +469,7 @@ function printNSextent(property, center) {
 	var outputTEXT = $("#result").empty();
 
 	//computing central meridian
-	var lng = dd2dmLON(center.lng);
+	var lng = outputLON(center.lng, false);
 
 	//formating the output
 	if (property == "Conformal") {
@@ -490,7 +499,7 @@ function printEWextent(property, center, scale) {
 	var outputTEXT = $("#result").empty();
 
 	//computing central meridian
-	var lng = dd2dmLON(center.lng);
+	var lng = outputLON(center.lng, false);
 
 	//formating the output
 	if (property == "Conformal") {
@@ -547,7 +556,7 @@ function printEWextent(property, center, scale) {
 			previewMapProjection = "CylindricalEqualArea";
 		}
 		
-		outputTEXT.append("<p class='outputText'>Standard parallel: " + dd2dmLAT(latS) + "</p>");
+		outputTEXT.append("<p class='outputText'>Standard parallel: " + outputLAT(latS, false) + "</p>");
 	}
 
 	//case: mid-latitudes, with long strip in east-west direction
@@ -555,7 +564,7 @@ function printEWextent(property, center, scale) {
 		outputTEXT.append("<p class='outputText'><b>Oblique Lambert azimuthal equal-area</b>" + 
 			proj4link("laea", NaN, center.lat, NaN, NaN, center.lng, NaN) + "</p>");
 		
-		outputTEXT.append("<p class='outputText'>Latitude of origin: " + dd2dmLAT(center.lat) + "</p>");
+		outputTEXT.append("<p class='outputText'>Latitude of origin: " + outputLAT(center.lat, false) + "</p>");
 		
 		previewMapProjection = "AzimuthalEqualArea";
 		previewMapLat0 = center.lat;
@@ -565,9 +574,9 @@ function printEWextent(property, center, scale) {
 	else {
 		//formating coordinates of the center
 		var interval = (latmax - latmin) / 6.;
-		var latOr = dd2dmLAT(center.lat);
-		var latS1 = dd2dmLAT(latmin + interval);
-		var latS2 = dd2dmLAT(latmax - interval);
+		var latOr = outputLAT(center.lat,        false);
+		var latS1 = outputLAT(latmin + interval, false);
+		var latS2 = outputLAT(latmax - interval, false);
 		previewMapLat0 = center.lat;
 
 		if (property == "Conformal") {
@@ -603,7 +612,13 @@ function printScaleFactorNote(outputTEXT, property) {
 function proj4link(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	var PROJstr = "+proj=" + prj;
 	//var datum = "WGS84";
-	
+
+	//format output values
+	lat0 = Math.round(lat0 * 1e7) / 1e7;
+	lat1 = Math.round(lat1 * 1e7) / 1e7;
+	lat2 = Math.round(lat2 * 1e7) / 1e7;
+	lon0 = Math.round(lon0 * 1e7) / 1e7;
+
 	// False easting
 	if ( !isNaN(x0) ) {
 		PPROJstr += (" +x_0=" + x0);
@@ -698,12 +713,18 @@ function copyPROJ4(text) {
 	window.prompt("Copy PROJ string to clipboard (Ctrl + C or ⌘ + C):", text);
 }
 
-/*Funtion that formats the central meridian value for world maps*/
+/*Function that formats the central meridian value for world maps*/
 function worldCM(lng, outputTEXT) {
 	var lon = Math.round(lng), lonS;
-	if (lon < 0)
-		lonS = Math.abs(lon) + "º W";
-	else
-		lonS = lon + "º E";
+	
+	if  ( angUnit == "DMS" ){
+		if (lng < 0)
+			lonS = Math.abs(lng) + "º W";
+		else
+			lonS = lng + "º E";
+	} else {
+		lonS = lng;
+	} 
+	
 	outputTEXT.append("<p><b>Central meridian:</b> " + lonS + "</p>");
 }

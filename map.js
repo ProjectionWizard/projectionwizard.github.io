@@ -11,7 +11,7 @@ window.onload = init;
 
 /*GLOBAL VARIABLES*/
 //map and layers
-var map, rectangle, attrubutionControl; 
+var map, rectangle, angUnit, attrubutionControl; 
 //bounds of the rectangle
 var latmax, latmin, lonmax, lonmin;
 //preview map variables
@@ -27,13 +27,54 @@ function updateMapArea (N, S, E, W) {
 	swapCoordinates();
 }
 
+/*Reading geographic coordinates*/
+function readLAT(latS) {
+	if  ( angUnit == "DMS" ){
+		return dms2ddLAT(latS);
+	}
+	
+	return parseFloat(latS);
+}
+
+function readLON(lonS) {
+	if  ( angUnit == "DMS" ){
+		return dms2ddLAT(lonS);
+	}
+	
+	return parseFloat(lonS);
+}
+
+/*Outputing geographic coordinates*/
+function outputLAT(lat, ui_bool) {
+	if  ( angUnit == "DMS" ){
+		if  ( ui_bool ){
+			return dd2dmsLAT(lat);
+		}
+		
+		return dd2dmLAT(lat);
+	}
+	
+	return Math.round(lat * 1e7) / 1e7;
+}
+
+function outputLON(lon, ui_bool) {
+	if  ( angUnit == "DMS" ){
+		if  ( ui_bool ){
+			return dd2dmsLAT(lon);
+		}
+		
+		return dd2dmLON(lon);
+	}
+	
+	return Math.round(lon * 1e7) / 1e7;
+}
 
 /*Updating input boxes*/
 function setInputBoxes() {
-	document.getElementById("latmax").value = dd2dmsLAT(latmax);
-	document.getElementById("latmin").value = dd2dmsLAT(latmin);
-	document.getElementById("lonmax").value = dd2dmsLON(lonmax);
-	document.getElementById("lonmin").value = dd2dmsLON(lonmin);
+	document.getElementById("latmax").value = outputLAT(latmax, true);
+	document.getElementById("latmin").value = outputLAT(latmin, true);
+	document.getElementById("lonmax").value = outputLON(lonmax, true);
+	document.getElementById("lonmin").value = outputLON(lonmin, true);
 }
 
 function swapCoordinates() {
@@ -76,16 +117,16 @@ function updateRectangle() {
 //This function is called in index.html
 function changeInput () {
 	// Reading from the input and fixing values
-	var North = dms2ddLAT(document.getElementById("latmax").value);
+	var North = readLAT(document.getElementById("latmax").value);
 	if (North > 85.0) {
 		North = 90.0;
 	}
-	var South = dms2ddLAT(document.getElementById("latmin").value);
+	var South = readLAT(document.getElementById("latmin").value);
 	if (South < -85.0) {
 		South = -90.0;
 	}
-	var East = dms2ddLON(document.getElementById("lonmax").value);
-	var West = dms2ddLON(document.getElementById("lonmin").value);
+	var East = readLON(document.getElementById("lonmax").value);
+	var West = readLON(document.getElementById("lonmin").value);
 	
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);
@@ -147,7 +188,7 @@ function showCoords(event) {
 	var stringPos = "";
 	
 	//LATITUDE STRING
-	stringPos = dd2dmsLAT(event.latlng.lat) + "  |  ";
+	stringPos = outputLAT(event.latlng.lat, true) + "  |  ";
 	
 	//LONGITUDE STRING
 	var lam = event.latlng.lng;
@@ -159,7 +200,7 @@ function showCoords(event) {
 		lam -= 360.0;
 	}
 	
-	stringPos += dd2dmsLON(lam);
+	stringPos += outputLON(lam, true);
 	
 	//CHANGING ATTRIBUTION CONTROL
 	attrubutionControl.setPrefix(stringPos);
@@ -249,6 +290,9 @@ function addRectangle () {
 function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
+	
+	//Seting angular unit
+	angUnit = $('input[name=ang_format]:checked').val();
 
 	//Options button
 	$( "#options_dialog" ).dialog({ autoOpen: false });
@@ -267,6 +311,7 @@ function init() {
 			buttons : {
 				OK : function() {
 					$(this).dialog("close");
+					angUnit = $('input[name=ang_format]:checked').val();
 					updateRectangle();
 				}
 			}

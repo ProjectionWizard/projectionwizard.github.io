@@ -58,9 +58,9 @@
 					<form id="ang_format">
 						<h4>Angular units format</h4>
 						<input type="radio" name="ang_format" id="DMS" value="DMS" checked="checked" />
-						<label for="DMS">	DD&deg; MM' SS.SSS''<br></label>
+						<label for="DMS">	44&deg; 30' 15'' W<br></label>
 						<input type="radio" name="ang_format" id="DD" value="DD"/>
-						<label for="DD">	DD.DDD&deg;<br></label>
+						<label for="DD">	–44.754305<br></label>
 					</form>
 
 					<h4>Geographic datum:&nbsp;&nbsp;
@@ -95,9 +95,9 @@
 						<li>Select the map extent by using the input boxes on the left side of the map or by changing the blue rectangle on the map. Red handlers on edges of the rectangle enable the user to resize the rectangle. The movement of the middle handler repositions the rectangle on the map. Any change to  the rectangle on the map is reflected in the input boxes and via versa.</li>
 					</ol>
 					<p>Any change of the rectangle or distortion property interactively updates the list of proposed map projections and map preview below the web map.</p>
-					<img src="figures/buttoms.png" width="35%" align="right"><p>The <i>Select All</i> button sets the rectangle size to the full extent.</p>
-					<p>The <i>Fit Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
-					<p>The <i>Full View</i> button zooms out to the full extent.</p>
+					<img src="figures/buttoms.png" width="35%" align="right"><p>The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
+					<p>The <i>Select Entire World</i> button sets the rectangle size to the full extent.</p>
+					<p>The <i>Show Entire World</i> button zooms out to the full extent.</p>
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p><br>
 					
 					
@@ -154,9 +154,8 @@
 						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
 						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
 						<li>Projections that excessively buldge outwards and interrupted projections removed from world lists.</li>
-						<li>User interface updated.</li>
-						<li>Third-party libraries updated.</li>
-						<li>The help content updated.</li>
+						<li><i>Customize Projection Wizard</i> button added. Users can now specify geographic datum for their output strings and toggle between decimal degrees and dms formats.</li>
+						<li>User interface, preview maps, third-party libraries, and help content updated.</li>
 					</ul>
 					
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
@@ -202,17 +201,11 @@
 					<form id="distortion" onchange="makeOutput()">
 						<h4>Distortion Property</h4>
 						<input type="radio" name="distortion" id="Equalarea" value="Equalarea" checked="checked" onchange="makeOutput()"/>
-						<label for="Equalarea">Equal-area
-							<br>
-						</label>
+						<label for="Equalarea">Equal-area<br></label>
 						<input type="radio" name="distortion" id="Conformal" value="Conformal" onchange="makeOutput()"/>
-						<label id="Label2" for="Conformal">Conformal
-							<br>
-						</label>
+						<label id="Label2" for="Conformal">Conformal<br></label>
 						<input type="radio" name="distortion" id="Equidistant" value="Equidistant" onchange="makeOutput()"/>
-						<label for="Equidistant">Equidistant
-							<br>
-						</label>
+						<label for="Equidistant">Equidistant<br></label>
 						<input type="radio" name="distortion" id="Compromise" value="Compromise" onchange="makeOutput()"/>
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>

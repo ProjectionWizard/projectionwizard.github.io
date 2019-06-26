@@ -233,7 +233,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		// Style sphere
 		context.beginPath();
 		path(sphere);
-		context.fillStyle = "#000";
+		context.fillStyle = "#ADD8E6";
 		context.fill();
 
 		// Style land
@@ -242,14 +242,15 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.fillStyle = "#eee";
 		context.fill();
 		context.lineWidth = 0.3;
-		context.strokeStyle = "#000";
+		context.strokeStyle = "#999";
 		context.stroke();
 		
 		// Style graticule
 		context.beginPath();
 		path(grid);
 		context.lineWidth = 0.5;
-		context.strokeStyle = "#ccc";
+		context.globalAlpha = 0.2;
+		context.strokeStyle = "#555";
 		context.stroke();
 	});
 }
