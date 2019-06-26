@@ -11,9 +11,9 @@
 	<head>
 		<title>Projection Wizard</title>
 		<!--JQUERY-UI-->
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.min.css" />
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 
 		<!--LEAFLET-->
 		<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
@@ -151,9 +151,10 @@
 					<ul class="dialogtext">
 						<li>The extent of the geographic area determined with spherical surface equations.</li>
 						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
-						<li>Additional suggestions added to a list of appropriate map projections for conformal distortion property at very large map scales.</li>
+						<li>Additional suggestions added to a list of appropriate map projections for conformal property at very large map scales.</li>
 						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
 						<li>Projections that excessively buldge outwards and interrupted projections removed from world lists.</li>
+						<li>PROJ strings values rounded on seven decimal places.</li>
 						<li><i>Customize Projection Wizard</i> button added. Users can now specify geographic datum for their output strings and toggle between decimal degrees and dms formats.</li>
 						<li>User interface, preview maps, third-party libraries, and help content updated.</li>
 					</ul>
