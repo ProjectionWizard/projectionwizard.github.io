@@ -103,7 +103,7 @@ function updateRectangle() {
     bounds = new L.LatLngBounds(SouthWest, NorthEast);
 
   rectangle.pm.disable();
-	rectangle.fitBounds(bounds);
+	rectangle.setBounds(bounds);
 
 	//Display the output
 	makeOutput();
