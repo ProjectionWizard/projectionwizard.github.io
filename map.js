@@ -11,7 +11,7 @@ window.onload = init;
 
 /*GLOBAL VARIABLES*/
 //map and layers
-var map, rectangle, angUnit, attrubutionControl; 
+var map, rectangle, angUnit, attrubutionControl;
 //bounds of the rectangle
 var latmax, latmin, lonmax, lonmin;
 //preview map variables
@@ -31,7 +31,7 @@ function readLAT(latS) {
 	if  ( angUnit == "DMS" ){
 		return dms2ddLAT(latS);
 	}
-	
+
 	return parseFloat(latS);
 }
 
@@ -39,7 +39,7 @@ function readLON(lonS) {
 	if  ( angUnit == "DMS" ){
 		return dms2ddLAT(lonS);
 	}
-	
+
 	return parseFloat(lonS);
 }
 
@@ -49,10 +49,10 @@ function outputLAT(lat, ui_bool) {
 		if  ( ui_bool ){
 			return dd2dmsLAT(lat);
 		}
-		
+
 		return dd2dmLAT(lat);
 	}
-	
+
 	return Math.round(lat * 1e7) / 1e7;
 }
 
@@ -61,10 +61,10 @@ function outputLON(lon, ui_bool) {
 		if  ( ui_bool ){
 			return dd2dmsLAT(lon);
 		}
-		
+
 		return dd2dmLON(lon);
 	}
-	
+
 	return Math.round(lon * 1e7) / 1e7;
 }
 
@@ -103,13 +103,16 @@ function updateRectangle() {
     bounds = new L.LatLngBounds(SouthWest, NorthEast);
 
   rectangle.pm.disable();
-	rectangle.setBounds(bounds);
-	rectangle.pm.enable({
-		allowSelfIntersection: false,
-	});
+	rectangle.fitBounds(bounds);
 
 	//Display the output
 	makeOutput();
+
+	rectangle.pm.enable({
+		allowSelfIntersection: false
+	})
+
+	map.pm.enableGlobalDragMode()
 }
 
 
@@ -144,7 +147,7 @@ function resetUI(map) {
 	updateRectangle();
 
 	//Updating the map view
-	map.setView( [0.0, 0.0], 0);
+	map.setView( [0, 0], 0);
 }
 
 
@@ -209,7 +212,7 @@ function showCoords(event) {
 function loadBaseLayer(map) {
 	var esriNatGeoURL = 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile//{z}/{y}/{x}.png';
 	L.tileLayer(esriNatGeoURL, {
-		maxZoom : 10
+		maxZoom: 10
 	}).addTo(map)
 }
 
@@ -263,30 +266,46 @@ function addRectangle (map) {
 	});
 
 	rectangle.on('pm:dragstart', function (e) {
-		rectangle.pm.disable();
+		// ideally pm would update the anchors as the geometry is dragged.
+		// as a workaround, we can just hide them temporarily
+		const elements = document.querySelectorAll('.marker-icon')
+		elements.forEach(handle => {
+			handle.style.display = 'none'
+		})
+
+	})
+
+	rectangle.on('pm:drag', function (e) {
+		console.log(e)
 	})
 
 	rectangle.on('pm:dragend', function (e) {
+		const elements = document.querySelectorAll('.marker-icon')
+		elements.forEach(handle => {
+			handle.style.display = ''
+		})
+
 		rectangle.pm.enable({
-			allowSelfIntersection: false,
-		});
+			allowSelfIntersection: false
+		})
 	})
 
 	//Adding layer to the map
 	map.addLayer(rectangle);
 
+	rectangle.pm.toggleEdit({
+		allowSelfIntersection: false
+	})
+
 	// allow both dragging and resizing the rectangle
 	map.pm.toggleGlobalDragMode();
-	rectangle.pm.enable({
-		allowSelfIntersection: false,
-	});
 }
 
 /*MAIN FUNCTION*/
 function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
-	
+
 	//Seting angular unit
 	angUnit = $('input[name=ang_format]:checked').val();
 
@@ -312,7 +331,7 @@ function init() {
 				}
 			}
 		});
-		
+
 		//Opening dialog window
 		NewDialog.dialog( "open" );
 	});
@@ -354,10 +373,9 @@ function init() {
 
 	//Creates a map
 	map = new L.Map('map', {
-		attributionControl : false
-	});
-	//Centers map and default zoom level
-	map.setView([0.00, 0.00], 0);
+		attributionControl: false,
+		doubleClickZoom: false
+	}).setView([0,0], 0);
 
 	//Fit bounds button
 	$("#fit").button();

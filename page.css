@@ -122,10 +122,6 @@ body {
 	font-size: x-small;
 }
 
-.leaflet-top, .leaflet-bottom {
-	z-index: 100;
-}
-
 .leaflet-control-attribution {
 	width: 155px;
 	text-align: left;
