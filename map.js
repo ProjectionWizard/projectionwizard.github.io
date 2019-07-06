@@ -11,7 +11,7 @@ window.onload = init;
 
 /*GLOBAL VARIABLES*/
 //map and layers
-var map, rectangle, angUnit, attrubutionControl;
+var map, rectangle, angUnit, attributionControl;
 //bounds of the rectangle
 var latmax, latmin, lonmax, lonmin;
 //preview map variables
@@ -216,6 +216,15 @@ function loadBaseLayer(map) {
 	}).addTo(map)
 }
 
+function toggleAnchorVisibility () {
+	/* ideally pm would update the anchors as the geometry is dragged.
+	as a workaround, we can just hide them temporarily */
+	const elements = document.querySelectorAll('.marker-icon')
+		elements.forEach(handle => {
+			(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
+		})
+}
+
 /*ADDS A SELECTED AREA RECTANGLE*/
 function addRectangle (map) {
 	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
@@ -239,6 +248,46 @@ function addRectangle (map) {
 		// update the rest of the UI
 		setInputBoxes();
 		makeOutput();
+	});
+
+	rectangle.on("pm:markerdragstart", function() {
+		toggleAnchorVisibility();
+	})
+
+	rectangle.on("pm:markerdragend", function() {
+		toggleAnchorVisibility();
+	})
+
+	rectangle.on("pm:markerdrag", function(e) {
+		const liveCorner = e.markerEvent.latlng
+		const allCorners = e.sourceTarget.getLatLngs();
+
+		// loop through each rectangle vertex to determine which one is opposite the corner being dragged
+		for (i = 0; i < allCorners[0].length; i++) {
+			if (liveCorner.lat !== allCorners[0][i].lat && liveCorner.lng !== allCorners[0][i].lng) {
+				var oppositeCorner = allCorners[0][i];
+				break;
+			}
+		}
+
+		const deltaLng = Math.abs(liveCorner.lng - oppositeCorner.lng);
+
+		// dont allow the horizontal span of the rectangle to exceed 360deg
+		if (deltaLng > 360) {
+			if (liveCorner.lng < oppositeCorner.lng)
+			oppositeCorner.lng = liveCorner.lng + 360.0;
+			else
+			oppositeCorner.lng = liveCorner.lng - 360.0;
+		}
+
+		updateMapArea(liveCorner.lat, oppositeCorner.lat, liveCorner.lng, oppositeCorner.lng);
+
+		// update Rectangle bounds *without* toggling edit mode
+		var SouthWest = new L.LatLng(latmin, lonmin),
+    NorthEast = new L.LatLng(latmax, lonmax),
+		bounds = new L.LatLngBounds(SouthWest, NorthEast);
+		rectangle.setBounds(bounds);
+		setInputBoxes();
 	});
 
 	//Event handler: Double click the rectangle
@@ -266,24 +315,11 @@ function addRectangle (map) {
 	});
 
 	rectangle.on('pm:dragstart', function (e) {
-		// ideally pm would update the anchors as the geometry is dragged.
-		// as a workaround, we can just hide them temporarily
-		const elements = document.querySelectorAll('.marker-icon')
-		elements.forEach(handle => {
-			handle.style.display = 'none'
-		})
-
-	})
-
-	rectangle.on('pm:drag', function (e) {
-		console.log(e)
+		toggleAnchorVisibility();
 	})
 
 	rectangle.on('pm:dragend', function (e) {
-		const elements = document.querySelectorAll('.marker-icon')
-		elements.forEach(handle => {
-			handle.style.display = ''
-		})
+		toggleAnchorVisibility();
 
 		rectangle.pm.enable({
 			allowSelfIntersection: false
