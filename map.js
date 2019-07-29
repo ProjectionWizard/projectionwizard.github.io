@@ -1,22 +1,21 @@
 /*
  * PROJECTION WIZARD v2.0
  * Map Projection Selection Tool
- * 
+ *
  * Author: Bojan Savric
  * Date: June, 2019
- * 
+ *
  */
 
 window.onload = init;
 
 /*GLOBAL VARIABLES*/
 //map and layers
-var map, rectangle, angUnit, attrubutionControl; 
+var map, rectangle, angUnit, attributionControl;
 //bounds of the rectangle
 var latmax, latmin, lonmax, lonmin;
 //preview map variables
 var previewMapProjection, previewMapLat0;
-
 
 /*Updating rectangle bounds*/
 function updateMapArea (N, S, E, W) {
@@ -32,7 +31,7 @@ function readLAT(latS) {
 	if  ( angUnit == "DMS" ){
 		return dms2ddLAT(latS);
 	}
-	
+
 	return parseFloat(latS);
 }
 
@@ -40,7 +39,7 @@ function readLON(lonS) {
 	if  ( angUnit == "DMS" ){
 		return dms2ddLAT(lonS);
 	}
-	
+
 	return parseFloat(lonS);
 }
 
@@ -50,10 +49,10 @@ function outputLAT(lat, ui_bool) {
 		if  ( ui_bool ){
 			return dd2dmsLAT(lat);
 		}
-		
+
 		return dd2dmLAT(lat);
 	}
-	
+
 	return Math.round(lat * 1e7) / 1e7;
 }
 
@@ -62,10 +61,10 @@ function outputLON(lon, ui_bool) {
 		if  ( ui_bool ){
 			return dd2dmsLAT(lon);
 		}
-		
+
 		return dd2dmLON(lon);
 	}
-	
+
 	return Math.round(lon * 1e7) / 1e7;
 }
 
@@ -102,14 +101,18 @@ function updateRectangle() {
 	var SouthWest = new L.LatLng(latmin, lonmin),
     NorthEast = new L.LatLng(latmax, lonmax),
     bounds = new L.LatLngBounds(SouthWest, NorthEast);
-    
-    //setting new boud to the rectangle
-    rectangle.editing.disable();
+
+  rectangle.pm.disable();
 	rectangle.setBounds(bounds);
-	rectangle.editing.enable();
-	
+
 	//Display the output
 	makeOutput();
+
+	rectangle.pm.enable({
+		allowSelfIntersection: false
+	})
+
+	map.pm.enableGlobalDragMode()
 }
 
 
@@ -127,7 +130,7 @@ function changeInput () {
 	}
 	var East = readLON(document.getElementById("lonmax").value);
 	var West = readLON(document.getElementById("lonmin").value);
-	
+
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);
 	updateRectangle();
@@ -135,21 +138,21 @@ function changeInput () {
 
 
 /*RESET BUTTON CALLBACK FUNCTION*/
-function resetUI(event) {
+function resetUI(map) {
 	//Updating Radio List
 	//document.getElementById("Equalarea").checked = true;
-	
+
 	//Updating the rectangle
 	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
 	updateRectangle();
-	
+
 	//Updating the map view
-	map.setView( [0.0, 0.0], 0);
+	map.setView( [0, 0], 0);
 }
 
 
 /*FIT BUTTON CALLBACK FUNCTION*/
-function fitSquare(event) {
+function fitSquare(map) {
 	//getting bounds from the map
 	var zoomBounds = map.getBounds();
 	var zoomCenter = map.getCenter();
@@ -184,55 +187,56 @@ function fitSquare(event) {
 /*MAP MOUSEMOVE CALLBACK FUNCTION*/
 //For every move, attribution displays mouse position
 function showCoords(event) {
-	var letter, deg, min, sec;
 	var stringPos = "";
-	
+
 	//LATITUDE STRING
 	stringPos = outputLAT(event.latlng.lat, true) + "  |  ";
-	
+
 	//LONGITUDE STRING
 	var lam = event.latlng.lng;
-	
+
 	while (lam < -180.0) {
 		lam += 360.0;
 	}
 	while (lam > 180.0) {
 		lam -= 360.0;
 	}
-	
-	stringPos += outputLON(lam, true);
-	
-	//CHANGING ATTRIBUTION CONTROL
-	attrubutionControl.setPrefix(stringPos);
-}
 
+	stringPos += outputLON(lam, true);
+
+	//CHANGING ATTRIBUTION CONTROL
+	attributionControl.setPrefix(stringPos);
+}
 
 /*CREATES BACKGROUND LAYER*/
-function loadBaseLayer() {
+function loadBaseLayer(map) {
 	var esriNatGeoURL = 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile//{z}/{y}/{x}.png';
-	var NatGeoLayer = new L.TileLayer(esriNatGeoURL, {
-		maxZoom : 10
-	});
-
-	//adding layer to the map
-	map.addLayer(NatGeoLayer);
+	L.tileLayer(esriNatGeoURL, {
+		maxZoom: 10
+	}).addTo(map)
 }
 
+function toggleAnchorVisibility () {
+	/* ideally pm would update the anchors as the geometry is dragged.
+	as a workaround, we can just hide them temporarily */
+	const elements = document.querySelectorAll('.marker-icon')
+		elements.forEach(handle => {
+			(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
+		})
+}
 
 /*ADDS A SELECTED AREA RECTANGLE*/
-function addRectangle () {
+function addRectangle (map) {
 	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
-	
+
 	//Creating rectangle
 	rectangle = L.rectangle([[latmax, lonmax], [latmin, lonmin]]);
-	
+
 	// updating the bounds in the input form
 	setInputBoxes();
 
-	rectangle.editing.enable();
-	
-	//Event handler: Editing the rectangle
-	rectangle.on("edit", function(e) {
+	rectangle.on('pm:edit', function (e) {
+		const rectangle = e.sourceTarget;
 		// reading changed bounds
 		var newBounds = rectangle.getBounds();
 		var SW = newBounds.getSouthWest();
@@ -240,57 +244,104 @@ function addRectangle () {
 
 		// updating the bounds
 		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
-		updateRectangle();
-	}); 
-	
+
+		// update the rest of the UI
+		setInputBoxes();
+		makeOutput();
+	});
+
+	rectangle.on("pm:markerdragstart", function() {
+		toggleAnchorVisibility();
+	})
+
+	rectangle.on("pm:markerdragend", function() {
+		toggleAnchorVisibility();
+	})
+
+	rectangle.on("pm:markerdrag", function(e) {
+		const liveCorner = e.markerEvent.latlng
+		const allCorners = e.sourceTarget.getLatLngs();
+
+		// loop through each rectangle vertex to determine which one is opposite the corner being dragged
+		for (i = 0; i < allCorners[0].length; i++) {
+			if (liveCorner.lat !== allCorners[0][i].lat && liveCorner.lng !== allCorners[0][i].lng) {
+				var oppositeCorner = allCorners[0][i];
+				break;
+			}
+		}
+
+		const deltaLng = Math.abs(liveCorner.lng - oppositeCorner.lng);
+
+		// dont allow the horizontal span of the rectangle to exceed 360deg
+		if (deltaLng > 360) {
+			if (liveCorner.lng < oppositeCorner.lng)
+			oppositeCorner.lng = liveCorner.lng + 360.0;
+			else
+			oppositeCorner.lng = liveCorner.lng - 360.0;
+		}
+
+		updateMapArea(liveCorner.lat, oppositeCorner.lat, liveCorner.lng, oppositeCorner.lng);
+
+		// update Rectangle bounds *without* toggling edit mode
+		var SouthWest = new L.LatLng(latmin, lonmin),
+    NorthEast = new L.LatLng(latmax, lonmax),
+		bounds = new L.LatLngBounds(SouthWest, NorthEast);
+		rectangle.setBounds(bounds);
+		setInputBoxes();
+	});
+
 	//Event handler: Double click the rectangle
 	rectangle.on("dblclick", function(e) {
 		// reading bounds
-		var recBounds = rectangle.getBounds();
+		var recBounds = e.sourceTarget.getBounds();
 		//fitting view on rectangle extent
 		map.fitBounds(recBounds);
-	}); 
-	
+	});
+
 	//Event handler: Mouse over the rectangle
 	rectangle.on("mouseover", function(e) {
 		//Seting starting style
 		rectangle.setStyle({
-				color : "#03f",
-				fillColor : "#03f",
-				fillOpacity : 0.2,
-				dashArray : null
+				color : "#ff7b1a"
 			});
-		
-		//Changing the markers to red
-		var markers = $(".leaflet-div-icon");
-		markers.removeClass('leaflet-div-icon').addClass('leaflet-div-newicon');
-	}); 
-	
+	});
+
 	//Event handler: Mouse out the rectangle
 	rectangle.on("mouseout", function(e) {
 		//Seting starting style
 		rectangle.setStyle({
-				color : "#03f",
-				fillColor : "#03f",
-				fillOpacity : 0.2,
-				dashArray : null
-			});
-		
-		//Changing the markers bact to white
-		var markers = $(".leaflet-div-newicon");
-		markers.removeClass('leaflet-div-newicon').addClass('leaflet-div-icon');
-	}); 
+			color : "#3388ff"
+		});
+	});
+
+	rectangle.on('pm:dragstart', function (e) {
+		toggleAnchorVisibility();
+	})
+
+	rectangle.on('pm:dragend', function (e) {
+		toggleAnchorVisibility();
+
+		rectangle.pm.enable({
+			allowSelfIntersection: false
+		})
+	})
 
 	//Adding layer to the map
 	map.addLayer(rectangle);
-}
 
+	rectangle.pm.toggleEdit({
+		allowSelfIntersection: false
+	})
+
+	// allow both dragging and resizing the rectangle
+	map.pm.toggleGlobalDragMode();
+}
 
 /*MAIN FUNCTION*/
 function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
-	
+
 	//Seting angular unit
 	angUnit = $('input[name=ang_format]:checked').val();
 
@@ -316,7 +367,7 @@ function init() {
 				}
 			}
 		});
-		
+
 		//Opening dialog window
 		NewDialog.dialog( "open" );
 	});
@@ -329,7 +380,7 @@ function init() {
 		var dWidth = $(window).width() * .5;
 		if (dWidth > 600) dWidth = 800;
 		var dHeight = $(window).height() * .7;
-		
+
 		//Setting dialog content
 		var NewDialog = $( "#dialog" );
 		//Setting dialog window
@@ -346,41 +397,45 @@ function init() {
 				}
 			}
 		});
-		
+
 		//Opening dialog window
 		NewDialog.dialog( "open" );
 	});
-	
+
+	//Tooltip call
+	$(function() {
+		$(document).tooltip();
+	});
+
+	//Creates a map
+	map = new L.Map('map', {
+		attributionControl: false,
+		doubleClickZoom: false
+	}).setView([0,0], 0);
+
+	//Fit bounds button
+	$("#fit").button();
+	$("#fit").click(function() {
+		fitSquare(map)
+	});
+
 	//Reset button
 	$("#reset").button();
-	$("#reset").click(resetUI);
+	$("#reset").click(function() {
+		resetUI(map)
+	});
 
 	//Reset button
 	$("#view").button();
 	$("#view").click(function() {
 		//Updating the map view
 		map.setView([0.0, rectangle.getBounds().getCenter().lng], 0);
-	}); 
-
-	//Fit bounds button
-	$("#fit").button();
-	$("#fit").click(fitSquare);
-
-	//Tooltip call
-	$(function() {
-		$(document).tooltip();
-	}); 
-
-	//Creates a map
-	map = new L.Map('map', {
-		attributionControl : false
 	});
-	//Centers map and default zoom level
-	map.setView([0.00, 0.00], 0);
+
 	//Event handlers of the map
 	map.on("mousemove", showCoords);
 	map.on("mouseout", function(e) {
-		attrubutionControl.setPrefix(false);
+		attributionControl.setPrefix(false);
 	});
 
 	//Resizing preview map
@@ -389,16 +444,16 @@ function init() {
 	});
 
 	//Adding attribution control to the map
-	attrubutionControl = new L.Control.Attribution({
-		"prefix" : false
+	attributionControl = new L.Control.Attribution({
+		prefix: false
 	}).addTo(map);
 
 	//Loading base layer
-	loadBaseLayer();
+	loadBaseLayer(map);
 
 	//Add the rectangle box to the map
-	addRectangle();
-	
+	addRectangle(map);
+
 	//Display the output
 	makeOutput();
 }
