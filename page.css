@@ -71,6 +71,10 @@ body {
 	margin-left: 29px;
 }
 
+#ang_ops {
+	margin-top: -10px;
+}
+
 #buttons {
 	max-width: 200px;
 	margin-top: 20px;
