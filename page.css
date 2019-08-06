@@ -71,6 +71,28 @@ body {
 	margin-left: 29px;
 }
 
+.step-circle {
+	background: #ff7b1a;
+	color: #fff;
+	border-radius: 70%;
+	/*border: 0.75px solid #ff7b1a;
+	behavior: url(PIE.htc);	*/
+	padding: 1.5px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.ui-circle {
+	background: #6fa2f6;
+	color: #fff;
+	border-radius: 70%;
+	/*border: 0.75px solid #6fa2f6;
+	behavior: url(PIE.htc);	*/
+	padding: 1.5px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
 #ang_ops {
 	margin-top: -10px;
 }
@@ -191,7 +213,11 @@ canvas {
 }
 
 .ui-dialog {
-	z-index: 500
+	z-index: 1001
+}
+
+.leaflet-top, .leaflet-bottom {
+	z-index: 1000;
 }
 
 .marker-icon:hover {

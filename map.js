@@ -59,7 +59,7 @@ function outputLAT(lat, ui_bool) {
 function outputLON(lon, ui_bool) {
 	if  ( angUnit == "DMS" ){
 		if  ( ui_bool ){
-			return dd2dmsLAT(lon);
+			return dd2dmsLON(lon);
 		}
 
 		return dd2dmLON(lon);
@@ -99,10 +99,10 @@ function updateRectangle() {
 
 	//updating bounds for the rectangle on the map
 	var SouthWest = new L.LatLng(latmin, lonmin),
-    NorthEast = new L.LatLng(latmax, lonmax),
-    bounds = new L.LatLngBounds(SouthWest, NorthEast);
+	NorthEast = new L.LatLng(latmax, lonmax),
+	bounds = new L.LatLngBounds(SouthWest, NorthEast);
 
-  rectangle.pm.disable();
+	rectangle.pm.disable();
 	rectangle.setBounds(bounds);
 
 	//Display the output
