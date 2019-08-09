@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric
- * Date: June, 2019
+ * Date: August, 2019
  * 
  */
 

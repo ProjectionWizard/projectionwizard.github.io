@@ -3,7 +3,7 @@
 	Map Projection Selection Tool
 
 	Author: Bojan Savric
-	Date: June, 2019
+	Date: August, 2019
 -->
 
 <!DOCTYPE html>
@@ -78,23 +78,23 @@
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
-					<h3>About the Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. There are PROJ and WKT links next to each proposed projection that open a popup window with <a target="_top" href="https://proj.org/">PROJ</a> or <a target="_top" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. The <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not clip to the exact geographic extent specified by a user. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
-					<p>The tool is based on <a href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also considers a research published by <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed on the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
+					<h3>About this Tool</h3>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. There are a PROJ and WKT links next to each proposed projection that open a popup window with <a target="_top" href="https://proj.org/">PROJ</a> or <a target="_top" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not clip to the exact geographic extent specified by a user. The map preview is created using <a href="http://d3js.org/">D3</a>.</p>
+					<p>This tool is based on <a href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 
 
-					<h3>How to Use the Tool?</h3>
+					<h3>How to Use this Tool?</h3>
 					<p>Using <i>Projection Wizard</i> is easy and requires only two steps:</p>
 					<p><span class="step-circle">1</span> From the radio button list, select the distortion property of the map.</p>
 					<p><span class="step-circle">2</span> Select the geographic extent by using the input boxes on the left side of the map or by changing the rectangle on the map.</p>
 
-					<p>The anchors at the corners of the rectangle allow it to be resized. The rectangle can also be dragged around the map. Any change to the rectangle is reflected in the input boxes and via versa. The change of the rectangle or distortion property interactively updates the list of proposed map projections and map preview below the web map.</p>
+					<p>The anchors at the corners of the rectangle allow it to be resized. The rectangle can also be dragged around the map. Any change to the rectangle is reflected in the input boxes and vice versa. Changes to the rectangle or distortion property interactively update the list of proposed map projections and the map preview below the web map.</p>
 					<p><img src="figures/UI.png" border=0.5 alt="User Interface" style="float:center" width="100%"></p>
 
-					<p><span class="ui-circle">a</span> The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, marking approximately 80&#37; of the shown map.</p>
+					<p><span class="ui-circle">a</span> The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, selecting approximately 80&#37; of the visible map.</p>
 					<p><span class="ui-circle">b</span> The <i>Select Entire World</i> button sets the rectangle size to the full extent.</p>
 					<p><span class="ui-circle">c</span> The <i>Show Entire World</i> button zooms out to the full extent.</p>
-					<p><span class="ui-circle">d</span> The <i>Customize</i> button allows the user to select a system of geographic coordinates and angular units format.</p><br>
+					<p><span class="ui-circle">d</span> The <i>Customize</i> button allows the user to select a system of geographic coordinates and an angular unit format.</p><br>
 
 
 					<h3>Selection Criteria Derived from the Geographic Extent</h3>
@@ -145,39 +145,39 @@
 					<h3>Update History</h3>
 					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (Fall, 2019)</p>
 					<ul class="dialogtext">
-						<li>The extent of the geographic area determined with spherical surface equations.</li>
-						<li>The predominant extent computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
-						<li>Additional suggestions added to a list of appropriate map projections for conformal property at very large map scales.</li>
-						<li>The Equal Earth projection added to a list of equal-area world map projections.</li>
-						<li>Projections that excessively buldge outwards and interrupted projections removed from world lists.</li>
-						<li>PROJ string values rounded on seven decimal places and datum or ellipsoid information added.</li>
-						<li>WKT strings provided for each proposed projection.</li>
-						<li><i>Customize</i> button added. Users can now specify type of geographic coordinates for their output strings and toggle between decimal degrees and dms formats for angular units.</li>
-						<li>User interface, preview maps, third-party libraries, and help content updated.</li>
+						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
+						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
+						<li>Additional suggestions were added to the list of appropriate map projections for the conformal property at very large map scales.</li>
+						<li>The Equal Earth projection was added to the list of equal-area world map projections.</li>
+						<li>Projections that excessively bulge outwards and interrupted projections were removed from the world lists.</li>
+						<li>PROJ string values were rounded to seven decimal places and datum or ellipsoid information was added.</li>
+						<li>WKT strings are provided for each proposed projection.</li>
+						<li>A <i>Customize</i> button was added. Users can now specify the geographic coordinate type for their output strings and toggle between decimal degrees and DMS formats for angular units.</li>
+						<li>The user interface, preview maps, third-party libraries, and help content was updated.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
 					<ul class="dialogtext">
-						<li>PROJ code fixed for the Lambert azimuthal projection.</li>
-						<li>The help content updated.</li>
+						<li>PROJ code was fixed for the Lambert azimuthal projection.</li>
+						<li>The help content was updated.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1.1</b> (February, 2016)</p>
 					<ul class="dialogtext">
-						<li>The help content updated.</li>
-						<li>The list of publications and related articles about the Projection Wizard added.</li>
+						<li>The help content was updated.</li>
+						<li>A list of publications and related articles about Projection Wizard was added.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.1</b> (December, 2015)</p>
 					<ul class="dialogtext">
-						<li>The Patterson projection added to a list of compromise world map projections.</li>
-						<li>The help content updated.</li>
+						<li>The Patterson projection was added to the list of compromise world map projections.</li>
+						<li>The help content was updated.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.0</b> (October, 2014)</p>
 					<ul class="dialogtext">
-						<li>Map preview added to a list of appropriate map projections.</li>
-						<li>Selection criteria for a hemisphere map updated on one sixth of the full geographic extent.</li>
+						<li>Map preview added to the list of appropriate map projections.</li>
+						<li>Selection criteria for a hemisphere map updated on one-sixth of the full geographic extent.</li>
 						<li>Updated criteria for the latitude of the mapped area of a landscape-oriented map. The map has a center at pole when the central latitude is more than 70&#186; N or 70&#186; S, or more than 67.5&#186; N or 67.5&#186; S for showing between one sixth and one eighth of the full geographic extent.</li>
 					</ul>
 
@@ -186,7 +186,7 @@
 						<li>Original web application</li>
 					</ul><br><br>
 
-					<h3>Publications</h3>
+					<h3>Publications and Related Articles</h3>
 					<p>Jenny, B., Šavrič, B., Arnold, N. D., Marston, B. E. and Preppernau, C. A. (2017). A guide to selecting map projections for world and hemisphere maps. In: M. Lapaine and E. L. Usery (eds), <a href="https://link.springer.com/book/10.1007%2F978-3-319-51835-0">Choosing a Map Projection</a>, Lecture Notes in Geoinformation and Cartography (pp. 213–228). Berlin, Heidelberg, New York: Springer. Doi: <a href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">10.1007/978-3-319-51835-0_9</a></p>
 					<p>Šavrič, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. </br>The Cartographic Journal, 53–2, p. 177–185. Doi: <a href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a></p>
 					<p>Šavrič, B. (2016). Projection Wizard: A free web application for selecting a map projection. </br>ISPRS SC Newsletter, 9–4. p. 5. Available online: <a href="http://www.isprs-sc.org/material/isprs_sc_vol9_no4.pdf#page=7">http://www.isprs-sc.org/material/isprs_sc_vol9_no4.pdf</a></p>
