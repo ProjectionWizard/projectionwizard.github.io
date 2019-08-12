@@ -37,7 +37,7 @@ function readLAT(latS) {
 
 function readLON(lonS) {
 	if  ( angUnit == "DMS" ){
-		return dms2ddLAT(lonS);
+		return dms2ddLON(lonS);
 	}
 
 	return parseFloat(lonS);

@@ -44,7 +44,7 @@ function dd2dmsLAT(phi) {
 		letter = "N";
 
 	//returning the final string
-	return ("0" + dd2dms(phi)).slice(-13) + letter;
+	return dd2dms(phi) + letter;
 }
 
 /*Coverter for latitude*/
@@ -59,7 +59,7 @@ function dd2dmLAT(phi) {
 		letter = "N";
 
 	//returning the final string
-	return ("0" + dd2dms(phi)).slice(-13,-5) + letter;
+	return dd2dms(phi) + letter;
 }
 
 /*Coverter for longitude*/
@@ -72,7 +72,7 @@ function dd2dmLON(lam) {
 	} else
 		letter = "E";
 
-	return ("00" + dd2dms(lam)).slice(-14,-5) + letter;
+	return dd2dms(lam) + letter;
 }
 
 
@@ -86,7 +86,7 @@ function dd2dmsLON(lam) {
 	} else
 		letter = "E";
 
-	return ("00" + dd2dms(lam)).slice(-14) + letter;
+	return dd2dms(lam) + letter;
 }
 
 
