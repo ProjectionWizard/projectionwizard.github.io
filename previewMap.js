@@ -12,9 +12,11 @@
 // TODO: use 110m geojson when zoomed out (as is already done) and during potentially costly drag events,
 // but then use 50m geojson when zoomed in (as it already done) and after dragend events
 var world110m, world50m;
+
 d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json").then(function(geoJsonData) {
   world110m = geoJsonData;
 });
+
 d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then(function(geoJsonData) {
   world50m = geoJsonData;
 });
