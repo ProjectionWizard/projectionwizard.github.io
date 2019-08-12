@@ -258,6 +258,12 @@ function addRectangle (map) {
 		toggleAnchorVisibility();
 	})
 
+	// IN PROGRESS: testing redrawing the output canvas during rectangle drag
+	rectangle.on("pm:drag", function(e) {
+		// TODO: also call updateMapArea() and setInputBoxes()
+		makeOutput();
+	});
+
 	rectangle.on("pm:markerdrag", function(e) {
 		const liveCorner = e.markerEvent.latlng
 		const allCorners = e.sourceTarget.getLatLngs();
@@ -288,6 +294,9 @@ function addRectangle (map) {
 		bounds = new L.LatLngBounds(SouthWest, NorthEast);
 		rectangle.setBounds(bounds);
 		setInputBoxes();
+
+		// IN PROGRESS: testing redrawing the output canvas during rectangle vertex marker drag
+		makeOutput();
 	});
 
 	//Event handler: Double click the rectangle

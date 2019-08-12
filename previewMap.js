@@ -7,13 +7,29 @@
  * 
  */
 
+// TODO: temporarily moved fetching these resources here so they only happen once,
+// but eventually they must happen elsewhere to ensure they are loaded before attempting to "addCanvasMap()"
+// TODO: use 110m geojson when zoomed out (as is already done) and during potentially costly drag events,
+// but then use 50m geojson when zoomed in (as it already done) and after dragend events
+var world110m, world50m;
+d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json").then(function(geoJsonData) {
+  world110m = geoJsonData;
+});
+d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then(function(geoJsonData) {
+  world50m = geoJsonData;
+});
+
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
 function addWorldMapPreview(center, projection) {
-	var previewMap = $("#previewMap").empty();
+  // var previewMap = $('#previewMap');
 
-	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection + "<br><br>");
+  //Creating canvas HTML element
+  // previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
+  
+  addCanvasMap(0, center.lng, projection, 1);
+  
+  // TODO: bring back displaying the name of the projection below the <canvas>
+  // previewMap.append("<br>" + projection + "<br><br>");
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -21,14 +37,17 @@ function addWorldMapPreview(center, projection) {
 
 /***MAIN MAP DRAW FUNCTION***/
 function addMapPreview(center) {
-	var previewMap = $("#previewMap").empty();
+  // var previewMap = $("#previewMap");
 
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
+  // previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
 	
-	if (previewMapProjection == 'ConicEquidistant') {
-		previewMap.append("<br>Equidistant conic<br><br>");
-	}
+  addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0);
+  
+  // TODO: bring back displaying the name of the projection below the <canvas>
+  // if (previewMapProjection == 'ConicEquidistant') {
+  //   previewMap.append("<br>Equidistant conic<br><br>");
+  // }
 	
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -213,19 +232,22 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 	}
 
 	//Setting data layer
-	var jsonData;
+  var jsonData, data;
 	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
 	
 	if (scale < 6)
-		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json";
+    // jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json";
+    data = world110m;
 	else
-		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json";
+    // jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json";
+    data = world50m;
 
 	//Drawing map elements
 	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
-	var canvas = d3.select("#previewMap").append("canvas")
+  var canvas = d3.select("#previewMap canvas")
+    // .append("canvas")
 		.attr("width", width)
 		.attr("height", height);
 
@@ -233,7 +255,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 	var path = d3.geoPath(projection, context);
 
-	d3.json(jsonData).then( function(data) {
+  // d3.json(jsonData).then( function(data) {
 		land = topojson.feature(data, data.objects.countries); 
 		grid = graticule();
 		context.clearRect(0, 0, width, height);
@@ -260,5 +282,6 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		context.globalAlpha = 0.2;
 		context.strokeStyle = "#555";
 		context.stroke();
-	});
+		context.globalAlpha = 1;
+  // });
 }
