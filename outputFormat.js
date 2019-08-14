@@ -169,7 +169,7 @@ function printWorld(property, center) {
 		outputTEXT.append("<p class='outputText'>Oblique azimuthal equidistant (centered on arbitrary point)" + 
 			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</p>");
 			
-		outputTEXT.append("<p class='outputText'>Two-point equidistant (relative to two arbitrary points" + 
+		outputTEXT.append("<p class='outputText'>Two-point equidistant (relative to two arbitrary points)" + 
 			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</p>");
 			
 		$("#previewMap").empty();
