@@ -261,7 +261,7 @@ function addRectangle (map) {
 	// IN PROGRESS: testing redrawing the output canvas during rectangle drag
 	rectangle.on("pm:drag", function(e) {
 		// TODO: also call updateMapArea() and setInputBoxes()
-		makeOutput();
+		makeOutput(true);
 	});
 
 	rectangle.on("pm:markerdrag", function(e) {
@@ -296,7 +296,7 @@ function addRectangle (map) {
 		setInputBoxes();
 
 		// IN PROGRESS: testing redrawing the output canvas during rectangle vertex marker drag
-		makeOutput();
+		makeOutput(true);
 	});
 
 	//Event handler: Double click the rectangle

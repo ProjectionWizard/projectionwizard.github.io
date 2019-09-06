@@ -7,28 +7,16 @@
  * 
  */
 
-// TODO: temporarily moved fetching these resources here so they only happen once,
-// but eventually they must happen elsewhere to ensure they are loaded before attempting to "addCanvasMap()"
-// TODO: use 110m geojson when zoomed out (as is already done) and during potentially costly drag events,
-// but then use 50m geojson when zoomed in (as it already done) and after dragend events
 var world110m, world50m;
 
-d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json").then(function(geoJsonData) {
-  world110m = geoJsonData;
-});
-
-d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json").then(function(geoJsonData) {
-  world50m = geoJsonData;
-});
-
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
-function addWorldMapPreview(center, projection) {
+function addWorldMapPreview(center, projection, currentlyDragging) {
   // var previewMap = $('#previewMap');
 
   //Creating canvas HTML element
   // previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
   
-  addCanvasMap(0, center.lng, projection, 1);
+  addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
   
   // TODO: bring back displaying the name of the projection below the <canvas>
   // previewMap.append("<br>" + projection + "<br><br>");
@@ -38,13 +26,13 @@ function addWorldMapPreview(center, projection) {
 }
 
 /***MAIN MAP DRAW FUNCTION***/
-function addMapPreview(center) {
+function addMapPreview(center, currentlyDragging) {
   // var previewMap = $("#previewMap");
 
 	//Creating canvas HTML element
   // previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
 	
-  addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0);
+  addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
   
   // TODO: bring back displaying the name of the projection below the <canvas>
   // if (previewMapProjection == 'ConicEquidistant') {
@@ -161,7 +149,28 @@ function pickProjection(lat0, lon0, projectionString) {
 }
 
 /* Map drawing function (D3)*/
-function addCanvasMap(lat0, lon0, projectionString, world) {
+function addCanvasMap(lat0, lon0, projectionString, world, currentlyDragging) {
+	// first and only once, attempt to fetch both of the needed world geojson files
+	// otherwise, continue with the geojson files that were already fetched
+	if (!world110m && !world50m) {
+		Promise
+			.all([
+				d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json"),
+				d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json")
+			])
+			.then(function(allGeoJsonData) {
+				world110m = allGeoJsonData[0];
+				world50m = allGeoJsonData[1];
+
+				continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging);
+			});
+	} else {
+		continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging);
+	}
+
+}
+
+function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging) {
 	//Definding D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
 	if (projection == null) {
@@ -234,22 +243,22 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 	}
 
 	//Setting data layer
-  var jsonData, data;
+  var data;
 	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
 	
-	if (scale < 6)
-    // jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json";
+	if (currentlyDragging || (scale < 6)) {
     data = world110m;
-	else
-    // jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json";
+	} else {
     data = world50m;
+	}
 
 	//Drawing map elements
 	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
+	// TODO: investigate why d3 canvas width and height and other map projection properties during dragging events are different
+	// than the final d3 canvas map when the user is done interacting with the leaflet map
   var canvas = d3.select("#previewMap canvas")
-    // .append("canvas")
 		.attr("width", width)
 		.attr("height", height);
 

@@ -8,7 +8,9 @@
  */
 
 /***MAIN OUTPUT FUNCTION***/
-function makeOutput() {
+function makeOutput(currentlyDragging) {
+	currentlyDragging = currentlyDragging || false;
+
 	//computing a scale of the map
 	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
 	//reading the passed distortion
@@ -37,7 +39,7 @@ function makeOutput() {
 		}
 
 		//World (small-scale) map
-		printWorld(distortion, center);
+		printWorld(distortion, center, currentlyDragging);
 
 	} else if (scale < 6) {
 		//locking Conformal map
@@ -60,7 +62,7 @@ function makeOutput() {
 
 		//Hemisphere (medium-scale) map
 		printHemisphere(distortion, center, scale);
-		addMapPreview(center);
+		addMapPreview(center, currentlyDragging);
 	} else {
 		//locking compromise map
 		var radioCompromise = document.getElementById("Compromise");
@@ -80,7 +82,7 @@ function makeOutput() {
 
 		//Continent or a smaller area (large-scale) map
 		printSmallerArea(distortion, center, scale);
-		addMapPreview(center);
+		addMapPreview(center, currentlyDragging);
 	}
 }
 
@@ -132,7 +134,7 @@ var listWorld = [
 }];
 
 /*Main small-scale output function*/
-function printWorld(property, center) {
+function printWorld(property, center, currentlyDragging) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
@@ -142,7 +144,7 @@ function printWorld(property, center) {
 	
 	//formating the output text
 	if (property == 'Equalarea') {
-		addWorldMapPreview(center, "Equal Earth");
+		addWorldMapPreview(center, "Equal Earth", currentlyDragging);
 		
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as points</b></p>");
 		//loop through global data
@@ -177,7 +179,7 @@ function printWorld(property, center) {
 	else {
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
 		
-		addWorldMapPreview(center, "Natural Earth");
+		addWorldMapPreview(center, "Natural Earth", currentlyDragging);
 		//loop through global data
 		for (var i = 6; i < 9; i++) {
 			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
