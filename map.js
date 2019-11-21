@@ -260,6 +260,18 @@ function addRectangle (map) {
 
 	// IN PROGRESS: testing redrawing the output canvas during rectangle drag
 	rectangle.on("pm:drag", function(e) {
+		const rectangle = e.sourceTarget;
+		// reading changed bounds
+		var newBounds = rectangle.getBounds();
+		var SW = newBounds.getSouthWest();
+		var NE = newBounds.getNorthEast();
+
+		// updating the bounds
+		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
+
+		// update the rest of the UI
+		setInputBoxes();
+		
 		// TODO: also call updateMapArea() and setInputBoxes()
 		makeOutput(true);
 	});
