@@ -284,7 +284,7 @@ function addRectangle (map) {
 
 		// update Rectangle bounds *without* toggling edit mode
 		var SouthWest = new L.LatLng(latmin, lonmin),
-    NorthEast = new L.LatLng(latmax, lonmax),
+        NorthEast = new L.LatLng(latmax, lonmax),
 		bounds = new L.LatLngBounds(SouthWest, NorthEast);
 		rectangle.setBounds(bounds);
 		setInputBoxes();

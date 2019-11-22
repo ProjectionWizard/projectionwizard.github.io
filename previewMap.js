@@ -19,6 +19,14 @@ function addWorldMapPreview(center, projection) {
 	$("#result").addClass("results");
 }
 
+/***MAP DRAW FUNCTION FOR onmouseover***/
+function updateWorldMap(projection) {
+	//getting a center of the map
+	var center = rectangle.getBounds().getCenter();
+	
+	addWorldMapPreview(center, projection);
+}
+
 /***MAIN MAP DRAW FUNCTION***/
 function addMapPreview(center) {
 	var previewMap = $("#previewMap").empty();
@@ -123,8 +131,40 @@ function pickProjection(lat0, lon0, projectionString) {
 			.parallels([latmin + interval, latmax - interval])
 			.precision(.1);
 	}
+	else if (projectionString == 'Mollweide') {
+		return d3.geoMollweide()
+			.rotate([-lon0, 0])
+			.precision(.1);
+
+	}
+	else if (projectionString == 'Hammer (or Hammer-Aitoff)') {
+		return d3.geoHammer()
+			.rotate([-lon0, 0])
+			.precision(.1);
+
+	}
 	else if (projectionString == 'Equal Earth') {
 		return d3.geoEqualEarth()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Eckert IV') {
+		return d3.geoEckert4()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Wagner IV (or Putnins P2`)') {
+		return d3.geoWagner4()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Wagner VII (or Hammer-Wagner)') {
+		return d3.geoWagner7()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Robinson') {
+		return d3.geoRobinson()
 			.rotate([-lon0, 0])
 			.precision(.1);
 	}
@@ -132,7 +172,28 @@ function pickProjection(lat0, lon0, projectionString) {
 		return d3.geoNaturalEarth()
 			.rotate([-lon0, 0])
 			.precision(.1);
-	} 
+	}
+	else if (projectionString == 'Winkel Tripel') {
+		return d3.geoWinkel3()
+			.rotate([-lon0, 0])
+			.precision(.1);
+
+	}
+	else if (projectionString == 'Patterson') {
+		return d3.geoPatterson()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Plate Carrée') {
+		return d3.geoEquirectangular()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Miller cylindrical I') {
+		return d3.geoMiller()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
 	else {
 		$("#previewMap").append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
 		return;
@@ -141,6 +202,7 @@ function pickProjection(lat0, lon0, projectionString) {
 
 /* Map drawing function (D3)*/
 function addCanvasMap(lat0, lon0, projectionString, world) {
+	
 	//Definding D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
 	if (projection == null) {
@@ -158,8 +220,8 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		projection.rotate([0, 0]);
 		var coord1 = projection([180, 0]), 
 			coord2 = projection([-180, 0]), 
-			coord3 = projection([0, 90]), 
-			coord4 = projection([0, -90]);
+			coord3 = projection([180, 90]), 
+			coord4 = projection([-180, -90]);
 
 		//Definding original width and height of the extent
 		width = Math.abs(coord1[0] - coord2[0]);
@@ -169,7 +231,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		scaleFactor = 1 / width;
 		
 		//Final scaling factor and translation parameters
-		var X = Math.min(max_width / width, max_width / height)/1.5;
+		var X = Math.min(max_width / width, max_width / height);
 		width *= X;
 		height *= X;
 		scaleFactor *= width;

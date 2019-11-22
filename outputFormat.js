@@ -98,13 +98,13 @@ var listWorld = [
 },
 //Equal-area world map projections with poles represented as lines
 {
-	projection : "Eckert IV",
-	PROJ4 : "eck4"
-}, {
 	projection : "Equal Earth",
 	PROJ4 : "eqearth"
 }, {
-	projection : "Wagner IV (or Putnins P2')",
+	projection : "Eckert IV",
+	PROJ4 : "eck4"
+}, {
+	projection : "Wagner IV (or Putnins P2&#96;)",
 	PROJ4 : "wag4"
 }, {
 	projection : "Wagner VII (or Hammer-Wagner)",
@@ -147,15 +147,13 @@ function printWorld(property, center) {
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as points</b></p>");
 		//loop through global data
 		for (var i = 0; i < 2; i++) {
-			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as lines</b></p>");
 		//loop through global data
 		for (var i = 2; i < 6; i++) {
-			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
@@ -180,14 +178,12 @@ function printWorld(property, center) {
 		addWorldMapPreview(center, "Natural Earth");
 		//loop through global data
 		for (var i = 6; i < 9; i++) {
-			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		outputTEXT.append("<p><b>Compromise rectangular world map projections</b></p>");
 		//loop through global data
 		for (var i = 9; i < 12; i++) {
-			outputTEXT.append("<p class='outputText'>" + listWorld[i].projection + 
-				stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
