@@ -264,7 +264,7 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 		scaleFactor = 1 / width;
 		
 		//Final scaling factor and translation parameters
-		var X = Math.min(max_width / width, max_width / height);
+		var X = Math.min(max_width / width, 0.66 * max_width / height);
 		width *= X;
 		height *= X;
 		scaleFactor *= width;
