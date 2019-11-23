@@ -456,4 +456,10 @@ function init() {
 
 	//Display the output
 	makeOutput();
+	
+	//PROJ dialog
+	$( "#PROJ" ).dialog({ autoOpen: false });
+	
+	//WKT dialog
+	$( "#WKT" ).dialog({ autoOpen: false });
 }

@@ -616,15 +616,15 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	switch (datum) {
 		case "WGS84":
 			datum_str = (" +datum=" + datum);
-			gcs_str = 'GEOGCS[\\\"GCS_WGS_1984\\\",DATUM[\\\"D_WGS_1984\\\",SPHEROID[\\\"WGS_1984\\\",6378137.0,298.257223563]],PRIMEM[\\\"Greenwich\\\",0.0],UNIT[\\\"Degree\\\",0.0174532925199433]],';
+			gcs_str = '</br>&nbsp;GEOGCS[\\\"GCS_WGS_1984\\\",</br>&nbsp;&nbsp;DATUM[\\\"D_WGS_1984\\\",</br>&nbsp;&nbsp;&nbsp;SPHEROID[\\\"WGS_1984\\\",6378137.0,298.257223563]],</br>&nbsp;&nbsp;PRIMEM[\\\"Greenwich\\\",0.0],</br>&nbsp;&nbsp;UNIT[\\\"Degree\\\",0.0174532925199433]],';
 			break;
 		case "ETRS89":
 			datum_str = " +ellps=GRS80";
-			gcs_str ='GEOGCS[\\\"GCS_ETRS_1989\\\",DATUM[\\\"D_ETRS_1989\\\",SPHEROID[\\\"GRS_1980\\\",6378137.0,298.257222101]],PRIMEM[\\\"Greenwich\\\",0.0],UNIT[\\\"Degree\\\",0.0174532925199433]],';
+			gcs_str ='</br>&nbsp;GEOGCS[\\\"GCS_ETRS_1989\\\",</br>&nbsp;&nbsp;DATUM[\\\"D_ETRS_1989\\\",</br>&nbsp;&nbsp;&nbsp;SPHEROID[\\\"GRS_1980\\\",6378137.0,298.257222101]],</br>&nbsp;&nbsp;PRIMEM[\\\"Greenwich\\\",0.0],</br>&nbsp;&nbsp;UNIT[\\\"Degree\\\",0.0174532925199433]],';
 			break;
 		case "NAD83":
 			datum_str = (" +datum=" + datum);
-			gcs_str ='GEOGCS[\\\"GCS_North_American_1983\\\",DATUM[\\\"D_North_American_1983\\\",SPHEROID[\\\"GRS_1980\\\",6378137.0,298.257222101]],PRIMEM[\\\"Greenwich\\\",0.0],UNIT[\\\"Degree\\\",0.0174532925199433]],';
+			gcs_str ='</br>&nbsp;GEOGCS[\\\"GCS_North_American_1983\\\",</br>&nbsp;&nbsp;DATUM[\\\"D_North_American_1983\\\",</br>&nbsp;&nbsp;&nbsp;SPHEROID[\\\"GRS_1980\\\",6378137.0,298.257222101]],</br>&nbsp;&nbsp;PRIMEM[\\\"Greenwich\\\",0.0],</br>&nbsp;&nbsp;UNIT[\\\"Degree\\\",0.0174532925199433]],';
 			break;
 
 		// Default
@@ -642,99 +642,99 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	switch (prj) {
 		// Azimuthal equidistant
 		case "aeqd":
-			WKTstr += 'Azimuthal_Equidistant\\\",' + gcs_str + 'PROJECTION[\\\"Azimuthal_Equidistant\\\"],';
+			WKTstr += 'Azimuthal_Equidistant\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Azimuthal_Equidistant\\\"],';
 			break;
 		// Lambert azimuthal
 		case "laea":
-			WKTstr += 'Lambert_Azimuthal\\\",' + gcs_str + 'PROJECTION[\\\"Lambert_Azimuthal_Equal_Area\\\"],';
+			WKTstr += 'Lambert_Azimuthal\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Lambert_Azimuthal_Equal_Area\\\"],';
 			break;
 		// Stereographic
 		case "stere":
-			WKTstr += 'Stereographic\\\",' + gcs_str + 'PROJECTION[\\\"Stereographic\\\"],';
+			WKTstr += 'Stereographic\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Stereographic\\\"],';
 			break;
 		// Albers
 		case "aea":
-			WKTstr += 'Albers\\\",' + gcs_str + 'PROJECTION[\\\"Albers\\\"],';
+			WKTstr += 'Albers\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Albers\\\"],';
 			break;
 		// Equidistant conic
 		case "eqdc":
-			WKTstr += 'Equidistant_Conic\\\",' + gcs_str + 'PROJECTION[\\\"Equidistant_Conic\\\"],';
+			WKTstr += 'Equidistant_Conic\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Equidistant_Conic\\\"],';
 			break;
 		// Lambert conformal conic
 		case "lcc":
-			WKTstr += 'Lambert_Conformal_Conic\\\",' + gcs_str + 'PROJECTION[\\\"Lambert_Conformal_Conic\\\"],';
+			WKTstr += 'Lambert_Conformal_Conic\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Lambert_Conformal_Conic\\\"],';
 			break;
 		// Cylindrical equal-area
 		case "cea":
-			WKTstr += 'Cylindrical_Equal_Area\\\",' + gcs_str + 'PROJECTION[\\\"Cylindrical_Equal_Area\\\"],';
+			WKTstr += 'Cylindrical_Equal_Area\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Cylindrical_Equal_Area\\\"],';
 			break;
 		// Mercator
 		case "merc":
-			WKTstr += 'Mercator\\\",' + gcs_str + 'PROJECTION[\\\"Mercator\\\"],';
+			WKTstr += 'Mercator\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Mercator\\\"],';
 			break;
 		// Equidistant cylindrical
 		case "eqc":
-			WKTstr += 'Equidistant_Cylindrical\\\",' + gcs_str + 'PROJECTION[\\\"Equidistant_Cylindrical\\\"],';
+			WKTstr += 'Equidistant_Cylindrical\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Equidistant_Cylindrical\\\"],';
 			break;
 		// Transverse cylindrical equal-area
 		case "tcea":
-			WKTstr += 'Transverse_Cylindrical_Equal_Area\\\",' + gcs_str + 'PROJECTION[\\\"Transverse_Cylindrical_Equal_Area\\\"],';
+			WKTstr += 'Transverse_Cylindrical_Equal_Area\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Transverse_Cylindrical_Equal_Area\\\"],';
 			break;
 		// Transverse Mercator
 		case "tmerc":
-			WKTstr += 'Transverse_Mercator\\\",' + gcs_str + 'PROJECTION[\\\"Transverse_Mercator\\\"],';
+			WKTstr += 'Transverse_Mercator\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Transverse_Mercator\\\"],';
 			break;
 		// Mollweide
 		case "moll":
-			WKTstr += 'Mollweide\\\",' + gcs_str + 'PROJECTION[\\\"Mollweide\\\"],';
+			WKTstr += 'Mollweide\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Mollweide\\\"],';
 			break;
 		// Hammer
 		case "hammer":
-			WKTstr += 'Hammer_Aitoff\\\",' + gcs_str + 'PROJECTION[\\\"Hammer_Aitoff\\\"],';
+			WKTstr += 'Hammer_Aitoff\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Hammer_Aitoff\\\"],';
 			break;
 		// Eckert IV
 		case "eck4":
-			WKTstr += 'Eckert_IV\\\",' + gcs_str + 'PROJECTION[\\\"Eckert_IV\\\"],';
+			WKTstr += 'Eckert_IV\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Eckert_IV\\\"],';
 			break;
 		// Equal Earth
 		case "eqearth":
-			WKTstr += 'Equal_Earth\\\",' + gcs_str + 'PROJECTION[\\\"Equal_Earth\\\"],';
+			WKTstr += 'Equal_Earth\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Equal_Earth\\\"],';
 			break;
 		// Wagner IV
 		case "wag4":
-			WKTstr += 'Wagner_IV\\\",' + gcs_str + 'PROJECTION[\\\"Wagner_IV\\\"],';
+			WKTstr += 'Wagner_IV\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Wagner_IV\\\"],';
 			break;
 		// Wagner VII
 		case "wag7":
-			WKTstr += 'Wagner_VII\\\",' + gcs_str + 'PROJECTION[\\\"Wagner_VII\\\"],';
+			WKTstr += 'Wagner_VII\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Wagner_VII\\\"],';
 			break;
 		// Robinson
 		case "robin":
-			WKTstr += 'Robinson\\\",' + gcs_str + 'PROJECTION[\\\"Robinson\\\"],';
+			WKTstr += 'Robinson\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Robinson\\\"],';
 			break;
 		// Natural Earth
 		case "natearth":
-			WKTstr += 'Natural_Earth\\\",' + gcs_str + 'PROJECTION[\\\"Natural_Earth\\\"],';
+			WKTstr += 'Natural_Earth\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Natural_Earth\\\"],';
 			break;
 		// Winkel Tripel
 		case "wintri":
-			WKTstr += 'Winkel_Tripel\\\",' + gcs_str + 'PROJECTION[\\\"Winkel_Tripel\\\"],';
+			WKTstr += 'Winkel_Tripel\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Winkel_Tripel\\\"],';
 			break;
 		// Patterson
 		case "patterson":
-			WKTstr += 'Patterson\\\",' + gcs_str + 'PROJECTION[\\\"Patterson\\\"],';
+			WKTstr += 'Patterson\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Patterson\\\"],';
 			break;
 		// Plate Carrée
 		case "latlong":
-			WKTstr += 'Plate_Carree\\\",' + gcs_str + 'PROJECTION[\\\"Plate_Carree\\\"],';
+			WKTstr += 'Plate_Carree\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Plate_Carree\\\"],';
 			break;
 		// Miller cylindrical I
 		case "mill":
-			WKTstr += 'Miller_Cylindrical\\\",' + gcs_str + 'PROJECTION[\\\"Miller_Cylindrical\\\"],';
+			WKTstr += 'Miller_Cylindrical\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Miller_Cylindrical\\\"],';
 			break;
 		// Two-point azimuthal equidistant
 		case "tpeqd":
-			WKTstr += 'Two_Point_Equidistant\\\",' + gcs_str + 'PROJECTION[\\\"Two_Point_Equidistant\\\"],';
+			WKTstr += 'Two_Point_Equidistant\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Two_Point_Equidistant\\\"],';
 			break;
 
 		// Default
@@ -748,10 +748,10 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 	// False Easting and False Northing
 	if ( !isNaN(x0) ) {
 		PROJstr += (" +x_0=" + x0);
-		WKTstr  += 'PARAMETER[\\\"False_Easting\\\",' + x0 + '],PARAMETER[\\\"False_Northing\\\",0.0],'
+		WKTstr  += '</br>&nbsp;PARAMETER[\\\"False_Easting\\\",' + x0 + '],</br>&nbsp;PARAMETER[\\\"False_Northing\\\",0.0],'
 	}
 	else {
-		WKTstr  += 'PARAMETER[\\\"False_Easting\\\",0.0],PARAMETER[\\\"False_Northing\\\",0.0],'
+		WKTstr  += '</br>&nbsp;PARAMETER[\\\"False_Easting\\\",0.0],</br>&nbsp;PARAMETER[\\\"False_Northing\\\",0.0],'
 	}
 
 	//Format output values
@@ -767,18 +767,18 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		// Lambert azimuthal
 		case "laea":
 			PROJstr += (" +lon_0=" + lon0 + " +lat_0=" + lat0);
-			WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
 			break;
 
 		// Stereographic
 		case "stere":
 			if ( isNaN(k0) ) {
 				PROJstr += (" +lon_0=" + lon0 + " +lat_0=" + lat0);
-				WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Scale_Factor\\\",1.0],PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
+				WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Scale_Factor\\\",1.0],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
 			}
 			else {
 				PROJstr += (" +lon_0=" + lon0 + " +lat_0=" + lat0 + " +k_0=" + k0);
-				WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Scale_Factor\\\",' + k0 +  '],PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
+				WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Scale_Factor\\\",' + k0 +  '],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
 			}
 			break;
 
@@ -789,7 +789,7 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		// Lambert conformal conic
 		case "lcc":
 			PROJstr += (" +lon_0=" + lon0 + " +lat_1=" + lat1 + " +lat_2=" + lat2 + " +lat_0=" + lat0);
-			WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Standard_Parallel_1\\\",' + lat1 + '],PARAMETER[\\\"Standard_Parallel_2\\\",' + lat2 + '],PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Standard_Parallel_1\\\",' + lat1 + '],</br>&nbsp;PARAMETER[\\\"Standard_Parallel_2\\\",' + lat2 + '],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",' + lat0 + '],');
 			break;
 
 		// Cylindrical equal-area
@@ -799,7 +799,7 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		// Mercator
 		case "merc":
 			PROJstr += (" +lon_0=" + lon0 + " +lat_ts=" + lat1);
-			WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Standard_Parallel_1\\\",' + lat1 + '],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Standard_Parallel_1\\\",' + lat1 + '],');
 			break;
 
 		// Transverse cylindrical equal-area
@@ -808,11 +808,11 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		case "tmerc":
 			if ( isNaN(k0) ) {
 				PROJstr += (" +lon_0=" + lon0);
-				WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Scale_Factor\\\",1.0],PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],');
+				WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Scale_Factor\\\",1.0],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],');
 			}
 			else {
 				PROJstr += (" +lon_0=" + lon0 + " +k_0=" + k0);
-				WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Scale_Factor\\\",' + k0 +  '],PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],');
+				WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Scale_Factor\\\",' + k0 +  '],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],');
 			}
 			break;
 
@@ -839,19 +839,19 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		// Miller cylindrical I
 		case "mill":
 			PROJstr += (" +lon_0=" + lon0);
-			WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],');
 			break;
 
 		// Winkel Tripel
 		case "wintri":
 			PROJstr += (" +lon_0=" + lon0);
-			WKTstr  += ('PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],PARAMETER[\\\"Standard_Parallel_1\\\",50.467],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Standard_Parallel_1\\\",50.467],');
 			break;
 
 		// Two-point azimuthal equidistant
 		case "tpeqd":
 			PROJstr += (" +lat_1=" + lat0 + " +lon_1=" + lat1 + " +lat_2=" + lat2 + " +lon_2=" + lon0);
-			WKTstr  += ('PARAMETER[\\\"Latitude_Of_1st_Point\\\",' + lat0 + '],PARAMETER[\\\"Latitude_Of_2nd_Point\\\",' + lat2 + '],PARAMETER[\\\"Longitude_Of_1st_Point\\\",' + lat1 + '],PARAMETER[\\\"Longitude_Of_2nd_Point\\\",' + lon0 + '],');
+			WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Latitude_Of_1st_Point\\\",' + lat0 + '],</br>&nbsp;PARAMETER[\\\"Latitude_Of_2nd_Point\\\",' + lat2 + '],</br>&nbsp;PARAMETER[\\\"Longitude_Of_1st_Point\\\",' + lat1 + '],</br>&nbsp;PARAMETER[\\\"Longitude_Of_2nd_Point\\\",' + lon0 + '],');
 			break;
 
 		// Default
@@ -861,15 +861,76 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 
 	// Closing the string
 	PROJstr += ( datum_str + " +no_defs");
-	WKTstr  += ('UNIT[\\\"Meter\\\",1.0]]');
+	WKTstr  += ('</br>&nbsp;UNIT[\\\"Meter\\\",1.0]]');
 
-	return " <a href='#' onclick=\'copyProjString(\"" + PROJstr + "\")\' class=\'linkPROJ4\'>PROJ</a>" + 
-	       " <a href='#' onclick=\'copyProjString(\"" + WKTstr  + "\")\' class=\'linkPROJ4\'>WKT</a>";
+	return " <a href='#' onclick=\'copyPROJstring(\"" + PROJstr + "\")\' class=\'linkPROJ4\'>PROJ</a>" + 
+	       " <a href='#' onclick=\'copyWKTstring(\"" + WKTstr  + "\")\' class=\'linkPROJ4\'>WKT</a>";
 }
 
-/* Callback function for strings links */
-function copyProjString(text) {
-	window.prompt("Copy PROJ string to clipboard (Ctrl + C or ⌘ + C):", text);
+/* Callback function for PROJ strings */
+function copyPROJstring(text) {
+	//Defining window size
+	var dWidth = $(window).width() * 0.5;
+	var dHeight = $(window).height() * 0.5;
+	
+	dWidth = Math.min(dWidth, dHeight);
+	if (dWidth > 375) dWidth = 375;
+	
+	//Setting PROJ dialog content
+	var ProjDialog = $( "#PROJ" ).empty();
+
+	ProjDialog.append("<p><b>Copy PROJ string to clipboard (Ctrl + C or ⌘ + C):</b></p>");
+	ProjDialog.append("<p>" + text + "</p>");
+	
+	//Setting dialog window
+	ProjDialog.dialog({
+		modal : true,
+		show : 'puff',
+		hide : 'explode',
+		width : dWidth,
+		height : dWidth,
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	//Opening dialog window
+	ProjDialog.dialog( "open" );
+}
+
+/* Callback function for WKT strings */
+function copyWKTstring(text) {
+	//Defining window size
+	var dWidth = $(window).width() * 0.5;
+	var dHeight = $(window).height() * 0.5;
+	
+	dWidth = Math.min(dWidth, dHeight);
+	if (dWidth > 375) dWidth = 375;
+	
+	//Setting PROJ dialog content
+	var ProjDialog = $( "#WKT" ).empty();
+
+	ProjDialog.append("<p><b>Copy WKT string to clipboard (Ctrl + C or ⌘ + C):</b></p>");
+	ProjDialog.append("<p>" + text + "</p>");
+	
+	//Setting dialog window
+	ProjDialog.dialog({
+		modal : true,
+		show : 'puff',
+		hide : 'explode',
+		width : dWidth,
+		height : dWidth,
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	//Opening dialog window
+	ProjDialog.dialog( "open" );
 }
 
 /*Function that formats the central meridian value for world maps*/
