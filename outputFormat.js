@@ -858,10 +858,25 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		default:
 			return "";
 	}
+	
+	// FORMATING LINEAR UNIT and CLOSING STRINGS
+	var unit = document.getElementById("unit").value;
 
-	// Closing the string
-	PROJstr += ( datum_str + " +no_defs");
-	WKTstr  += ('</br>&nbsp;UNIT[\\\"Meter\\\",1.0]]');
+	// PROJ and WKT strings
+	switch (unit) {
+		case "m":
+			PROJstr += ( datum_str + " +units=m +no_defs");
+			WKTstr  += ('</br>&nbsp;UNIT[\\\"Meter\\\",1.0]]');
+			break;
+		case "ft":
+			PROJstr += ( datum_str + " +units=ft +no_defs");
+			WKTstr  += ('</br>&nbsp;UNIT[\\\"Foot\\\",0.3048]]');
+			break;
+		// Default
+		default:
+			return "";
+	}
+	// END of FORMATING LINEAR UNIT and CLOSING STRINGS
 
 	return " <a href='#' onclick=\'copyPROJstring(\"" + PROJstr + "\")\' class=\'linkPROJ4\'>PROJ</a>" + 
 	       " <a href='#' onclick=\'copyWKTstring(\"" + WKTstr  + "\")\' class=\'linkPROJ4\'>WKT</a>";
