@@ -62,13 +62,15 @@ body {
 #settings {
 	vertical-align: top;
 	margin-top: -29px;
-	margin-left: 0px;
+	margin-right: 0px;
+	float: right;
 }
 
 #help {
 	vertical-align: top;
 	margin-top: -29px;
-	margin-left: 29px;
+	margin-right: 29px;
+	float: right;
 }
 
 .step-circle {
