@@ -258,7 +258,6 @@ function addRectangle (map) {
 		toggleAnchorVisibility();
 	})
 
-	// IN PROGRESS: testing redrawing the output canvas during rectangle drag
 	rectangle.on("pm:drag", function(e) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
@@ -306,7 +305,6 @@ function addRectangle (map) {
 		rectangle.setBounds(bounds);
 		setInputBoxes();
 
-		// IN PROGRESS: testing redrawing the output canvas during rectangle vertex marker drag
 		makeOutput(true);
 	});
 
