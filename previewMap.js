@@ -11,15 +11,8 @@ var world110m, world50m;
 
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
 function addWorldMapPreview(center, projection, currentlyDragging) {
-  // var previewMap = $('#previewMap');
-
-  //Creating canvas HTML element
-  // previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
-  
+	//Creating canvas HTML element
   addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
-  
-  // TODO: bring back displaying the name of the projection below the <canvas>
-  // previewMap.append("<br>" + projection + "<br><br>");
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -27,17 +20,8 @@ function addWorldMapPreview(center, projection, currentlyDragging) {
 
 /***MAIN MAP DRAW FUNCTION***/
 function addMapPreview(center, currentlyDragging) {
-  // var previewMap = $("#previewMap");
-
 	//Creating canvas HTML element
-  // previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
-	
   addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
-  
-  // TODO: bring back displaying the name of the projection below the <canvas>
-  // if (previewMapProjection == 'ConicEquidistant') {
-  //   previewMap.append("<br>Equidistant conic<br><br>");
-  // }
 	
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -143,9 +127,25 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1);
 	} 
 	else {
-		$("#previewMap").append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
+		// projection error condition
+		var previewMapProjectionName = $("#previewMap #projectionName");
+		previewMapProjectionName.append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
 		return;
 	}
+}
+
+function clearCanvasMap() {
+	// helper function to clear the d3 preview map canvas because
+	// 1. the canvas context and the projection name display must be cleared before being updated
+	// 2. some other conditions do not show the d3 preview map at all
+	var previewMapCanvas = d3.select("#previewMap canvas").node();
+	previewMapCanvas
+		.getContext("2d")
+		.clearRect(0, 0, previewMapCanvas.width, previewMapCanvas.height);
+	
+	// to be safe, also clear the projection name text below the d3 preview map
+	var previewMapProjectionName = $("#previewMap #projectionName");
+	previewMapProjectionName.empty();
 }
 
 /* Map drawing function (D3)*/
@@ -171,10 +171,21 @@ function addCanvasMap(lat0, lon0, projectionString, world, currentlyDragging) {
 }
 
 function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging) {
-	//Definding D3 projection
+	// clear the canvas context and the projection name display must be cleared before being updated
+	clearCanvasMap();
+
+	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
 	if (projection == null) {
-		return
+		return;
+	}
+
+	//Set the display text of the projection name that appears below the d3 preview map
+	var previewMapProjectionName = $("#previewMap #projectionName");
+	if (previewMapProjection == 'ConicEquidistant') {
+		previewMapProjectionName.append("<br>Equidistant conic<br><br>");
+	} else {
+		previewMapProjectionName.append("<br>" + projectionString + "<br><br>");
 	}
 	
 	//Scaling projection on original coordinates
@@ -256,8 +267,6 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
-	// TODO: investigate why d3 canvas width and height and other map projection properties during dragging events are different
-	// than the final d3 canvas map when the user is done interacting with the leaflet map
   var canvas = d3.select("#previewMap canvas")
 		.attr("width", width)
 		.attr("height", height);
@@ -266,33 +275,30 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 
 	var path = d3.geoPath(projection, context);
 
-  // d3.json(jsonData).then( function(data) {
-		land = topojson.feature(data, data.objects.countries); 
-		grid = graticule();
-		context.clearRect(0, 0, width, height);
+	land = topojson.feature(data, data.objects.countries); 
+	grid = graticule();
 
-		// Style sphere
-		context.beginPath();
-		path(sphere);
-		context.fillStyle = "#add8e6";
-		context.fill();
+	// Style sphere
+	context.beginPath();
+	path(sphere);
+	context.fillStyle = "#add8e6";
+	context.fill();
 
-		// Style land
-		context.beginPath();
-		path(land);
-		context.fillStyle = "#eee";
-		context.fill();
-		context.lineWidth = 0.3;
-		context.strokeStyle = "#999";
-		context.stroke();
-		
-		// Style graticule
-		context.beginPath();
-		path(grid);
-		context.lineWidth = 0.5;
-		context.globalAlpha = 0.2;
-		context.strokeStyle = "#555";
-		context.stroke();
-		context.globalAlpha = 1;
-  // });
+	// Style land
+	context.beginPath();
+	path(land);
+	context.fillStyle = "#eee";
+	context.fill();
+	context.lineWidth = 0.3;
+	context.strokeStyle = "#999";
+	context.stroke();
+	
+	// Style graticule
+	context.beginPath();
+	path(grid);
+	context.lineWidth = 0.5;
+	context.globalAlpha = 0.2;
+	context.strokeStyle = "#555";
+	context.stroke();
+	context.globalAlpha = 1;
 }

@@ -271,8 +271,7 @@ function addRectangle (map) {
 
 		// update the rest of the UI
 		setInputBoxes();
-		
-		// TODO: also call updateMapArea() and setInputBoxes()
+
 		makeOutput(true);
 	});
 

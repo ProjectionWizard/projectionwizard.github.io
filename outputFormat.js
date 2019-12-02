@@ -173,8 +173,9 @@ function printWorld(property, center, currentlyDragging) {
 			
 		outputTEXT.append("<p class='outputText'>Two-point equidistant (relative to two arbitrary points" + 
 			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</p>");
-			
-		$("#previewMap").empty();
+		
+		// clear the canvas context and the projection name display in this condition
+		clearCanvasMap();
 	}
 	else {
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
