@@ -258,6 +258,22 @@ function addRectangle (map) {
 		toggleAnchorVisibility();
 	})
 
+	rectangle.on("pm:drag", function(e) {
+		const rectangle = e.sourceTarget;
+		// reading changed bounds
+		var newBounds = rectangle.getBounds();
+		var SW = newBounds.getSouthWest();
+		var NE = newBounds.getNorthEast();
+
+		// updating the bounds
+		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
+
+		// update the rest of the UI
+		setInputBoxes();
+
+		makeOutput(true);
+	});
+
 	rectangle.on("pm:markerdrag", function(e) {
 		const liveCorner = e.markerEvent.latlng
 		const allCorners = e.sourceTarget.getLatLngs();
@@ -288,6 +304,8 @@ function addRectangle (map) {
 		bounds = new L.LatLngBounds(SouthWest, NorthEast);
 		rectangle.setBounds(bounds);
 		setInputBoxes();
+
+		makeOutput(true);
 	});
 
 	//Event handler: Double click the rectangle
