@@ -52,9 +52,7 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="title">
-				Projection&nbsp;&nbsp;Wizard
-			</div>
+			<div id="title">Projection&nbsp;&nbsp;Wizard</div>
 			<div id="inputUIarea">
 				<img id="settings" src="figures/opts.png" height="22" align="left" title="Customize">
 				<div id="options_dialog" class="dialogtext" title="Projection Wizard Options">
@@ -74,6 +72,12 @@
 							<label for="DD">	–44.754305<br></label>
 						</div>
 					</form>
+					<h4>Linear units:&nbsp;&nbsp;
+						<select id="unit">
+							<option value="m" selected>Meter</option>
+							<option value="ft">Intl. Foot</option>
+						</select>
+					</h4>
 				</div>
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
@@ -150,10 +154,12 @@
 						<li>Additional suggestions were added to the list of appropriate map projections for the conformal property at very large map scales.</li>
 						<li>The Equal Earth projection was added to the list of equal-area world map projections.</li>
 						<li>Projections that excessively bulge outwards and interrupted projections were removed from the world lists.</li>
-						<li>PROJ string values were rounded to seven decimal places and datum or ellipsoid information was added.</li>
+						<li>Preview map updates were added when a user hovers over projection's name with the cursor on the world lists.</li>
+						<li>PROJ string values were rounded to seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
 						<li>WKT strings are provided for each proposed projection.</li>
-						<li>A <i>Customize</i> button was added. Users can now specify the geographic coordinate type for their output strings and toggle between decimal degrees and DMS formats for angular units.</li>
-						<li>The user interface, preview maps, third-party libraries, and help content was updated.</li>
+						<li>A <i>Customize</i> button was added. Users can now specify the geographic coordinate type for their output strings, toggle between decimal degrees and DMS formats for angular units, and select between meters and international feet for linear units.</li>
+						<li>Continuous updates to the output, preview map, and extend inputs was added during individual vertex or whole rectangle dragging.</li>
+						<li>The user interface, popup window, preview maps, third-party libraries, and help content was updated.</li>
 					</ul>
 
 					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;1.2</b> (May, 2017)</p>
@@ -238,10 +244,13 @@
 			<div id="output">
 				<div id="printout"></div>
 				<div id="result" class="results"></div>
+				<div id="previewMap"></div>
 				<div id="previewMap">
 					<canvas></canvas>
 					<div id="projectionName"></div>
 				</div>
+				<div id="PROJ" class="dialogtext" title="PROJ string"></div>
+				<div id="WKT" class="dialogtext" title="Well-Known Text"></div>
 			</div>
 		</div>
 	</body>
