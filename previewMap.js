@@ -7,28 +7,21 @@
  * 
  */
 
-/***MAP DRAW FUNCTION FOR SMALL-SCALE***/
-function addWorldMapPreview(center, projection) {
-	var previewMap = $("#previewMap").empty();
+var world110m, world50m;
 
+/***MAP DRAW FUNCTION FOR SMALL-SCALE***/
+function addWorldMapPreview(center, projection, currentlyDragging) {
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + 0 + "," + center.lng + ",'" + projection + "'," + 1 + ");</script>");
-	previewMap.append("<br>" + projection + "<br><br>");
+  addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
 }
 
 /***MAIN MAP DRAW FUNCTION***/
-function addMapPreview(center) {
-	var previewMap = $("#previewMap").empty();
-
+function addMapPreview(center, currentlyDragging) {
 	//Creating canvas HTML element
-	previewMap.append("<script>addCanvasMap(" + previewMapLat0 + "," + center.lng + ",'" + previewMapProjection + "'," + 0 + ");</script>");
-	
-	if (previewMapProjection == 'ConicEquidistant') {
-		previewMap.append("<br>Equidistant conic<br><br>");
-	}
+  addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
 	
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -134,17 +127,65 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1);
 	} 
 	else {
-		$("#previewMap").append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
+		// projection error condition
+		var previewMapProjectionName = $("#previewMap #projectionName");
+		previewMapProjectionName.append("<p></p><p></p><p>Map preview not avaliable</p><p></p><p></p>");
 		return;
 	}
 }
 
+function clearCanvasMap() {
+	// helper function to clear the d3 preview map canvas because
+	// 1. the canvas context and the projection name display must be cleared before being updated
+	// 2. some other conditions do not show the d3 preview map at all
+	var previewMapCanvas = d3.select("#previewMap canvas").node();
+	previewMapCanvas
+		.getContext("2d")
+		.clearRect(0, 0, previewMapCanvas.width, previewMapCanvas.height);
+	
+	// to be safe, also clear the projection name text below the d3 preview map
+	var previewMapProjectionName = $("#previewMap #projectionName");
+	previewMapProjectionName.empty();
+}
+
 /* Map drawing function (D3)*/
-function addCanvasMap(lat0, lon0, projectionString, world) {
-	//Definding D3 projection
+function addCanvasMap(lat0, lon0, projectionString, world, currentlyDragging) {
+	// first and only once, attempt to fetch both of the needed world geojson files
+	// otherwise, continue with the geojson files that were already fetched
+	if (!world110m && !world50m) {
+		Promise
+			.all([
+				d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json"),
+				d3.json("https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json")
+			])
+			.then(function(allGeoJsonData) {
+				world110m = allGeoJsonData[0];
+				world50m = allGeoJsonData[1];
+
+				continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging);
+			});
+	} else {
+		continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging);
+	}
+
+}
+
+function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging) {
+	// clear the canvas context and the projection name display must be cleared before being updated
+	clearCanvasMap();
+
+	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
 	if (projection == null) {
-		return
+		return;
+	}
+
+	//Set the display text of the projection name that appears below the d3 preview map
+	var previewMapProjectionName = $("#previewMap #projectionName");
+	if (previewMapProjection == 'ConicEquidistant') {
+		previewMapProjectionName.append("<br>Equidistant conic<br><br>");
+	} else {
+		previewMapProjectionName.append("<br>" + projectionString + "<br><br>");
 	}
 	
 	//Scaling projection on original coordinates
@@ -213,19 +254,20 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 	}
 
 	//Setting data layer
-	var jsonData;
+  var data;
 	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
 	
-	if (scale < 6)
-		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.json";
-	else
-		jsonData = "https://cdn.jsdelivr.net/npm/world-atlas@1/world/50m.json";
+	if (currentlyDragging || (scale < 6)) {
+    data = world110m;
+	} else {
+    data = world50m;
+	}
 
 	//Drawing map elements
 	var graticule = d3.geoGraticule(),
 		sphere = {type : "Sphere"};
 
-	var canvas = d3.select("#previewMap").append("canvas")
+  var canvas = d3.select("#previewMap canvas")
 		.attr("width", width)
 		.attr("height", height);
 
@@ -233,32 +275,30 @@ function addCanvasMap(lat0, lon0, projectionString, world) {
 
 	var path = d3.geoPath(projection, context);
 
-	d3.json(jsonData).then( function(data) {
-		land = topojson.feature(data, data.objects.countries); 
-		grid = graticule();
-		context.clearRect(0, 0, width, height);
+	land = topojson.feature(data, data.objects.countries); 
+	grid = graticule();
 
-		// Style sphere
-		context.beginPath();
-		path(sphere);
-		context.fillStyle = "#add8e6";
-		context.fill();
+	// Style sphere
+	context.beginPath();
+	path(sphere);
+	context.fillStyle = "#add8e6";
+	context.fill();
 
-		// Style land
-		context.beginPath();
-		path(land);
-		context.fillStyle = "#eee";
-		context.fill();
-		context.lineWidth = 0.3;
-		context.strokeStyle = "#999";
-		context.stroke();
-		
-		// Style graticule
-		context.beginPath();
-		path(grid);
-		context.lineWidth = 0.5;
-		context.globalAlpha = 0.2;
-		context.strokeStyle = "#555";
-		context.stroke();
-	});
+	// Style land
+	context.beginPath();
+	path(land);
+	context.fillStyle = "#eee";
+	context.fill();
+	context.lineWidth = 0.3;
+	context.strokeStyle = "#999";
+	context.stroke();
+	
+	// Style graticule
+	context.beginPath();
+	path(grid);
+	context.lineWidth = 0.5;
+	context.globalAlpha = 0.2;
+	context.strokeStyle = "#555";
+	context.stroke();
+	context.globalAlpha = 1;
 }
