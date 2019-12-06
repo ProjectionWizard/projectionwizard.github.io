@@ -220,9 +220,9 @@ function toggleAnchorVisibility () {
 	/* ideally pm would update the anchors as the geometry is dragged.
 	as a workaround, we can just hide them temporarily */
 	const elements = document.querySelectorAll('.marker-icon')
-		elements.forEach(handle => {
-			(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
-		})
+	elements.forEach(function(handle) {
+		(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
+	});
 }
 
 /*ADDS A SELECTED AREA RECTANGLE*/
@@ -252,11 +252,25 @@ function addRectangle (map) {
 
 	rectangle.on("pm:markerdragstart", function() {
 		toggleAnchorVisibility();
-	})
 
-	rectangle.on("pm:markerdragend", function() {
+		// TODO: decide if you want to always force ON the orange color when starting a vertex drag
+		// i.e. orange: rectangle.fire('mouseover');
+
+		// while dragging any of the corner vertices,
+		// turn OFF the mouseover and mouseout handlers that can conflictingly change the rectangle colors
+		pauseRectangleStyleEvents();
+	});
+
+	rectangle.on("pm:markerdragend", function () {
 		toggleAnchorVisibility();
-	})
+
+		// turn ON the mouseover and mouseout handlers that change the rectangle colors
+		resumeRectangleStyleEvents();
+
+		// TODO: decide if you want to always force ON the orange or blue color after a vertex drag end
+		// i.e. orange: rectangle.fire('mouseover');
+		// i.e. blue: rectangle.fire('mouseout');
+	});
 
 	rectangle.on("pm:drag", function(e) {
 		const rectangle = e.sourceTarget;
@@ -286,6 +300,8 @@ function addRectangle (map) {
 			}
 		}
 
+		// TODO: sometimes "oppositeCorner" is undefined;
+		// this issue can appear as a console error when "flipping" the rectangle by dragging a vertex around
 		const deltaLng = Math.abs(liveCorner.lng - oppositeCorner.lng);
 
 		// dont allow the horizontal span of the rectangle to exceed 360deg
@@ -303,6 +319,7 @@ function addRectangle (map) {
         NorthEast = new L.LatLng(latmax, lonmax),
 		bounds = new L.LatLngBounds(SouthWest, NorthEast);
 		rectangle.setBounds(bounds);
+
 		setInputBoxes();
 
 		makeOutput(true);
@@ -316,43 +333,68 @@ function addRectangle (map) {
 		map.fitBounds(recBounds);
 	});
 
-	//Event handler: Mouse over the rectangle
-	rectangle.on("mouseover", function(e) {
-		//Seting starting style
-		rectangle.setStyle({
-				color : "#ff7b1a"
-			});
-	});
+	function pauseRectangleStyleEvents() {
+		rectangle.off('mouseover');
+		rectangle.off('mouseout');
+	}
 
-	//Event handler: Mouse out the rectangle
-	rectangle.on("mouseout", function(e) {
-		//Seting starting style
-		rectangle.setStyle({
-			color : "#3388ff"
+	function resumeRectangleStyleEvents() {
+		//Event handler: Mouse over the rectangle
+		rectangle.on("mouseover", function(e) {
+			//Setting active editing style
+			rectangle.setStyle({
+				color: "#ff7b1a" // orange
+			});
 		});
-	});
+	
+		//Event handler: Mouse out the rectangle
+		rectangle.on("mouseout", function(e) {
+			//Setting starting style
+			rectangle.setStyle({
+				color : "#3388ff" // blue
+			});
+		});
+	}
 
 	rectangle.on('pm:dragstart', function (e) {
 		toggleAnchorVisibility();
-	})
+
+		// while dragging the entire rectangle,
+		// turn OFF the mouseover and mouseout handlers that can conflictingly change the rectangle colors
+		pauseRectangleStyleEvents();
+	});
 
 	rectangle.on('pm:dragend', function (e) {
 		toggleAnchorVisibility();
 
+		// turn ON the mouseover and mouseout handlers that change the rectangle colors
+		resumeRectangleStyleEvents()
+
+		// while the user is still hovering over the rectangle after dragging is finished,
+		// try to prevent the pm editor code from reverting back to the starting blue color
+		rectangle.pm.cachedColor = "#ff7b1a"; // orange
+
+		// again, make sure the current color is the orange active editing color,
+		// since the user is likely still hovering over the rectangle
+		rectangle.fire('mouseover');
+
 		rectangle.pm.enable({
 			allowSelfIntersection: false
-		})
-	})
+		});
+	});
 
 	//Adding layer to the map
 	map.addLayer(rectangle);
 
 	rectangle.pm.toggleEdit({
 		allowSelfIntersection: false
-	})
+	});
 
 	// allow both dragging and resizing the rectangle
 	map.pm.toggleGlobalDragMode();
+
+	// turn ON the mouseover and mouseout handlers that change the rectangle colors
+	resumeRectangleStyleEvents();
 }
 
 /*MAIN FUNCTION*/
@@ -360,7 +402,7 @@ function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
 
-	//Seting angular unit
+	//Setting angular unit
 	angUnit = $('input[name=ang_format]:checked').val();
 
 	//Options button
