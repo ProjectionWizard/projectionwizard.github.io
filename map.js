@@ -255,6 +255,7 @@ function addRectangle (map) {
 
 		// TODO: decide if you want to always force ON the orange color when starting a vertex drag
 		// i.e. orange: rectangle.fire('mouseover');
+		rectangle.fire('mouseover');
 
 		// while dragging any of the corner vertices,
 		// turn OFF the mouseover and mouseout handlers that can conflictingly change the rectangle colors
@@ -270,6 +271,7 @@ function addRectangle (map) {
 		// TODO: decide if you want to always force ON the orange or blue color after a vertex drag end
 		// i.e. orange: rectangle.fire('mouseover');
 		// i.e. blue: rectangle.fire('mouseout');
+		rectangle.fire('mouseout');
 	});
 
 	rectangle.on("pm:drag", function(e) {
