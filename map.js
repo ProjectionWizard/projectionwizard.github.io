@@ -276,7 +276,7 @@ function addRectangle (map) {
 	rectangle.on("pm:drag", function(e) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
-		var newBounds = map.options.crs.wrapLatLngBounds(rectangle.getBounds());
+		var newBounds = rectangle.getBounds();
 
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
