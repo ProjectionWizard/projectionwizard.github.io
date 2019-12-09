@@ -38,13 +38,13 @@ function addMapPreview(center, currentlyDragging) {
 /* Setting a new projection with D3 */
 function pickProjection(lat0, lon0, projectionString) {
 	//Definding D3 projection
-	if (projectionString == 'AzimuthalEqualArea') {
+	if (projectionString == 'Azimuthal equal area') {
 		return d3.geoAzimuthalEqualArea()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
 			.rotate([-lon0, -lat0]);
 	}
-	else if (projectionString == 'AzimuthalEquidistant') {
+	else if (projectionString == 'Azimuthal equidistant') {
 		return d3.geoAzimuthalEquidistant()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
@@ -62,22 +62,17 @@ function pickProjection(lat0, lon0, projectionString) {
 			//.clipExtent([[0, 0], [width, height]])
 			.precision(.1);
 	}
-	else if (projectionString == 'PlateCarree') {
-		return d3.geoEquirectangular()
-			.precision(.1)
-			.rotate([-lon0, 0]);
-	}
 	else if (projectionString == 'Mercator') {
 		return d3.geoMercator()
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
-	else if (projectionString == 'TransverseMercator') {
+	else if (projectionString == 'Transverse Mercator') {
 		return d3.geoTransverseMercator()
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
-	else if (projectionString == 'CylindricalEqualArea') {
+	else if (projectionString == 'Cylindrical equal area') {
 		var interval = (latmax - latmin) / 4.;
 		var latS1 = lat0 + interval, latS2 = lat0 - interval, latS;
 
@@ -92,14 +87,14 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
-	else if (projectionString == 'TransverseCylindrical') {
+	else if (projectionString == 'Transverse cylindrical equal area') {
 		var scale = 1.5;
 		return d3.geoTransverseCylindricalEqualArea()
 			.parallel(0)
 			.precision(.1)
 			.rotate([-lon0, 0, 90]);
 	}
-	else if (projectionString == 'ConicEquidistant') {
+	else if (projectionString == 'Conic equidistant') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoConicEquidistant()
 			.parallels([latmin + interval, latmax - interval])
@@ -107,7 +102,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
-	else if (projectionString == 'ConicEqualArea') {
+	else if (projectionString == 'Albers conic equal area') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoAlbers()
 			.rotate([-lon0, 0])
@@ -115,7 +110,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.parallels([latmin + interval, latmax - interval])
 			.precision(.1);
 	}
-	else if (projectionString == 'ConicConformal') {
+	else if (projectionString == 'Lambert conic conformal') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoConicConformal()
 			.rotate([-lon0, 0])
@@ -128,13 +123,11 @@ function pickProjection(lat0, lon0, projectionString) {
 		return d3.geoMollweide()
 			.rotate([-lon0, 0])
 			.precision(.1);
-
 	}
 	else if (projectionString == 'Hammer (or Hammer-Aitoff)') {
 		return d3.geoHammer()
 			.rotate([-lon0, 0])
 			.precision(.1);
-
 	}
 	else if (projectionString == 'Equal Earth') {
 		return d3.geoEqualEarth()
