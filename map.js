@@ -135,39 +135,7 @@ function changeInput () {
 	updateMapArea(North, South, East, West);
 	updateRectangle();
 
-	// fit the map's view if the rectangle is not fully contained by the current map bounds
-
-	// NOTE 1: but first ensure that the rectangle's north and south are within the map's CRS MAX_LATITUDE,
-	// otherwise the "map.getBounds().contains()"" method will not always provide correct answers
-
-	// NOTE 2: if you want to simply ALWAYS do "map.fitBounds(rectangle.getBounds());",
-	// then you don't need to fix the north and south bounds
-	// (again, this is only needed for the "map.getBounds().contains()" method)
-	var rectangleBounds = rectangle.getBounds();
-	var validRectangleBounds = [
-		[
-			// southwest corner
-			// manually update the southern value (e.g. if south is -90, it should actually be -85.0511287798)
-			rectangleBounds.getSouth() >= -map.options.crs.projection.MAX_LATITUDE
-				? rectangleBounds.getSouth()
-				: -map.options.crs.projection.MAX_LATITUDE,
-			rectangleBounds.getWest()
-		],
-		[
-			// northeast corner
-			// manually update the northern value (e.g. if north is +90, it should actually be 85.0511287798)
-			rectangleBounds.getNorth() <= map.options.crs.projection.MAX_LATITUDE
-				? rectangleBounds.getNorth()
-				: map.options.crs.projection.MAX_LATITUDE,
-			rectangleBounds.getEast()
-		]
-	];
-
-	validRectangleBounds = L.latLngBounds(validRectangleBounds);
-
-	if (!map.getBounds().contains(validRectangleBounds)) {
-		map.fitBounds(rectangle.getBounds());
-	}
+	map.fitBounds(rectangle.getBounds());
 }
 
 /*RESET BUTTON CALLBACK FUNCTION*/
@@ -271,11 +239,7 @@ function addRectangle (map) {
 	rectangle.on('pm:edit', function (e) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
-		
-		// TODO: new code suggestion:
-		// decide if you want to wrap the bounds to try to contain the East and West numbers from getting too large when dragging the rectangle very far east or west
-		// var newBounds = rectangle.getBounds();
-		var newBounds = map.options.crs.wrapLatLngBounds(rectangle.getBounds());
+		var newBounds = rectangle.getBounds();
 
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
@@ -312,10 +276,6 @@ function addRectangle (map) {
 	rectangle.on("pm:drag", function(e) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
-		
-		// TODO: new code suggestion:
-		// decide if you want to wrap the bounds to try to contain the East and West numbers from getting too large when dragging the rectangle very far east or west
-		// var newBounds = rectangle.getBounds();
 		var newBounds = map.options.crs.wrapLatLngBounds(rectangle.getBounds());
 
 		var SW = newBounds.getSouthWest();
