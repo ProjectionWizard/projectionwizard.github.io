@@ -134,8 +134,9 @@ function changeInput () {
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);
 	updateRectangle();
-}
 
+	map.fitBounds(rectangle.getBounds());
+}
 
 /*RESET BUTTON CALLBACK FUNCTION*/
 function resetUI(map) {
@@ -220,9 +221,9 @@ function toggleAnchorVisibility () {
 	/* ideally pm would update the anchors as the geometry is dragged.
 	as a workaround, we can just hide them temporarily */
 	const elements = document.querySelectorAll('.marker-icon')
-		elements.forEach(handle => {
-			(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
-		})
+	elements.forEach(function(handle) {
+		(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
+	});
 }
 
 /*ADDS A SELECTED AREA RECTANGLE*/
@@ -239,6 +240,7 @@ function addRectangle (map) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
 		var newBounds = rectangle.getBounds();
+
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
@@ -252,16 +254,30 @@ function addRectangle (map) {
 
 	rectangle.on("pm:markerdragstart", function() {
 		toggleAnchorVisibility();
-	})
 
-	rectangle.on("pm:markerdragend", function() {
+		// force ON the orange color when starting a vertex drag
+		rectangle.fire('mouseover');
+
+		// while dragging any of the corner vertices,
+		// turn OFF the mouseover and mouseout handlers that can conflictingly change the rectangle colors
+		pauseRectangleInteractionEvents();
+	});
+
+	rectangle.on("pm:markerdragend", function () {
 		toggleAnchorVisibility();
-	})
+
+		// turn ON the mouseover and mouseout handlers that change the rectangle colors
+		resumeRectangleInteractionEvents();
+
+		// force OFF the orange color after a vertex drag end to return to the non-editing blue color
+		rectangle.fire('mouseout');
+	});
 
 	rectangle.on("pm:drag", function(e) {
 		const rectangle = e.sourceTarget;
 		// reading changed bounds
 		var newBounds = rectangle.getBounds();
+
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
@@ -303,6 +319,7 @@ function addRectangle (map) {
         NorthEast = new L.LatLng(latmax, lonmax),
 		bounds = new L.LatLngBounds(SouthWest, NorthEast);
 		rectangle.setBounds(bounds);
+
 		setInputBoxes();
 
 		makeOutput(true);
@@ -316,43 +333,74 @@ function addRectangle (map) {
 		map.fitBounds(recBounds);
 	});
 
-	//Event handler: Mouse over the rectangle
-	rectangle.on("mouseover", function(e) {
-		//Seting starting style
-		rectangle.setStyle({
-				color : "#ff7b1a"
-			});
-	});
+	function pauseRectangleInteractionEvents() {
+		rectangle.off('mouseover');
+		rectangle.off('mouseout');
+	}
 
-	//Event handler: Mouse out the rectangle
-	rectangle.on("mouseout", function(e) {
-		//Seting starting style
-		rectangle.setStyle({
-			color : "#3388ff"
+	function resumeRectangleInteractionEvents() {
+		//Event handler: Mouse over the rectangle
+		rectangle.on("mouseover", function(e) {
+			//Setting active editing style
+			rectangle.setStyle({
+				color: "#ff7b1a" // orange
+			});
+
+			// temporarily disable the map's default behavior of doubleClickZoom
+			map.doubleClickZoom.disable();
 		});
-	});
+	
+		//Event handler: Mouse out the rectangle
+		rectangle.on("mouseout", function(e) {
+			//Setting starting style
+			rectangle.setStyle({
+				color : "#3388ff" // blue
+			});
+
+			// re-enable the map's default behavior of doubleClickZoom
+			map.doubleClickZoom.enable();
+		});
+	}
 
 	rectangle.on('pm:dragstart', function (e) {
 		toggleAnchorVisibility();
-	})
+
+		// while dragging the entire rectangle,
+		// turn OFF the mouseover and mouseout handlers that can conflictingly change the rectangle colors
+		pauseRectangleInteractionEvents();
+	});
 
 	rectangle.on('pm:dragend', function (e) {
 		toggleAnchorVisibility();
 
+		// turn ON the mouseover and mouseout handlers that change the rectangle colors
+		resumeRectangleInteractionEvents()
+
+		// while the user is still hovering over the rectangle after dragging is finished,
+		// try to prevent the pm editor code from reverting back to the starting blue color
+		rectangle.pm.cachedColor = "#ff7b1a"; // orange
+
+		// again, make sure the current color is the orange active editing color,
+		// since the user is likely still hovering over the rectangle
+		rectangle.fire('mouseover');
+
 		rectangle.pm.enable({
 			allowSelfIntersection: false
-		})
-	})
+		});
+	});
 
 	//Adding layer to the map
 	map.addLayer(rectangle);
 
 	rectangle.pm.toggleEdit({
 		allowSelfIntersection: false
-	})
+	});
 
 	// allow both dragging and resizing the rectangle
 	map.pm.toggleGlobalDragMode();
+
+	// turn ON the mouseover and mouseout handlers that change the rectangle colors
+	resumeRectangleInteractionEvents();
 }
 
 /*MAIN FUNCTION*/
@@ -360,7 +408,7 @@ function init() {
 	//Selecting equal-area radio button
 	document.getElementById("Equalarea").checked = true;
 
-	//Seting angular unit
+	//Setting angular unit
 	angUnit = $('input[name=ang_format]:checked').val();
 
 	//Options button
@@ -428,7 +476,6 @@ function init() {
 	//Creates a map
 	map = new L.Map('map', {
 		attributionControl: false,
-		doubleClickZoom: false
 	}).setView([0,0], 0);
 
 	//Fit bounds button
