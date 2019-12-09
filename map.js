@@ -357,7 +357,7 @@ function addRectangle (map) {
 				color : "#3388ff" // blue
 			});
 
-			// re-enable the map's default behavior of doubleClickZoom after "map.fitBounds(recBounds);" occurs
+			// re-enable the map's default behavior of doubleClickZoom
 			map.doubleClickZoom.enable();
 		});
 	}
