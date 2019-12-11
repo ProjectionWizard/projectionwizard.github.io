@@ -161,19 +161,21 @@ function printWorld(property, center, currentlyDragging) {
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
+		addWorldMapPreview(center, "Two-point equidistant", currentlyDragging);
+		
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
 		
-		outputTEXT.append("<p class='outputText'>Polar azimuthal equidistant (centered on a pole)" + 
-			stringLinks("aeqd", NaN, 90.0, NaN, NaN, lng, NaN) + "</p>");
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>" +
+			"Polar azimuthal equidistant (centered on a pole)" + 
+			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "</p>");
 			
-		outputTEXT.append("<p class='outputText'>Oblique azimuthal equidistant (centered on arbitrary point)" + 
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>" +
+			"Oblique azimuthal equidistant (centered on arbitrary point)" + 
 			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</p>");
 			
-		outputTEXT.append("<p class='outputText'>Two-point equidistant (relative to two arbitrary points)" + 
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>" +
+			"Two-point equidistant (relative to two arbitrary points)" + 
 			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</p>");
-		
-		// clear the canvas context and the projection name display in this condition
-		clearCanvasMap();
 	}
 	else {
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
