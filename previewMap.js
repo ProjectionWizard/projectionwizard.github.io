@@ -12,7 +12,12 @@ var world110m, world50m;
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
 function addWorldMapPreview(center, projection, currentlyDragging) {
 	//Creating canvas HTML element
-  addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
+	if ( projection == 'Two-point equidistant' || projection == 'Oblique azimuthal equidistant' ) {
+		addCanvasMap(center.lat, center.lng, projection, 1, currentlyDragging);
+	}
+	else {
+		addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
+	}
 
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -29,7 +34,7 @@ function updateWorldMap(projection) {
 /***MAIN MAP DRAW FUNCTION***/
 function addMapPreview(center, currentlyDragging) {
 	//Creating canvas HTML element
-  addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
+	addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
 	
 	//adding class to split text and map preview
 	$("#result").addClass("results");
@@ -49,7 +54,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
 			.rotate([-lon0, -lat0]);
-	} 
+	}
 	else if (projectionString == 'Orthographic') {
 		return d3.geoOrthographic()
 			.clipAngle(90)
@@ -180,6 +185,22 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, 0])
 			.precision(.1);
 	}
+	else if (projectionString == 'Polar azimuthal equidistant') {
+		return d3.geoAzimuthalEquidistant()
+			.clipAngle(180 - 1e-3)
+			.precision(.1)
+			.rotate([-lon0, 90]);
+	}
+	else if (projectionString == 'Oblique azimuthal equidistant') {
+		return d3.geoAzimuthalEquidistant()
+			.clipAngle(180 - 1e-3)
+			.precision(.1)
+			.rotate([-lon0, -lat0]);
+	}
+	else if (projectionString == 'Two-point equidistant') {
+		return d3.geoTwoPointEquidistant([lon0, lat0],[90.5, 45.5])
+			.clipAngle(105);
+	}
 	else {
 		// projection error condition
 		var previewMapProjectionName = $("#previewMap #projectionName");
@@ -221,57 +242,67 @@ function addCanvasMap(lat0, lon0, projectionString, world, currentlyDragging) {
 	} else {
 		continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging);
 	}
-
 }
 
 function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionString, world, currentlyDragging) {
 	// clear the canvas context and the projection name display must be cleared before being updated
 	clearCanvasMap();
+	
+	//Setting graticule layer
+	var graticule = d3.geoGraticule(),
+		sphere = {type : "Sphere"};
+	
+	grid = graticule();
 
 	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
 	if (projection == null) {
 		return;
 	}
-
+	
 	//Set the display text of the projection name that appears below the d3 preview map
-	var previewMapProjectionName = $("#previewMap #projectionName");
-	if (previewMapProjection == 'ConicEquidistant') {
-		previewMapProjectionName.append("<br>Equidistant conic<br><br>");
-	} else {
-		previewMapProjectionName.append("<br>" + projectionString + "<br><br>");
-	}
+	$("#previewMap #projectionName").append(projectionString + "<br>");
 	
 	//Scaling projection on original coordinates
 	projection.scale(1).translate([0,0]);
 	var max_width = document.getElementById('previewMap').offsetWidth, 
-		height, width, scaleFactor;
+		height, width, scaleFactor, X;
 
 	//Computing scale factor and translation for world maps
 	if (world) {
-		//Computing extent coordinates
-		projection.rotate([0, 0]);
-		var coord1 = projection([180, 0]), 
-			coord2 = projection([-180, 0]), 
-			coord3 = projection([180, 90]), 
-			coord4 = projection([-180, -90]);
+		if (projectionString == 'Polar azimuthal equidistant' || projectionString == 'Oblique azimuthal equidistant') {
+			width = height = 0.7 * max_width;
+			
+			projection.fitSize([width - 20, height - 20], grid)
+					  .translate([width / 2, height / 2]);
+		}
+		else if (projectionString == 'Two-point equidistant') {
+			height = 0.5 * max_width;
+			width  = max_width;
+			
+			projection.fitSize([width, height - 10], grid)
+					  .translate([width / 2, height / 2]);
+		}
+		else {
+			//Computing extent coordinates
+			projection.rotate([0, 0]);
+			var coord1 = projection([180, 0]), 
+				coord2 = projection([-180, 0]), 
+				coord3 = projection([180, 90]), 
+				coord4 = projection([-180, -90]);
 
-		//Definding original width and height of the extent
-		width = Math.abs(coord1[0] - coord2[0]);
-		height = Math.abs(coord3[1] - coord4[1]);
-		
-		//scaling map on the width to be 1
-		scaleFactor = 1 / width;
-		
-		//Final scaling factor and translation parameters
-		var X = Math.min(max_width / width, max_width / height);
-		width *= X;
-		height *= X;
-		scaleFactor *= width;
-		
-		projection.rotate([-lon0, 0])
-			.scale(scaleFactor)
-			.translate([width / 2, height / 2]);
+			//Definding original width and height of the extent
+			width  = Math.abs(coord1[0] - coord2[0]);
+			height = Math.abs(coord3[1] - coord4[1]);
+			
+			//Final scaling factor and translation parameters
+			X = Math.min(max_width / width, max_width / height);
+			width  *= X;
+			height *= X;
+
+			projection.rotate([-lon0, 0])
+					  .fitSize([width, height], grid);
+		}
 	} 
 	//Computing scale factor and translation for other maps
 	else {
@@ -291,13 +322,13 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 
 		//Definding original width and height of the extent
 		width = Math.abs(Math.max(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]) - Math.min(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]));
-		height = Math.abs(Math.max(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1], coord9[1], coord10[1], coord11[1], coord12[1]) - Math.min(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1], coord9[1], coord10[1], coord11[1], coord12[1]));
+		height = Math.abs(Math.max(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1],coord9[1], coord10[1], coord11[1], coord12[1]) - Math.min(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1], coord9[1], coord10[1], coord11[1], coord12[1]));
 		
 		//scaling map on the width to be 1
 		scaleFactor = 1 / width;
 		
 		//Final scaling factor and translation parameters
-		var X = Math.min(max_width / width, 0.66 * max_width / height);
+		X = Math.min(max_width / width, 0.66 * max_width / height);
 		width *= X;
 		height *= X;
 		scaleFactor *= width;
@@ -306,31 +337,26 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		var coordTran = projection([lon0, (latmax + latmin) / 2]);
 		projection.translate([width / 2, height / 2 - coordTran[1]]);
 	}
-
+	
 	//Setting data layer
-  var data;
+	var data;
 	var scale = 720. / (lonmax - lonmin) / (Math.sin(latmax * Math.PI / 180.) - Math.sin(latmin * Math.PI / 180.));
 	
 	if (currentlyDragging || (scale < 6)) {
-    data = world110m;
+		data = world110m;
 	} else {
-    data = world50m;
+		data = world50m;
 	}
 
-	//Drawing map elements
-	var graticule = d3.geoGraticule(),
-		sphere = {type : "Sphere"};
+	land = topojson.feature(data, data.objects.countries);
 
-  var canvas = d3.select("#previewMap canvas")
+	//Drawing map elements
+	var canvas = d3.select("#previewMap canvas")
 		.attr("width", width)
 		.attr("height", height);
 
 	var context = canvas.node().getContext("2d");
-
-	var path = d3.geoPath(projection, context);
-
-	land = topojson.feature(data, data.objects.countries); 
-	grid = graticule();
+	var path    = d3.geoPath(projection, context);
 
 	// Style sphere
 	context.beginPath();
