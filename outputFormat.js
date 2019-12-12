@@ -167,15 +167,15 @@ function printWorld(property, center, currentlyDragging) {
 		
 		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>" +
 			"Polar azimuthal equidistant (centered on a pole)" + 
-			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "</p>");
+			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "<\span></p>");
 			
 		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>" +
 			"Oblique azimuthal equidistant (centered on arbitrary point)" + 
-			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</p>");
+			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "<\span></p>");
 			
 		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>" +
 			"Two-point equidistant (relative to two arbitrary points)" + 
-			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</p>");
+			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "<\span></p>");
 	}
 	else {
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
@@ -298,17 +298,17 @@ function printSmallerArea(property, center, scale) {
 			var latS2 = outputLAT(latmax - interval, false);
 
 			//formating the output
-			outputTEXT.append("<p class='outputText'><b>Equidistant conic</b>" +
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'><b>Equidistant conic</b>" +
 				stringLinks("eqdc", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) +
-				" - distance correct along meridians</p>");
+				" - distance correct along meridians<\span></p>");
 			outputTEXT.append("<p class='outputText'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "<br>Central meridian: " + lng + "</p>");
 			
-			outputTEXT.append("<p class='outputText'><br><b>Oblique azimuthal equidistant</b>" + 
+			outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><b>Oblique azimuthal equidistant</b>" + 
 				stringLinks("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) +
-				" - distance correct along any line passing through the center of the map (i.e., great circle)</p>");
+				" - distance correct along any line passing through the center of the map (i.e., great circle)<\span></p>");
 			outputTEXT.append("<p class='outputText'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</p>");
 			
-			previewMapProjection = "Conic equidistant";
+			previewMapProjection = "Equidistant conic";
 			previewMapLat0 = center.lat;
 		}
 		outputTEXT.append('<p><b>Note:</b> In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</p>');
@@ -583,11 +583,11 @@ function printEWextent(property, center, scale) {
 		if (property == "Conformal") {
 			outputTEXT.append("<p class='outputText'><b>Lambert conformal conic</b>" + 
 				stringLinks("lcc", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) + '</p>');
-			previewMapProjection = "Lambert conic conformal";
+			previewMapProjection = "Lambert conformal conic";
 		} else if (property == 'Equalarea') {
 			outputTEXT.append('<p class="outputText"><b>Albers equal-area conic</b>' + 
 				stringLinks("aea", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) + '</p>');
-			previewMapProjection = "Albers conic equal area";
+			previewMapProjection = "Albers equal area conic";
 		}
 		outputTEXT.append("<p class='outputText'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "</p>");
 	}
