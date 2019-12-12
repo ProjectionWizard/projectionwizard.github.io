@@ -133,67 +133,90 @@ var listWorld = [
 	PROJ4 : "mill"
 }];
 
+// set default world projection distortion property
+// can be one of these: "Equalarea", "Equidistant", "Compromise, or "???"
+// TODO: is there a 4th type that would correspond to "activeEquidistantLargeScaleMidLatitudesProjection" below?
+var activeWorldProjectionProperty = "Equalarea";
+
+// this variable will later help set the styling of the active world projection choice
+var activeWorldProjection;
+
+// set default world projection names for the 4 different world distortion categories
+var activeWorldEqualAreaProjection = "Equal Earth";
+var activeWorldEquidistantProjection = "Two-point equidistant";
+var activeWorldCompromiseProjection = "Natural Earth";
+// TODO: set the default projection name string for "activeEquidistantLargeScaleMidLatitudesProjection"
+// TODO: handle the tracking of this projection type in previewMap.js "updateWorldMap" function
+var activeEquidistantLargeScaleMidLatitudesProjection = "???";
+
 /*Main small-scale output function*/
 function printWorld(property, center, currentlyDragging) {
+	// assign current world projection distortion property
+	activeWorldProjectionProperty = property;
+
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
 	//formating coordinates of the center
-	var lng = Math.round(center.lng * 100.) / 100.
-	var lat = Math.round(center.lat * 100.) / 100.
-	
+	var lng = Math.round(center.lng * 100.) / 100.;
+	var lat = Math.round(center.lat * 100.) / 100.;
+
 	//formating the output text
 	if (property == 'Equalarea') {
-		addWorldMapPreview(center, "Equal Earth", currentlyDragging);
+		addWorldMapPreview(center, activeWorldEqualAreaProjection, currentlyDragging);
 		
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as points</b></p>");
 		//loop through global data
 		for (var i = 0; i < 2; i++) {
-			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as lines</b></p>");
 		//loop through global data
 		for (var i = 2; i < 6; i++) {
-			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
-		addWorldMapPreview(center, "Two-point equidistant", currentlyDragging);
+		addWorldMapPreview(center, activeWorldEquidistantProjection, currentlyDragging);
 		
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
 		
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>" +
+		outputTEXT.append("<p class='outputText'><span data-proj-name='Polar azimuthal equidistant' onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>" +
 			"Polar azimuthal equidistant (centered on a pole)" + 
 			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "<\span></p>");
 			
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>" +
+		outputTEXT.append("<p class='outputText'><span data-proj-name='Oblique azimuthal equidistant' onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>" +
 			"Oblique azimuthal equidistant (centered on arbitrary point)" + 
 			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "<\span></p>");
 			
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>" +
+		outputTEXT.append("<p class='outputText'><span data-proj-name='Two-point equidistant' onmouseover='updateWorldMap(\"Two-point equidistant\")'>" +
 			"Two-point equidistant (relative to two arbitrary points)" + 
 			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "<\span></p>");
 	}
 	else {
+		// NOTE: property is equal to "Compromise" in this statement
+
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
 		
-		addWorldMapPreview(center, "Natural Earth", currentlyDragging);
+		addWorldMapPreview(center, activeWorldCompromiseProjection, currentlyDragging);
 		//loop through global data
 		for (var i = 6; i < 9; i++) {
-			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		outputTEXT.append("<p><b>Compromise rectangular world map projections</b></p>");
 		//loop through global data
 		for (var i = 9; i < 12; i++) {
-			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
 		outputTEXT.append("<p><b>Note:</b> Rectangular projections are not generally recommended for most world maps.</p>");
 	}
+
+	highlightActiveWorldProjectionNode();
 }
 
 /***PRINTING HEMISPHERE MAP PROJECTIONS***/

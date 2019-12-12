@@ -225,3 +225,8 @@ canvas {
 .marker-icon:hover {
 	background-color: #ff7b1a;
 }
+
+.active-world-projection {
+	font-style: italic;
+	color: steelblue;
+}

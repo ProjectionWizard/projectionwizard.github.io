@@ -9,8 +9,43 @@
 
 var world110m, world50m;
 
+function highlightActiveWorldProjectionNode() {
+	// remove ".active-world-projection" class from all world projection span nodes
+	var optionalWorldProjectionsNodeList = document.querySelectorAll('span[data-proj-name]');
+	for (var i = 0; i < optionalWorldProjectionsNodeList.length; i++) {
+		var node = optionalWorldProjectionsNodeList[i];
+		node.classList.remove('active-world-projection');
+	}
+
+	// if found, add ".active-world-projection" class to the matching world projection span node
+	var activeWorldProjectionNode = document.querySelector('span[data-proj-name="' + activeWorldProjection + '"]');
+	if (activeWorldProjectionNode) {
+		activeWorldProjectionNode.classList.add('active-world-projection');
+	}
+}
+
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
 function addWorldMapPreview(center, projection, currentlyDragging) {
+	// update the lastest known world projection information
+	// both for the overall shared variable
+	// and for the current world projection distortion property variable
+	// (this helps maintain the most recently chosen world projection
+	// by the user in the d3 canvas map and the html text styling)
+	activeWorldProjection = projection;
+	if (activeWorldProjectionProperty === 'Equalarea') {
+		activeWorldEqualAreaProjection = projection;
+	} else if (activeWorldProjectionProperty === 'Equidistant') {
+		activeWorldEquidistantProjection = projection;
+	} else if (activeWorldProjectionProperty === 'Compromise') {
+		activeWorldCompromiseProjection = projection;
+	}
+	// TODO: handle updating of variable "activeEquidistantLargeScaleMidLatitudesProjection"
+	// else if (activeWorldProjectionProperty === '???') {
+	// 	activeEquidistantLargeScaleMidLatitudesProjection = projection;
+	// }
+
+	highlightActiveWorldProjectionNode();
+
 	//Creating canvas HTML element
 	if ( projection == 'Two-point equidistant' || projection == 'Oblique azimuthal equidistant' ) {
 		addCanvasMap(center.lat, center.lng, projection, 1, currentlyDragging);

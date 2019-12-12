@@ -220,10 +220,11 @@ function loadBaseLayer(map) {
 function toggleAnchorVisibility () {
 	/* ideally pm would update the anchors as the geometry is dragged.
 	as a workaround, we can just hide them temporarily */
-	const elements = document.querySelectorAll('.marker-icon')
-	elements.forEach(function(handle) {
-		(handle.style.display === 'none') ? handle.style.display = '' : handle.style.display = 'none';
-	});
+	const nodeList = document.querySelectorAll('.marker-icon');
+	for (var i = 0; i < nodeList.length; i++) {
+		var node = nodeList[i];
+		(node.style.display === 'none') ? node.style.display = '' : node.style.display = 'none';
+	}
 }
 
 /*ADDS A SELECTED AREA RECTANGLE*/
