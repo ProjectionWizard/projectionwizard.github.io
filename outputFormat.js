@@ -146,7 +146,7 @@ var activeWorldEqualAreaProjection = "Equal Earth";
 var activeWorldEquidistantProjection = "Two-point equidistant";
 var activeWorldCompromiseProjection = "Natural Earth";
 // TODO: set the default projection name string for "activeEquidistantLargeScaleMidLatitudesProjection"
-// TODO: handle the tracking of this projection type in previewMap.js "updateWorldMap" function
+// TODO: handle the tracking of this projection type in previewMap.js "addWorldMapPreview" function
 var activeEquidistantLargeScaleMidLatitudesProjection = "???";
 
 /*Main small-scale output function*/
