@@ -28,7 +28,15 @@ function updateWorldMap(projection) {
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
 	
-	addWorldMapPreview(center, projection);
+	addWorldMapPreview(center, projection, false);
+}
+
+function updateEquidistantMap(projection) {
+	//getting a center of the map
+	var center = rectangle.getBounds().getCenter();
+	
+	previewMapProjection = projection;
+	addMapPreview(center, false);
 }
 
 /***MAIN MAP DRAW FUNCTION***/
@@ -99,7 +107,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1)
 			.rotate([-lon0, 0, 90]);
 	}
-	else if (projectionString == 'Conic equidistant') {
+	else if (projectionString == 'Equidistant conic') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoConicEquidistant()
 			.parallels([latmin + interval, latmax - interval])
@@ -107,7 +115,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
-	else if (projectionString == 'Albers conic equal area') {
+	else if (projectionString == 'Albers equal area conic') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoAlbers()
 			.rotate([-lon0, 0])
@@ -115,7 +123,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.parallels([latmin + interval, latmax - interval])
 			.precision(.1);
 	}
-	else if (projectionString == 'Lambert conic conformal') {
+	else if (projectionString == 'Lambert conformal conic') {
 		var interval = (latmax - latmin) / 6;
 		return d3.geoConicConformal()
 			.rotate([-lon0, 0])
