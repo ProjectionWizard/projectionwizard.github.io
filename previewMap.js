@@ -2,49 +2,32 @@
  * PROJECTION WIZARD v2.0
  * Map Projection Selection Tool
  * 
- * Author: Bojan Savric
- * Date: June, 2019
+ * Author: Bojan Savric, Jacob Wasilkowski
+ * Date: December, 2019
  * 
  */
 
 var world110m, world50m;
 
-function highlightActiveWorldProjectionNode() {
-	// remove ".active-world-projection" class from all world projection span nodes
-	var optionalWorldProjectionsNodeList = document.querySelectorAll('span[data-proj-name]');
-	for (var i = 0; i < optionalWorldProjectionsNodeList.length; i++) {
-		var node = optionalWorldProjectionsNodeList[i];
-		node.classList.remove('active-world-projection');
-	}
-
-	// if found, add ".active-world-projection" class to the matching world projection span node
-	var activeWorldProjectionNode = document.querySelector('span[data-proj-name="' + activeWorldProjection + '"]');
-	if (activeWorldProjectionNode) {
-		activeWorldProjectionNode.classList.add('active-world-projection');
-	}
-}
-
 /***MAP DRAW FUNCTION FOR SMALL-SCALE***/
 function addWorldMapPreview(center, projection, currentlyDragging) {
-	// update the lastest known world projection information
-	// both for the overall shared variable
-	// and for the current world projection distortion property variable
-	// (this helps maintain the most recently chosen world projection
+	var activeDistortion = $('input[name=distortion]:checked').val();
+	
+	// Updates the active projection
+	activeProjection = projection;
+	
+	// Updates default displays for the 3 world projections per distortion
+	// property (this helps maintain the most recently chosen world projection
 	// by the user in the d3 canvas map and the html text styling)
-	activeWorldProjection = projection;
-	if (activeWorldProjectionProperty === 'Equalarea') {
-		activeWorldEqualAreaProjection = projection;
-	} else if (activeWorldProjectionProperty === 'Equidistant') {
-		activeWorldEquidistantProjection = projection;
-	} else if (activeWorldProjectionProperty === 'Compromise') {
-		activeWorldCompromiseProjection = projection;
+	if (activeDistortion === 'Equalarea') {
+		activeWorldEqAreaProj = projection;
+	} else if (activeDistortion === 'Equidistant') {
+		activeWorldEqDistProj = projection;
+	} else if (activeDistortion === 'Compromise') {
+		activeWorldComproProj = projection;
 	}
-	// TODO: handle updating of variable "activeEquidistantLargeScaleMidLatitudesProjection"
-	// else if (activeWorldProjectionProperty === '???') {
-	// 	activeEquidistantLargeScaleMidLatitudesProjection = projection;
-	// }
-
-	highlightActiveWorldProjectionNode();
+	
+	highlightActiveProjectionNode();
 
 	//Creating canvas HTML element
 	if ( projection == 'Two-point equidistant' || projection == 'Oblique azimuthal equidistant' ) {
@@ -58,7 +41,7 @@ function addWorldMapPreview(center, projection, currentlyDragging) {
 	$("#result").addClass("results");
 }
 
-/***MAP DRAW FUNCTION FOR onmouseover***/
+/***MAP DRAW FUNCTIONS FOR onmouseover***/
 function updateWorldMap(projection) {
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
@@ -70,14 +53,36 @@ function updateEquidistantMap(projection) {
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
 	
+	// Updates the active projection and default display
+	// for the equidistant projection between pole and equator
+	activeEqDistProj = activeProjection = projection;
+	
 	previewMapProjection = projection;
 	addMapPreview(center, false);
 }
+
+function highlightActiveProjectionNode() {
+	// remove ".active-projection" class from all world projection span nodes
+	var optionalProjectionsNodeList = document.querySelectorAll('span[data-proj-name]');
+	for (var i = 0; i < optionalProjectionsNodeList.length; i++) {
+		var node = optionalProjectionsNodeList[i];
+		node.classList.remove('active-projection');
+	}
+
+	// if found, add ".active-projection" class to the matching world projection span node
+	var activeProjectionNode = document.querySelector('span[data-proj-name="' + activeProjection + '"]');
+	if (activeProjectionNode) {
+		activeProjectionNode.classList.add('active-projection');
+	}
+}
+
 
 /***MAIN MAP DRAW FUNCTION***/
 function addMapPreview(center, currentlyDragging) {
 	//Creating canvas HTML element
 	addCanvasMap(previewMapLat0, center.lng, previewMapProjection, 0, currentlyDragging);
+	
+	highlightActiveProjectionNode();
 	
 	//adding class to split text and map preview
 	$("#result").addClass("results");

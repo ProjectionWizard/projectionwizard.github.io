@@ -2,8 +2,8 @@
  * PROJECTION WIZARD v2.0
  * Map Projection Selection Tool
  * 
- * Author: Bojan Savric
- * Date: August, 2019
+ * Author: Bojan Savric, Jacob Wasilkowski
+ * Date: December, 2019
  * 
  */
 
@@ -84,6 +84,8 @@ function makeOutput(currentlyDragging) {
 		printSmallerArea(distortion, center, scale);
 		addMapPreview(center, currentlyDragging);
 	}
+	
+	highlightActiveProjectionNode();
 }
 
 /***PRINTING WOLRD MAP PROJECTIONS***/
@@ -133,27 +135,16 @@ var listWorld = [
 	PROJ4 : "mill"
 }];
 
-// set default world projection distortion property
-// can be one of these: "Equalarea", "Equidistant", "Compromise, or "???"
-// TODO: is there a 4th type that would correspond to "activeEquidistantLargeScaleMidLatitudesProjection" below?
-var activeWorldProjectionProperty = "Equalarea";
+// Set default displays for the 3 different world distortion categories
+var activeWorldEqAreaProj = "Equal Earth";
+var activeWorldEqDistProj = "Two-point equidistant";
+var activeWorldComproProj = "Natural Earth";
 
 // this variable will later help set the styling of the active world projection choice
-var activeWorldProjection;
-
-// set default world projection names for the 4 different world distortion categories
-var activeWorldEqualAreaProjection = "Equal Earth";
-var activeWorldEquidistantProjection = "Two-point equidistant";
-var activeWorldCompromiseProjection = "Natural Earth";
-// TODO: set the default projection name string for "activeEquidistantLargeScaleMidLatitudesProjection"
-// TODO: handle the tracking of this projection type in previewMap.js "addWorldMapPreview" function
-var activeEquidistantLargeScaleMidLatitudesProjection = "???";
+var activeProjection;
 
 /*Main small-scale output function*/
 function printWorld(property, center, currentlyDragging) {
-	// assign current world projection distortion property
-	activeWorldProjectionProperty = property;
-
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
@@ -163,60 +154,58 @@ function printWorld(property, center, currentlyDragging) {
 
 	//formating the output text
 	if (property == 'Equalarea') {
-		addWorldMapPreview(center, activeWorldEqualAreaProjection, currentlyDragging);
+		addWorldMapPreview(center, activeWorldEqAreaProj, currentlyDragging);
 		
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as points</b></p>");
 		//loop through global data
 		for (var i = 0; i < 2; i++) {
-			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'><span data-proj-name='" + listWorld[i].projection + "'>" + listWorld[i].projection + "</span>" + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</span></p>");
 		}
 
 		outputTEXT.append("<p><b>Equal-area world map projections with poles represented as lines</b></p>");
 		//loop through global data
 		for (var i = 2; i < 6; i++) {
-			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'><span data-proj-name='" + listWorld[i].projection + "'>" + listWorld[i].projection + "</span>" + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
-		addWorldMapPreview(center, activeWorldEquidistantProjection, currentlyDragging);
+		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);
 		
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
 		
-		outputTEXT.append("<p class='outputText'><span data-proj-name='Polar azimuthal equidistant' onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>" +
-			"Polar azimuthal equidistant (centered on a pole)" + 
-			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "<\span></p>");
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'><span data-proj-name='Polar azimuthal equidistant'>" +
+			"Polar azimuthal equidistant (centered on a pole)</span>" + 
+			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "</span></p>");
 			
-		outputTEXT.append("<p class='outputText'><span data-proj-name='Oblique azimuthal equidistant' onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>" +
-			"Oblique azimuthal equidistant (centered on arbitrary point)" + 
-			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "<\span></p>");
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'><span data-proj-name='Oblique azimuthal equidistant'>" +
+			"Oblique azimuthal equidistant (centered on arbitrary point)</span>" + 
+			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</span></p>");
 			
-		outputTEXT.append("<p class='outputText'><span data-proj-name='Two-point equidistant' onmouseover='updateWorldMap(\"Two-point equidistant\")'>" +
-			"Two-point equidistant (relative to two arbitrary points)" + 
-			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "<\span></p>");
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'><span data-proj-name='Two-point equidistant'>" +
+			"Two-point equidistant (relative to two arbitrary points)</span>" + 
+			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</span></p>");
 	}
 	else {
 		// NOTE: property is equal to "Compromise" in this statement
 
 		outputTEXT.append("<p><b>Compromise world map projections</b></p>");
 		
-		addWorldMapPreview(center, activeWorldCompromiseProjection, currentlyDragging);
+		addWorldMapPreview(center, activeWorldComproProj, currentlyDragging);
 		//loop through global data
 		for (var i = 6; i < 9; i++) {
-			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'><span data-proj-name='" + listWorld[i].projection + "'>" + listWorld[i].projection + "</span>" + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</span></p>");
 		}
 		outputTEXT.append("<p><b>Compromise rectangular world map projections</b></p>");
 		//loop through global data
 		for (var i = 9; i < 12; i++) {
-			outputTEXT.append("<p class='outputText'><span data-proj-name='" + listWorld[i].projection + "' onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'>" + listWorld[i].projection + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "<\span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"" + listWorld[i].projection + "\")'><span data-proj-name='" + listWorld[i].projection + "'>" + listWorld[i].projection + "</span>" + stringLinks(listWorld[i].PROJ4, NaN, NaN, NaN, NaN, lng, NaN) + "</span></p>");
 		}
 		
 		worldCM(lng, outputTEXT);
 		outputTEXT.append("<p><b>Note:</b> Rectangular projections are not generally recommended for most world maps.</p>");
 	}
-
-	highlightActiveWorldProjectionNode();
 }
 
 /***PRINTING HEMISPHERE MAP PROJECTIONS***/
@@ -272,9 +261,10 @@ function printHemisphere(property, center, scale) {
 }
 
 /***PRINTING LARGE-SCALE MAP PROJECTIONS***/
+// Set default display for the equidistant projection between pole and equator
+var activeEqDistProj = "Equidistant conic";
 
 /*Main large-scale output function*/
-
 function printSmallerArea(property, center, scale) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
@@ -319,19 +309,22 @@ function printSmallerArea(property, center, scale) {
 			var latOr = outputLAT(center.lat,        false);
 			var latS1 = outputLAT(latmin + interval, false);
 			var latS2 = outputLAT(latmax - interval, false);
+			
+			// Updates the active projection
+			activeProjection = activeEqDistProj;
 
 			//formating the output
-			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'><b>Equidistant conic</b>" +
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'><span data-proj-name='Equidistant conic'><b>Equidistant conic</b></span>" +
 				stringLinks("eqdc", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) +
-				" - distance correct along meridians<\span></p>");
-			outputTEXT.append("<p class='outputText'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "<br>Central meridian: " + lng + "</p>");
+				" - distance correct along meridians</span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "<br>Central meridian: " + lng + "</span></p>");
 			
-			outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><b>Oblique azimuthal equidistant</b>" + 
+			outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><span data-proj-name='Azimuthal equidistant' ><b>Oblique azimuthal equidistant</b></span>" + 
 				stringLinks("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) +
-				" - distance correct along any line passing through the center of the map (i.e., great circle)<\span></p>");
-			outputTEXT.append("<p class='outputText'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</p>");
+				" - distance correct along any line passing through the center of the map (i.e., great circle)</span></p>");
+			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</span></p>");
 			
-			previewMapProjection = "Equidistant conic";
+			previewMapProjection = activeEqDistProj;
 			previewMapLat0 = center.lat;
 		}
 		outputTEXT.append('<p><b>Note:</b> In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</p>');

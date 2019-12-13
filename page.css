@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: August, 2019
+ * Date: December, 2019
  *
  */
 
@@ -161,11 +161,11 @@ body {
 
 
 .results {
-	width: 55%;
+	width: 53.5%;
+	margin-right: 1.5%;
 	float: left;
 }
-
-
+	
 #mapText {
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -226,7 +226,7 @@ canvas {
 	background-color: #ff7b1a;
 }
 
-.active-world-projection {
-	font-style: italic;
+.active-projection {
+	font-weight: bold;
 	color: steelblue;
 }
