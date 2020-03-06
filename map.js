@@ -282,6 +282,16 @@ function addRectangle (map) {
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
+		// N and S max value fixing to keep rectangles from being dragged too far 
+		// this is very similar to changeInput()
+		if (NE.lat > 85.0) {
+			NE.lat = 90.0;
+		}
+		
+		if (SW.lat < -85.0) {
+			SW.lat = -90.0;
+		}
+
 		// updating the bounds
 		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
 
