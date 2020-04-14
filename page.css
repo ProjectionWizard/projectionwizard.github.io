@@ -30,8 +30,9 @@ body {
 
 #title {
 	font-family: TitleFont;
-	font-size: 32px;
+	font-size: 26px;
 	text-align: center;
+	text-transform: uppercase;
 	vertical-align: bottom;
 	margin-bottom: 10px;
 }
