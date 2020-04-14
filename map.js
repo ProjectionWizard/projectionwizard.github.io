@@ -121,11 +121,11 @@ function updateRectangle() {
 function changeInput () {
 	// Reading from the input and fixing values
 	var North = readLAT(document.getElementById("latmax").value);
-	if (North > 85.0) {
+	if (North > 90.0) {
 		North = 90.0;
 	}
 	var South = readLAT(document.getElementById("latmin").value);
-	if (South < -85.0) {
+	if (South < -90.0) {
 		South = -90.0;
 	}
 	var East = readLON(document.getElementById("lonmax").value);
@@ -282,13 +282,12 @@ function addRectangle (map) {
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
-		// N and S max value fixing to keep rectangles from being dragged too far 
-		// this is very similar to changeInput()
-		if (NE.lat > 85.0) {
+		// fixing North and South values when the rectangle is dragged too far 
+		if (NE.lat > 90.0) {
 			NE.lat = 90.0;
 		}
 		
-		if (SW.lat < -85.0) {
+		if (SW.lat < -90.0) {
 			SW.lat = -90.0;
 		}
 
