@@ -241,8 +241,8 @@ function printHemisphere(property, center, scale) {
 		else
 			lonS = lon + "º E";
 	} else {
-		latS = lat;
-		lonS = lon;
+		latS = lat + "º";
+		lonS = lon + "º";
 	}	
 
 	//formating center text
@@ -985,7 +985,7 @@ function worldCM(lng, outputTEXT) {
 		else
 			lonS = lng + "º E";
 	} else {
-		lonS = lng;
+		lonS = lng + "º";
 	} 
 	
 	outputTEXT.append("<p><b>Central meridian:</b> " + lonS + "</p>");

@@ -28,7 +28,7 @@ function updateMapArea (N, S, E, W) {
 
 /*Reading geographic coordinates*/
 function readLAT(latS) {
-	if  ( angUnit == "DMS" ){
+	if ( angUnit == "DMS" ) {
 		return dms2ddLAT(latS);
 	}
 
@@ -36,7 +36,7 @@ function readLAT(latS) {
 }
 
 function readLON(lonS) {
-	if  ( angUnit == "DMS" ){
+	if ( angUnit == "DMS" ) {
 		return dms2ddLON(lonS);
 	}
 
@@ -45,27 +45,35 @@ function readLON(lonS) {
 
 /*Outputing geographic coordinates*/
 function outputLAT(lat, ui_bool) {
-	if  ( angUnit == "DMS" ){
-		if  ( ui_bool ){
+	if ( angUnit == "DMS" ) {
+		if ( ui_bool ) {
 			return dd2dmsLAT(lat);
 		}
 
 		return dd2dmLAT(lat);
 	}
+	
+	if ( ui_bool ) {
+		return Math.round(lat * 1e7) / 1e7;
+	}
 
-	return Math.round(lat * 1e7) / 1e7;
+	return Math.round(lat * 1e7) / 1e7 + "º";
 }
 
 function outputLON(lon, ui_bool) {
-	if  ( angUnit == "DMS" ){
-		if  ( ui_bool ){
+	if ( angUnit == "DMS" ) {
+		if ( ui_bool ) {
 			return dd2dmsLON(lon);
 		}
 
 		return dd2dmLON(lon);
 	}
+	
+	if ( ui_bool ) {
+		return Math.round(lon * 1e7) / 1e7;
+	}
 
-	return Math.round(lon * 1e7) / 1e7;
+	return Math.round(lon * 1e7) / 1e7 + "º";
 }
 
 /*Updating input boxes*/
