@@ -18,6 +18,12 @@ function makeOutput(currentlyDragging) {
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
 	
+	// rounding central meridian
+	if (document.getElementById("roundCM").checked)
+	{
+		center.lng = Math.round(center.lng);
+	}
+	
 	//var printoutTEXT = $("#printout").empty();
 	//printoutTEXT.append("<p>Ratio/scale: " + scale + ", center latitude: " + center.lat + ", center longitude: " + center.lng + "</p>");
 
