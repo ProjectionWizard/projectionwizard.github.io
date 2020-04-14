@@ -930,7 +930,7 @@ function copyPROJstring(text) {
 		show : 'puff',
 		hide : 'explode',
 		width : dWidth,
-		height : dWidth,
+		height : 'auto',
 		buttons : {
 			Close : function() {
 				$(this).dialog("close");
@@ -949,7 +949,7 @@ function copyWKTstring(text) {
 	var dHeight = $(window).height() * 0.5;
 	
 	dWidth = Math.min(dWidth, dHeight);
-	if (dWidth > 375) dWidth = 375;
+	if (dWidth > 375) dWidth = 'auto';
 	
 	//Setting PROJ dialog content
 	var ProjDialog = $( "#WKT" ).empty();
@@ -963,7 +963,7 @@ function copyWKTstring(text) {
 		show : 'puff',
 		hide : 'explode',
 		width : dWidth,
-		height : dWidth,
+		height : 'auto',
 		buttons : {
 			Close : function() {
 				$(this).dialog("close");
