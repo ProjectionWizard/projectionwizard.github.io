@@ -130,6 +130,15 @@ body {
 	z-index: 101;
 }
 
+fieldset {
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    width: 260px;
+}
+legend {
+    font-weight: bold;
+}
+
 .leaflet-div-newicon {
 	background: #f00;
 	border: 1px solid #600;

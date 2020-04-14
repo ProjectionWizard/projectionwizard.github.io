@@ -432,8 +432,8 @@ function init() {
 			modal : true,
 			show : 'puff',
 			hide : 'explode',
-			width : 300,
-			height : 300,
+			width : 'auto',
+			height : 'auto',
 			title : "Projection Wizard Options",
 			buttons : {
 				OK : function() {
