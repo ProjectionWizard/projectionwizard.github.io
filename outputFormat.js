@@ -199,14 +199,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 180,
 		  value: pole_eq,
 		  slide: function( event, ui ) {
-			  pole_eq = $( "#pole_eq" ).slider( "value" );
+			  pole_eq = ui.value;
 			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
 			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  pole_eq = $( "#pole_eq" ).slider( "value" );
+			  pole_eq = ui.value;
 			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
 			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
 			  
@@ -222,14 +222,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lngP_eq,
 		  slide: function( event, ui ) {
-			  lngP_eq = $( "#lngP_eq" ).slider( "value" );
+			  lngP_eq = ui.value;
 			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
 			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lngP_eq = $( "#lngP_eq" ).slider( "value" );
+			  lngP_eq = ui.value;
 			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
 			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
 			  
@@ -249,14 +249,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: latC_eq,
 		  slide: function( event, ui ) {
-			  latC_eq = $( "#latC_eq" ).slider( "value" );
+			  latC_eq = ui.value;
 			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
 			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  latC_eq = $( "#latC_eq" ).slider( "value" );
+			  latC_eq = ui.value;
 			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
 			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
 			  
@@ -272,14 +272,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lngC_eq,
 		  slide: function( event, ui ) {
-			  lngC_eq = $( "#lngC_eq" ).slider( "value" );
+			  lngC_eq = ui.value;
 			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
 			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lngC_eq = $( "#lngC_eq" ).slider( "value" );
+			  lngC_eq = ui.value;
 			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
 			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
 			  
@@ -299,14 +299,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lat1_eq,
 		  slide: function( event, ui ) {
-			  lat1_eq = $( "#lat1_eq" ).slider( "value" );
+			  lat1_eq = ui.value;
 			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Two-point equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lat1_eq = $( "#lat1_eq" ).slider( "value" );
+			  lat1_eq = ui.value;
 			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
@@ -322,14 +322,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lng1_eq,
 		  slide: function( event, ui ) {
-			  lng1_eq = $( "#lng1_eq" ).slider( "value" );
+			  lng1_eq = ui.value;
 			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Two-point equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lng1_eq = $( "#lng1_eq" ).slider( "value" );
+			  lng1_eq = ui.value;
 			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
@@ -345,14 +345,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lat2_eq,
 		  slide: function( event, ui ) {
-			  lat2_eq = $( "#lat2_eq" ).slider( "value" );
+			  lat2_eq = ui.value;
 			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Two-point equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lat2_eq = $( "#lat2_eq" ).slider( "value" );
+			  lat2_eq = ui.value;
 			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
@@ -368,14 +368,14 @@ function printWorld(property, center, currentlyDragging) {
 		  step: 0.01,
 		  value: lng2_eq,
 		  slide: function( event, ui ) {
-			  lng2_eq = $( "#lng2_eq" ).slider( "value" );
+			  lng2_eq = ui.value;
 			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
 			  addWorldMapPreview(center, "Two-point equidistant", true);
 		  },
 		  stop: function( event, ui ) {
-			  lng2_eq = $( "#lng2_eq" ).slider( "value" );
+			  lng2_eq = ui.value;
 			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
 			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
 			  
