@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: December, 2019
+ * Date: April, 2020
  * 
  */
 

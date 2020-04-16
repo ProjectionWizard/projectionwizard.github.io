@@ -178,11 +178,11 @@ function fitSquare(map) {
 
 	//setting new bounds for the rectangle
 	var North = zoomCenter.lat + dLat;
-	if (North > 90.0)
+	if (North > 87.0)
 		North = 90.0;
 
 	var South = zoomCenter.lat - dLat;
-	if (South < -90.0)
+	if (South < -87.0)
 		South = -90.0;
 
 	var East = zoomCenter.lng + dLon;
@@ -293,11 +293,11 @@ function addRectangle (map) {
 		var NE = newBounds.getNorthEast();
 
 		// fixing North and South values when the rectangle is dragged too far 
-		if (NE.lat > 90.0) {
+		if (NE.lat > 87.0) {
 			NE.lat = 90.0;
 		}
 		
-		if (SW.lat < -90.0) {
+		if (SW.lat < -87.0) {
 			SW.lat = -90.0;
 		}
 

@@ -160,7 +160,7 @@ function printWorld(property, center, currentlyDragging) {
 	var outputTEXT = $("#result").empty();
 	
 	//formating coordinates of the centeral meridian
-	var lng = Math.round(center.lng);
+	var lng = Math.round(center.lng * 100.) / 100.;
 
 	//formating the output text
 	if (property == 'Equalarea') {
@@ -219,7 +219,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lngP_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lngP_eq,
 		  slide: function( event, ui ) {
 			  lngP_eq = $( "#lngP_eq" ).slider( "value" );
@@ -246,7 +246,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#latC_eq" ).slider({
 		  min: -90.0,
 		  max:  90.0,
-		  step: 1,
+		  step: 0.01,
 		  value: latC_eq,
 		  slide: function( event, ui ) {
 			  latC_eq = $( "#latC_eq" ).slider( "value" );
@@ -269,7 +269,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lngC_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lngC_eq,
 		  slide: function( event, ui ) {
 			  lngC_eq = $( "#lngC_eq" ).slider( "value" );
@@ -296,7 +296,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lat1_eq" ).slider({
 		  min: -90.0,
 		  max:  90.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lat1_eq,
 		  slide: function( event, ui ) {
 			  lat1_eq = $( "#lat1_eq" ).slider( "value" );
@@ -319,7 +319,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lng1_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lng1_eq,
 		  slide: function( event, ui ) {
 			  lng1_eq = $( "#lng1_eq" ).slider( "value" );
@@ -342,7 +342,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lat2_eq" ).slider({
 		  min: -90.0,
 		  max:  90.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lat2_eq,
 		  slide: function( event, ui ) {
 			  lat2_eq = $( "#lat2_eq" ).slider( "value" );
@@ -365,7 +365,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lng2_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 1,
+		  step: 0.01,
 		  value: lng2_eq,
 		  slide: function( event, ui ) {
 			  lng2_eq = $( "#lng2_eq" ).slider( "value" );
