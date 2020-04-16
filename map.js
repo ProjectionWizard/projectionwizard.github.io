@@ -28,11 +28,19 @@ function updateMapArea (N, S, E, W) {
 
 /*Reading geographic coordinates*/
 function readLAT(latS) {
+	var num;
+	
 	if ( angUnit == "DMS" ) {
-		return dms2ddLAT(latS);
+		num = dms2ddLAT(latS);
 	}
+	else {
+		num = parseFloat(latS);
+	}
+	
+	if (num >  90.0) num =  90.0;
+	if (num < -90.0) num = -90.0;
 
-	return parseFloat(latS);
+	return num;
 }
 
 function readLON(lonS) {
@@ -129,15 +137,9 @@ function updateRectangle() {
 function changeInput () {
 	// Reading from the input and fixing values
 	var North = readLAT(document.getElementById("latmax").value);
-	if (North > 90.0) {
-		North = 90.0;
-	}
 	var South = readLAT(document.getElementById("latmin").value);
-	if (South < -90.0) {
-		South = -90.0;
-	}
-	var East = readLON(document.getElementById("lonmax").value);
-	var West = readLON(document.getElementById("lonmin").value);
+	var East  = readLON(document.getElementById("lonmax").value);
+	var West  = readLON(document.getElementById("lonmin").value);
 
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);

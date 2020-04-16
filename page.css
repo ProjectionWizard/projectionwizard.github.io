@@ -191,7 +191,48 @@ legend {
 	text-align: center;
 	position: relative;
 	float:right;
+}
 
+.sliderBox {
+	margin-left: 14em;
+	margin-top: -18px;
+	width: 235px;
+	height: 18px;
+	position: absolute;
+}
+
+.sliderTextL {
+	margin-top: 1px;
+	width: 40px;
+	height: 18px;
+	position: relative;
+	float: left;
+	font-size: x-small;
+	text-align: right;
+}
+
+.sliderTextR {
+	margin-top: 1px;
+	width: 40px;
+	height: 18px;
+	position: relative;
+	float: right;
+	font-size: x-small;
+	text-align: left;
+}
+
+.slider {
+	margin-top: 6px;
+	margin-left: 45px;
+	width:  145px;
+	height: 0.25em;
+	position: absolute;
+}
+
+.ui-slider .ui-slider-handle{
+	width:  0.5em;
+    height: 0.75em;
+	top: -.3em
 }
 
 canvas {
