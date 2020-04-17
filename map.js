@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: December, 2019
+ * Date: April, 2020
  *
  */
 
@@ -28,15 +28,23 @@ function updateMapArea (N, S, E, W) {
 
 /*Reading geographic coordinates*/
 function readLAT(latS) {
-	if  ( angUnit == "DMS" ){
-		return dms2ddLAT(latS);
+	var num;
+	
+	if ( angUnit == "DMS" ) {
+		num = dms2ddLAT(latS);
 	}
+	else {
+		num = parseFloat(latS);
+	}
+	
+	if (num >  90.0) num =  90.0;
+	if (num < -90.0) num = -90.0;
 
-	return parseFloat(latS);
+	return num;
 }
 
 function readLON(lonS) {
-	if  ( angUnit == "DMS" ){
+	if ( angUnit == "DMS" ) {
 		return dms2ddLON(lonS);
 	}
 
@@ -45,27 +53,35 @@ function readLON(lonS) {
 
 /*Outputing geographic coordinates*/
 function outputLAT(lat, ui_bool) {
-	if  ( angUnit == "DMS" ){
-		if  ( ui_bool ){
+	if ( angUnit == "DMS" ) {
+		if ( ui_bool ) {
 			return dd2dmsLAT(lat);
 		}
 
 		return dd2dmLAT(lat);
 	}
+	
+	if ( ui_bool ) {
+		return Math.round(lat * 1e7) / 1e7;
+	}
 
-	return Math.round(lat * 1e7) / 1e7;
+	return Math.round(lat * 1e7) / 1e7 + "º";
 }
 
 function outputLON(lon, ui_bool) {
-	if  ( angUnit == "DMS" ){
-		if  ( ui_bool ){
+	if ( angUnit == "DMS" ) {
+		if ( ui_bool ) {
 			return dd2dmsLON(lon);
 		}
 
 		return dd2dmLON(lon);
 	}
+	
+	if ( ui_bool ) {
+		return Math.round(lon * 1e7) / 1e7;
+	}
 
-	return Math.round(lon * 1e7) / 1e7;
+	return Math.round(lon * 1e7) / 1e7 + "º";
 }
 
 /*Updating input boxes*/
@@ -121,15 +137,9 @@ function updateRectangle() {
 function changeInput () {
 	// Reading from the input and fixing values
 	var North = readLAT(document.getElementById("latmax").value);
-	if (North > 85.0) {
-		North = 90.0;
-	}
 	var South = readLAT(document.getElementById("latmin").value);
-	if (South < -85.0) {
-		South = -90.0;
-	}
-	var East = readLON(document.getElementById("lonmax").value);
-	var West = readLON(document.getElementById("lonmin").value);
+	var East  = readLON(document.getElementById("lonmax").value);
+	var West  = readLON(document.getElementById("lonmin").value);
 
 	//Updating the rectangle
 	updateMapArea(North, South, East, West);
@@ -168,11 +178,11 @@ function fitSquare(map) {
 
 	//setting new bounds for the rectangle
 	var North = zoomCenter.lat + dLat;
-	if (North > 90.0)
+	if (North > 87.0)
 		North = 90.0;
 
 	var South = zoomCenter.lat - dLat;
-	if (South < -90.0)
+	if (South < -87.0)
 		South = -90.0;
 
 	var East = zoomCenter.lng + dLon;
@@ -281,6 +291,15 @@ function addRectangle (map) {
 
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
+
+		// fixing North and South values when the rectangle is dragged too far 
+		if (NE.lat > 87.0) {
+			NE.lat = 90.0;
+		}
+		
+		if (SW.lat < -87.0) {
+			SW.lat = -90.0;
+		}
 
 		// updating the bounds
 		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
@@ -423,8 +442,8 @@ function init() {
 			modal : true,
 			show : 'puff',
 			hide : 'explode',
-			width : 300,
-			height : 300,
+			width : 'auto',
+			height : 'auto',
 			title : "Projection Wizard Options",
 			buttons : {
 				OK : function() {

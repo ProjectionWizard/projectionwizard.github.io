@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: December, 2019
+ * Date: April, 2020
  *
  */
 
@@ -30,8 +30,9 @@ body {
 
 #title {
 	font-family: TitleFont;
-	font-size: 32px;
+	font-size: 26px;
 	text-align: center;
+	text-transform: uppercase;
 	vertical-align: bottom;
 	margin-bottom: 10px;
 }
@@ -99,6 +100,10 @@ body {
 	margin-top: -10px;
 }
 
+#round_ops {
+	margin-top: -10px;
+}
+
 #buttons {
 	max-width: 200px;
 	margin-top: 20px;
@@ -127,6 +132,15 @@ body {
 	margin: 0;
 	position: relative;
 	z-index: 101;
+}
+
+fieldset {
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    width: 260px;
+}
+legend {
+    font-weight: bold;
 }
 
 .leaflet-div-newicon {
@@ -177,7 +191,48 @@ body {
 	text-align: center;
 	position: relative;
 	float:right;
+}
 
+.sliderBox {
+	margin-left: 14em;
+	margin-top: -18px;
+	width: 235px;
+	height: 18px;
+	position: absolute;
+}
+
+.sliderTextL {
+	margin-top: 1px;
+	width: 40px;
+	height: 18px;
+	position: relative;
+	float: left;
+	font-size: x-small;
+	text-align: right;
+}
+
+.sliderTextR {
+	margin-top: 1px;
+	width: 40px;
+	height: 18px;
+	position: relative;
+	float: right;
+	font-size: x-small;
+	text-align: left;
+}
+
+.slider {
+	margin-top: 6px;
+	margin-left: 45px;
+	width:  145px;
+	height: 0.25em;
+	position: absolute;
+}
+
+.ui-slider .ui-slider-handle {
+	width:  0.5em;
+	height: 0.75em;
+	top:    -.3em;
 }
 
 canvas {
@@ -228,4 +283,5 @@ canvas {
 
 .active-projection {
 	color: steelblue;
+	font-weight: bold;
 }

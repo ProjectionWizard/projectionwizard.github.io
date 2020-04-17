@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: December, 2019
+ * Date: April, 2020
  * 
  */
 
@@ -30,8 +30,12 @@ function addWorldMapPreview(center, projection, currentlyDragging) {
 	highlightActiveProjectionNode();
 
 	//Creating canvas HTML element
-	if ( projection == 'Two-point equidistant' || projection == 'Oblique azimuthal equidistant' ) {
-		addCanvasMap(center.lat, center.lng, projection, 1, currentlyDragging);
+	if ( projection == 'Two-point equidistant' ) {
+		addCanvasMap(lat1_eq, lng1_eq, projection, 1, currentlyDragging);
+	}
+	else if ( projection == 'Oblique azimuthal equidistant' )
+	{
+		addCanvasMap(latC_eq, lngC_eq, projection, 1, currentlyDragging);
 	}
 	else {
 		addCanvasMap(0, center.lng, projection, 1, currentlyDragging);
@@ -62,15 +66,15 @@ function updateEquidistantMap(projection) {
 }
 
 function highlightActiveProjectionNode() {
-	// remove ".active-projection" class from all world projection span nodes
-	var optionalProjectionsNodeList = document.querySelectorAll('span[data-proj-name]');
+	// remove ".active-projection" class from all projection title DOM nodes that have a custom proj-name data property
+	var optionalProjectionsNodeList = document.querySelectorAll('[data-proj-name]');
 	for (var i = 0; i < optionalProjectionsNodeList.length; i++) {
 		var node = optionalProjectionsNodeList[i];
 		node.classList.remove('active-projection');
 	}
 
-	// if found, add ".active-projection" class to the matching world projection span node
-	var activeProjectionNode = document.querySelector('span[data-proj-name="' + activeProjection + '"]');
+	// add ".active-projection" class to the matching projection title DOM node if it was found
+	var activeProjectionNode = document.querySelector('[data-proj-name="' + activeProjection + '"]');
 	if (activeProjectionNode) {
 		activeProjectionNode.classList.add('active-projection');
 	}
@@ -237,7 +241,7 @@ function pickProjection(lat0, lon0, projectionString) {
 		return d3.geoAzimuthalEquidistant()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
-			.rotate([-lon0, 90]);
+			.rotate([-lngP_eq, -pole_eq]);
 	}
 	else if (projectionString == 'Oblique azimuthal equidistant') {
 		return d3.geoAzimuthalEquidistant()
@@ -246,7 +250,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, -lat0]);
 	}
 	else if (projectionString == 'Two-point equidistant') {
-		return d3.geoTwoPointEquidistant([lon0, lat0],[90.5, 45.5])
+		return d3.geoTwoPointEquidistant([lon0, lat0],[lat2_eq, lng2_eq])
 			.clipAngle(105);
 	}
 	else {

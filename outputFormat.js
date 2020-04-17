@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: December, 2019
+ * Date: April, 2020
  * 
  */
 
@@ -17,6 +17,12 @@ function makeOutput(currentlyDragging) {
 	var distortion = $('input[name=distortion]:checked').val();
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
+	
+	// rounding central meridian
+	if (document.getElementById("roundCM").checked)
+	{
+		center.lng = Math.round(center.lng);
+	}
 	
 	//var printoutTEXT = $("#printout").empty();
 	//printoutTEXT.append("<p>Ratio/scale: " + scale + ", center latitude: " + center.lat + ", center longitude: " + center.lng + "</p>");
@@ -140,6 +146,11 @@ var activeWorldEqAreaProj = "Equal Earth";
 var activeWorldEqDistProj = "Two-point equidistant";
 var activeWorldComproProj = "Natural Earth";
 
+// Set default point values for equidistant world map projections
+var pole_eq = -90., lngP_eq = -180.;
+var latC_eq = -39., lngC_eq =  145.;
+var lat1_eq =  34., lng1_eq = -117., lat2_eq = 46., lng2_eq = 16.;
+
 // this variable will later help set the styling of the active world projection choice
 var activeProjection;
 
@@ -148,9 +159,8 @@ function printWorld(property, center, currentlyDragging) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
-	//formating coordinates of the center
+	//formating coordinates of the centeral meridian
 	var lng = Math.round(center.lng * 100.) / 100.;
-	var lat = Math.round(center.lat * 100.) / 100.;
 
 	//formating the output text
 	if (property == 'Equalarea') {
@@ -171,21 +181,207 @@ function printWorld(property, center, currentlyDragging) {
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
-		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);
-		
+		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);		
+		lngP_eq = lng;
+
+		//output text
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
-		
+
+
 		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'><span data-proj-name='Polar azimuthal equidistant'>" +
-			"Polar azimuthal equidistant (centered on a pole)</span>" + 
-			stringLinks("aeqd", NaN, -90.0, NaN, NaN, lng, NaN) + "</span></p>");
+			"<b>Polar azimuthal equidistant</b></span><span id='pole_str'>" + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN) +  "</span> - centered on a pole</span></p>");
+
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>Center pole: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='pole_eq' class='slider'></div></div>");
+		$( "#pole_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: 180,
+		  value: pole_eq,
+		  slide: function( event, ui ) {
+			  pole_eq = ui.value;
+			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
+			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  pole_eq = ui.value;
+			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
+			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Polar azimuthal equidistant", false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>Central meridian: <span id='lngP_val'>" + formatWorldLON(lngP_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngP_eq' class='slider'></div></div>");
+		$( "#lngP_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: 0.01,
+		  value: lngP_eq,
+		  slide: function( event, ui ) {
+			  lngP_eq = ui.value;
+			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
+			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lngP_eq = ui.value;
+			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
+			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Polar azimuthal equidistant", false);
+		  }
+		});
+
+
+		outputTEXT.append("<p class='outputText'><br><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'><span data-proj-name='Oblique azimuthal equidistant'>" +
+			"<b>Oblique azimuthal equidistant</b></span><span id='aeqd_str'>" + stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN) + "</span> - centered on arbitrary point</span></p>");
 			
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'><span data-proj-name='Oblique azimuthal equidistant'>" +
-			"Oblique azimuthal equidistant (centered on arbitrary point)</span>" + 
-			stringLinks("aeqd", NaN, lat, NaN, NaN, lng, NaN) + "</span></p>");
-			
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'><span data-proj-name='Two-point equidistant'>" +
-			"Two-point equidistant (relative to two arbitrary points)</span>" + 
-			stringLinks("tpeqd", NaN, lat, lng, 45.5, 90.5, NaN) + "</span></p>");
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>Center latitude: <span id='latC_val'>"  + formatWorldLAT(latC_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='latC_eq' class='slider'></div></div>");
+		$( "#latC_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: 0.01,
+		  value: latC_eq,
+		  slide: function( event, ui ) {
+			  latC_eq = ui.value;
+			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  latC_eq = ui.value;
+			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Oblique azimuthal equidistant", false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>Center longitude: <span id='lngC_val'>" + formatWorldLON(lngC_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngC_eq' class='slider'></div></div>");
+		$( "#lngC_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: 0.01,
+		  value: lngC_eq,
+		  slide: function( event, ui ) {
+			  lngC_eq = ui.value;
+			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lngC_eq = ui.value;
+			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Oblique azimuthal equidistant", false);
+		  }
+		});	
+
+
+		outputTEXT.append("<p class='outputText'><br><span onmouseover='updateWorldMap(\"Two-point equidistant\")'><span data-proj-name='Two-point equidistant'>" +
+			"<b>Two-point equidistant</b></span><span id='tpeqd_str'>" + stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN) + "</span> - relative to two arbitrary points</span></p>");
+
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>First latitude: <span id='lat1_val'>"  + formatWorldLAT(lat1_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat1_eq' class='slider'></div></div>");
+		$( "#lat1_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: 0.01,
+		  value: lat1_eq,
+		  slide: function( event, ui ) {
+			  lat1_eq = ui.value;
+			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lat1_eq = ui.value;
+			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>First longitude: <span id='lng1_val'>" + formatWorldLON(lng1_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng1_eq' class='slider'></div></div>");
+		$( "#lng1_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: 0.01,
+		  value: lng1_eq,
+		  slide: function( event, ui ) {
+			  lng1_eq = ui.value;
+			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lng1_eq = ui.value;
+			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", false);
+		  }
+		});
+		
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>Second latitude: <span id='lat2_val'>"  + formatWorldLAT(lat2_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat2_eq' class='slider'></div></div>");
+		$( "#lat2_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: 0.01,
+		  value: lat2_eq,
+		  slide: function( event, ui ) {
+			  lat2_eq = ui.value;
+			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lat2_eq = ui.value;
+			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", false);
+		  }
+		});
+		
+		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>Second longitude: <span id='lng2_val'>" + formatWorldLON(lng2_eq) + "</span></span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng2_eq' class='slider'></div></div>");
+		$( "#lng2_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: 0.01,
+		  value: lng2_eq,
+		  slide: function( event, ui ) {
+			  lng2_eq = ui.value;
+			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", true);
+		  },
+		  stop: function( event, ui ) {
+			  lng2_eq = ui.value;
+			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, "Two-point equidistant", false);
+		  }
+		});
 	}
 	else {
 		// NOTE: property is equal to "Compromise" in this statement
@@ -235,27 +431,27 @@ function printHemisphere(property, center, scale) {
 		else
 			lonS = lon + "º E";
 	} else {
-		latS = lat;
-		lonS = lon;
-	}	
+		latS = lat + "º";
+		lonS = lon + "º";
+	}
 
 	//formating center text
 	var center_text = "Center latitude: " + latS + "<br>Center longitude: " + lonS;
 
 	//formating the output text
 	if (property == 'Equalarea') {
+		previewMapProjection = activeProjection = "Azimuthal equal area";
 		outputTEXT.append("<p><b>Equal-area projection for maps showing a hemisphere</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Lambert azimuthal equal-area projection</b>" +
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert azimuthal equal-area projection</span>" +
 			stringLinks("laea", NaN, lat, NaN, NaN, lon, NaN) +
 			"<br>" + center_text + "</p>");
-		previewMapProjection = "Azimuthal equal area";
 		previewMapLat0 = lat;
 	} else {
+		previewMapProjection = activeProjection = "Azimuthal equidistant";
 		outputTEXT.append("<p><b>Equidistant projection for maps showing a hemisphere</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Azimuthal equidistant</b>" +
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Azimuthal equidistant</span>" +
 			stringLinks("aeqd", NaN, lat, NaN, NaN, lon, NaN) +
 			"<br>" + center_text + "</p>");
-		previewMapProjection = "Azimuthal equidistant";
 		previewMapLat0 = lat;
 	}
 }
@@ -279,26 +475,26 @@ function printSmallerArea(property, center, scale) {
 
 		//case: close to poles
 		if (((center.lat > 67.5 && scale < 8) || center.lat > 70)) {
-			outputTEXT.append("<p><b>Polar azimuthal equidistant</b>" + 
+			previewMapProjection = activeProjection = "Azimuthal equidistant";
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" + 
 				stringLinks("aeqd", NaN, 90.0, NaN, NaN, center.lng, NaN) + 
 				" - distance correct along any line passing through the pole (i.e., meridian)<br>Central meridian: " + lng + "</p>");
-			previewMapProjection = "Azimuthal equidistant";
 			previewMapLat0 = 90;
 		}
 		else if ((center.lat < -67.5 && scale < 8) || center.lat < -70) {
-			outputTEXT.append("<p><b>Polar azimuthal equidistant</b>" + 
+			previewMapProjection = activeProjection = "Azimuthal equidistant";
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" + 
 				stringLinks("aeqd", NaN, -90.0, NaN, NaN, center.lng, NaN) + 
 				" - distance correct along any line passing through the pole (i.e., meridian)<br>Central meridian: " + lng + "</p>");
-			previewMapProjection = "Azimuthal equidistant";
 			previewMapLat0 = -90;
 		}
 		
 		//case: close to equator
 		else if (center.lat > -15. && center.lat < 15.) {
-			outputTEXT.append("<p><b>Plate Carrée</b>" + 
+			previewMapProjection = activeProjection = "Plate Carrée";
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Plate Carrée</span>" + 
 				stringLinks("latlong", NaN, NaN, NaN, NaN, center.lng, NaN) + 
 				" (or equidistant cylindrical) - distance correct along meridians<br>Central meridian: " + lng + "</p>");
-			previewMapProjection = "Plate Carrée";
 			previewMapLat0 = 0;
 		}
 		
@@ -334,55 +530,55 @@ function printSmallerArea(property, center, scale) {
 	//case: very large scale, Universal Polar Stereographic - North Pole
 	else if ((latmin >= 84.) && (property == "Conformal")) {
 		//formating the output
+		previewMapProjection = activeProjection = "Stereographic";
 		outputTEXT.append("<p><b>Conformal projection at very large map scale</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, 90.0, NaN, NaN, center.lng, 0.994) + "</p>");
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 		outputTEXT.append("<p class='outputText'>Scale factor: 0.994</p>");
-		
-		previewMapProjection = "Stereographic";
-        previewMapLat0 = 90;
+
+		previewMapLat0 = 90;
 	}
 	
 	//case: very large scale, Universal Polar Stereographic - South Pole
 	else if ((latmax <= -80.) && (property == "Conformal")) {
 		//formating the output
+		previewMapProjection = activeProjection = "Stereographic";
 		outputTEXT.append("<p><b>Conformal projection at very large map scale</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, -90.0, NaN, NaN, center.lng, 0.994) + "</p>");
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 		outputTEXT.append("<p class='outputText'>Scale factor: 0.994</p>");
-		
-		previewMapProjection = "Stereographic";
-        previewMapLat0 = -90;
+
+		previewMapLat0 = -90;
 	} 
 	
 	//case: very large scale, like on "state plane" coord. sys.
 	else if ((dlon <= 3.) && (property == "Conformal")) {
 		//formating the output
+		previewMapProjection = activeProjection = "Transverse Mercator";
 		outputTEXT.append("<p><b>Conformal projection at very large map scale</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Transverse Mercator</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Transverse Mercator</span>" + 
 				stringLinks("tmerc", 500000.0, NaN, NaN, NaN, center.lng, 0.9999) + "</p>");
 		outputTEXT.append("<p class='outputText'>False easting: 500000.0</p>");
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 		outputTEXT.append("<p class='outputText'>Scale factor: 0.9999</p>");
-		
-		previewMapProjection = "Transverse Mercator";
-        previewMapLat0 = 0;
+
+		previewMapLat0 = 0;
 	} 
 	
 	//case: very large scale, like Universal Transverse Mercator
 	else if ( (dlon <= 6.) && (property == "Conformal")) {
 		//formating the output
+		previewMapProjection = activeProjection = "Transverse Mercator";
 		outputTEXT.append("<p><b>Conformal projection at very large map scale</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Transverse Mercator</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Transverse Mercator</span>" + 
 				stringLinks("tmerc", 500000.0, NaN, NaN, NaN, center.lng, 0.9996) + "</p>");
 		outputTEXT.append("<p class='outputText'>False easting: 500000.0</p>");
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 		outputTEXT.append("<p class='outputText'>Scale factor: 0.9996</p>");
-		
-		previewMapProjection = "Transverse Mercator";
-        previewMapLat0 = 0;
+
+		previewMapLat0 = 0;
 	} 
 	
 	else {
@@ -422,19 +618,19 @@ function printSquareFormat(property, center) {
 	//formating the output
 	if (property == "Conformal") {
 		outputTEXT.append("<p><b>Conformal projection for regional maps in square format</b></p>");
-		previewMapProjection = "Stereographic";
+		previewMapProjection = activeProjection = "Stereographic";
 	} else if (property == 'Equalarea') {
 		outputTEXT.append("<p><b>Equal-area projection for regional maps in square format</b></p>");
-		previewMapProjection = "Azimuthal equal area";
+		previewMapProjection = activeProjection = "Azimuthal equal area";
 	}
 	//case: close to poles
 	if (center.lat > 75.) {
 		previewMapLat0 = 90;
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Polar Lambert azimuthal equal-area</b>" + 
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		}
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
@@ -442,10 +638,10 @@ function printSquareFormat(property, center) {
 	else if (center.lat < -75.) {
 		previewMapLat0 = -90;
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Polar Lambert azimuthal equal-area</b>" + 
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		}
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
@@ -454,10 +650,10 @@ function printSquareFormat(property, center) {
 	else if (center.lat > -15. && center.lat < 15.) {
 		previewMapLat0 = 0;
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Equatorial stereographic</b>"
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Equatorial stereographic</span>"
 				+ stringLinks("stere", NaN, 0.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Equatorial Lambert azimuthal equal-area</b>"
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Equatorial Lambert azimuthal equal-area</span>"
 				+ stringLinks("laea", NaN, 0.0, NaN, NaN, center.lng, NaN) + "</p>");
 		}
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
@@ -469,10 +665,10 @@ function printSquareFormat(property, center) {
 		previewMapLat0 = center.lat;
 
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Oblique stereographic</b>" 
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Oblique stereographic</span>" 
 				+ stringLinks("stere", NaN, center.lat, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Oblique Lambert azimuthal equal-area</b>"
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Oblique Lambert azimuthal equal-area</span>"
 				+ stringLinks("laea", NaN, center.lat, NaN, NaN, center.lng, NaN) + "</p>");
 		}
 		outputTEXT.append("<p class='outputText'>" + center_text + "</p>");
@@ -490,15 +686,15 @@ function printNSextent(property, center) {
 
 	//formating the output
 	if (property == "Conformal") {
+		previewMapProjection = activeProjection = "Transverse Mercator";
 		outputTEXT.append("<p><b>Conformal projection for regional maps with an north-south extent</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Transverse Mercator</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Transverse Mercator</span>" + 
 				stringLinks("tmerc", NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
-		previewMapProjection = "Transverse Mercator";
 	} else if (property == 'Equalarea') {
+		previewMapProjection = activeProjection = "Transverse cylindrical equal area";
 		outputTEXT.append("<p><b>Equal-area projection for regional maps with an north-south extent</b></p>");
-		outputTEXT.append("<p class='outputText'><b>Transverse cylindrical equal-area</b>" + 
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Transverse cylindrical equal-area</span>" + 
 				stringLinks("tcea", NaN, NaN, NaN, NaN, center.lng, NaN) + "</p>");
-		previewMapProjection = "Transverse cylindrical equal area";
 	}
 	outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 	previewMapLat0 = 0;
@@ -529,25 +725,25 @@ function printEWextent(property, center, scale) {
 	if ((center.lat > 67.5 && scale < 8) || center.lat > 70) {
 		previewMapLat0 = 90;
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+			previewMapProjection = activeProjection = "Stereographic";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Stereographic";
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Polar Lambert azimuthal equal-area</b>" + 
+			previewMapProjection = activeProjection = "Azimuthal equal area";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Azimuthal equal area";
 		}
 	}
 	else if ((center.lat < -67.5 && scale < 8) || center.lat < -70) {
 		previewMapLat0 = -90;
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Polar stereographic</b>" + 
+			previewMapProjection = activeProjection = "Stereographic";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Stereographic";
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Polar Lambert azimuthal equal-area</b>" + 
+			previewMapProjection = activeProjection = "Azimuthal equal area";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Azimuthal equal area";
 		}
 	}
 	
@@ -564,13 +760,13 @@ function printEWextent(property, center, scale) {
 			latS = 0.;
 
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Mercator</b>" + 
+			previewMapProjection = activeProjection = "Mercator";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Mercator</span>" + 
 				stringLinks("merc", NaN, NaN, latS, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Mercator";
 		} else if (property == 'Equalarea') {
-			outputTEXT.append("<p class='outputText'><b>Cylindrical equal-area</b>" + 
+			previewMapProjection = activeProjection = "Cylindrical equal area";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Cylindrical equal-area</span>" + 
 				stringLinks("cea", NaN, NaN, latS, NaN, center.lng, NaN) + "</p>");
-			previewMapProjection = "Cylindrical equal area";
 		}
 		
 		outputTEXT.append("<p class='outputText'>Standard parallel: " + outputLAT(latS, false) + "</p>");
@@ -578,12 +774,12 @@ function printEWextent(property, center, scale) {
 
 	//case: mid-latitudes, with long strip in east-west direction
 	else if ( (Math.abs(lonmax - lonmin) > 200.) && (property == "Equalarea") ) {	
-		outputTEXT.append("<p class='outputText'><b>Oblique Lambert azimuthal equal-area</b>" + 
+		previewMapProjection = activeProjection = "Azimuthal equal area";
+		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Oblique Lambert azimuthal equal-area</span>" + 
 			stringLinks("laea", NaN, center.lat, NaN, NaN, center.lng, NaN) + "</p>");
 		
 		outputTEXT.append("<p class='outputText'>Latitude of origin: " + outputLAT(center.lat, false) + "</p>");
 		
-		previewMapProjection = "Azimuthal equal area";
 		previewMapLat0 = center.lat;
 	}	
 	
@@ -597,13 +793,13 @@ function printEWextent(property, center, scale) {
 		previewMapLat0 = center.lat;
 
 		if (property == "Conformal") {
-			outputTEXT.append("<p class='outputText'><b>Lambert conformal conic</b>" + 
+			previewMapProjection = activeProjection = "Lambert conformal conic";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert conformal conic</span>" + 
 				stringLinks("lcc", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) + '</p>');
-			previewMapProjection = "Lambert conformal conic";
 		} else if (property == 'Equalarea') {
-			outputTEXT.append('<p class="outputText"><b>Albers equal-area conic</b>' + 
+			previewMapProjection = activeProjection = "Albers equal area conic";
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Albers equal-area conic</span>" + 
 				stringLinks("aea", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) + '</p>');
-			previewMapProjection = "Albers equal area conic";
 		}
 		outputTEXT.append("<p class='outputText'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "</p>");
 	}
@@ -924,7 +1120,7 @@ function copyPROJstring(text) {
 		show : 'puff',
 		hide : 'explode',
 		width : dWidth,
-		height : dWidth,
+		height : 'auto',
 		buttons : {
 			Close : function() {
 				$(this).dialog("close");
@@ -943,7 +1139,7 @@ function copyWKTstring(text) {
 	var dHeight = $(window).height() * 0.5;
 	
 	dWidth = Math.min(dWidth, dHeight);
-	if (dWidth > 375) dWidth = 375;
+	if (dWidth > 375) dWidth = 'auto';
 	
 	//Setting PROJ dialog content
 	var ProjDialog = $( "#WKT" ).empty();
@@ -957,7 +1153,7 @@ function copyWKTstring(text) {
 		show : 'puff',
 		hide : 'explode',
 		width : dWidth,
-		height : dWidth,
+		height : 'auto',
 		buttons : {
 			Close : function() {
 				$(this).dialog("close");
@@ -971,16 +1167,48 @@ function copyWKTstring(text) {
 
 /*Function that formats the central meridian value for world maps*/
 function worldCM(lng, outputTEXT) {
-	var lon = Math.round(lng), lonS;
+	var lon;
 	
 	if  ( angUnit == "DMS" ){
 		if (lng < 0)
-			lonS = Math.abs(lng) + "º W";
+			lon = Math.abs(lng) + "º W";
 		else
-			lonS = lng + "º E";
+			lon = lng + "º E";
 	} else {
-		lonS = lng;
+		lon = lng + "º";
 	} 
 	
-	outputTEXT.append("<p><b>Central meridian:</b> " + lonS + "</p>");
+	outputTEXT.append("<p><b>Central meridian:</b> " + lon + "</p>");
+}
+
+/*Function that formats the latitude value for world maps*/
+function formatWorldLAT(lat) {
+	var phi;
+	
+	if ( angUnit == "DMS" ){
+		if (lat < 0)
+			phi = Math.abs(lat) + "º S";
+		else
+			phi = lat + "º N";
+	} else {
+		phi = lat + "º";
+	} 
+	
+	return phi;
+}
+
+/*Function that formats the longitude value for world maps*/
+function formatWorldLON(lng) {
+	var lon;
+	
+	if ( angUnit == "DMS" ){
+		if (lng < 0)
+			lon = Math.abs(lng) + "º W";
+		else
+			lon = lng + "º E";
+	} else {
+		lon = lng +  "º";
+	} 
+	
+	return lon;
 }
