@@ -283,4 +283,5 @@ canvas {
 
 .active-projection {
 	color: steelblue;
+	font-weight: bold;
 }

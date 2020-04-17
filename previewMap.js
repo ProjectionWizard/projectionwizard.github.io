@@ -66,15 +66,15 @@ function updateEquidistantMap(projection) {
 }
 
 function highlightActiveProjectionNode() {
-	// remove ".active-projection" class from all world projection span nodes
-	var optionalProjectionsNodeList = document.querySelectorAll('span[data-proj-name]');
+	// remove ".active-projection" class from all projection title DOM nodes that have a custom proj-name data property
+	var optionalProjectionsNodeList = document.querySelectorAll('[data-proj-name]');
 	for (var i = 0; i < optionalProjectionsNodeList.length; i++) {
 		var node = optionalProjectionsNodeList[i];
 		node.classList.remove('active-projection');
 	}
 
-	// if found, add ".active-projection" class to the matching world projection span node
-	var activeProjectionNode = document.querySelector('span[data-proj-name="' + activeProjection + '"]');
+	// add ".active-projection" class to the matching projection title DOM node if it was found
+	var activeProjectionNode = document.querySelector('[data-proj-name="' + activeProjection + '"]');
 	if (activeProjectionNode) {
 		activeProjectionNode.classList.add('active-projection');
 	}
