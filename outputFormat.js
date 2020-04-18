@@ -161,6 +161,14 @@ function printWorld(property, center, currentlyDragging) {
 	
 	//formating coordinates of the centeral meridian
 	var lng = Math.round(center.lng * 100.) / 100.;
+	
+	//formating slider steps for the central meridian
+	var steps_cm = 0.01;
+	if ( document.getElementById("roundCM").checked )
+	{
+		steps_cm = 1.;
+		lngC_eq  = Math.round(lngC_eq);
+	}	
 
 	//formating the output text
 	if (property == 'Equalarea') {
@@ -219,7 +227,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lngP_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 0.01,
+		  step: steps_cm,
 		  value: lngP_eq,
 		  slide: function( event, ui ) {
 			  lngP_eq = ui.value;
@@ -269,7 +277,7 @@ function printWorld(property, center, currentlyDragging) {
 		$( "#lngC_eq" ).slider({
 		  min: -180.0,
 		  max:  180.0,
-		  step: 0.01,
+		  step: steps_cm,
 		  value: lngC_eq,
 		  slide: function( event, ui ) {
 			  lngC_eq = ui.value;
