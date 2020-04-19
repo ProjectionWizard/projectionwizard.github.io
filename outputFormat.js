@@ -45,7 +45,7 @@ function makeOutput(currentlyDragging) {
 		}
 
 		//World (small-scale) map
-		printWorld(distortion, center, currentlyDragging);
+		printWorld(distortion, center, scale, currentlyDragging);
 
 	} else if (scale < 6) {
 		//locking Conformal map
@@ -155,20 +155,27 @@ var lat1_eq =  34., lng1_eq = -117., lat2_eq = 46., lng2_eq = 16.;
 var activeProjection;
 
 /*Main small-scale output function*/
-function printWorld(property, center, currentlyDragging) {
+function printWorld(property, center, scale, currentlyDragging) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
-	//formating coordinates of the centeral meridian
-	var lng = Math.round(center.lng * 100.) / 100.;
-	
-	//formating slider steps for the central meridian
-	var steps_cm = 0.01;
-	if ( document.getElementById("roundCM").checked )
-	{
-		steps_cm = 1.;
+	//formating slider steps and the central meridian
+	var lng, steps_cm;
+	if ( document.getElementById("roundCM").checked || scale < 1.15 ) {
+		lng      = Math.round(center.lng);
 		lngC_eq  = Math.round(lngC_eq);
-	}	
+		steps_cm = 1.;
+	}
+	else if ( scale < 1.32 ) {
+		lng      = Math.round(center.lng * 2.) / 2.;
+		lngC_eq  = Math.round(lngC_eq    * 2.) / 2.;
+		steps_cm = 0.5;
+	}
+	else {
+		lng      = Math.round(center.lng * 10.) / 10.;
+		lngC_eq  = Math.round(lngC_eq    * 10.) / 10.;
+		steps_cm = 0.1;
+	}
 
 	//formating the output text
 	if (property == 'Equalarea') {
