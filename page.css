@@ -24,17 +24,19 @@ body {
 
 #container {
 	max-width: 1024px;
+	margin-top: 35px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 #title {
 	font-family: TitleFont;
-	font-size: 26px;
-	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: left;
 	text-transform: uppercase;
-	vertical-align: bottom;
-	margin-bottom: 10px;
+	margin-top: 7px;
+	margin-bottom: 23px;
 }
 
 #inputUIarea {
@@ -48,16 +50,21 @@ body {
 
 .inputUI {
 	margin-left: 10px;
-	margin-top: -5px;
+	margin-top: 5px;
 	margin-bottom: 5px;
 	width: 200px;
 	float: left;
-	height: 450px;
+	height: 440px;
 	position: relative;
 }
 
 .inputBox {
 	max-width: 123px;
+}
+
+.inputSection {
+	margin-top: 20px;
+	margin-bottom: 10px;
 }
 
 #settings {

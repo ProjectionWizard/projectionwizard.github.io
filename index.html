@@ -48,7 +48,6 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="title">Projection&nbsp;&nbsp;Wizard</div>
 			<div id="inputUIarea">
 				<img id="settings" src="figures/opts.png" height="22" align="left" title="Customize">
 				<div id="options_dialog" class="dialogtext" title="Projection Wizard Options">
@@ -211,8 +210,9 @@
 
 				</div>
 				<div class="inputUI">
+					<div id="title">Projection&nbsp;Wizard</div>
 					<form id="distortion" onchange="makeOutput()">
-						<h4>Distortion Property</h4>
+						<h4 class="inputSection">Distortion Property</h4>
 						<input type="radio" name="distortion" id="Equalarea" value="Equalarea" checked="checked"/>
 						<label for="Equalarea">Equal-area<br></label>
 						<input type="radio" name="distortion" id="Conformal" value="Conformal"/>
@@ -223,7 +223,7 @@
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>
 
-					<h4>Geographic Extent</h4>
+					<h4 class="inputSection">Geographic Extent</h4>
 					<label class="extend" for="latmax">North: </label>
 					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
 					<label class="extend" for="latmin">South: </label>
