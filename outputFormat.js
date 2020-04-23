@@ -251,35 +251,25 @@ function outputWorldEquidistantOption(center, scale) {
 		var pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
 		
 		//creating the output
-		outputTEXT.append("<p class='outputText'>Distances are correct from or through the <span id='pole_str'>" + pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN) + "</span></br></p>");
-
-		outputTEXT.append("<p class='outputText'>Center latitude: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='pole_eq' class='slider'></div></div>");
-		$( "#pole_eq" ).slider({
-		  min: -90.0,
-		  max:  90.0,
-		  step: 180,
-		  value: pole_eq,
-		  slide: function( event, ui ) {
-			  pole_eq  = ui.value;
-			  pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
-			  
-			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
-			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, activeWorldEqDistProj, true);
-		  },
-		  stop: function( event, ui ) {
-			  pole_eq  = ui.value;
-			  pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
-			  
-			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
-			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, activeWorldEqDistProj, false);
-		  }
-		});
-
+		outputTEXT.append("<p class='outputText'>Distances are correct through or from the <span id='pole_str'>" + pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN) + "</span><br></p>");
+		
+		outputTEXT.append("<p class='outputText'>Center latitude: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></p>");	
+		outputTEXT.append("<div class='sliderBox'><form id='pole_eq'>" + 
+							"<input type='radio' name='pole_eq' id='North Pole' value='90'><label for='NP' style='font-size:11px;'>North Pole</label>" + 
+							"<input type='radio' name='pole_eq' id='South Pole' value='-90'><label for='SP' style='font-size:11px;'>South Pole</label>" + 
+						"</form></div>");
+		$( "#pole_eq" ).change( function( ) {
+			pole_eq  = $('input[name=pole_eq]:checked').val();
+			pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
+			
+			document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
+			document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			
+			addWorldMapPreview(center, activeWorldEqDistProj, true);
+			});
+		
+		document.getElementById(pole_str).checked = true;
+		
 		outputTEXT.append("<p class='outputText'>Central meridian: <span id='lngP_val'>" + formatWorldLON(lngP_eq) + "</span></p>");
 		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngP_eq' class='slider'></div></div>");
 		$( "#lngP_eq" ).slider({
@@ -307,7 +297,7 @@ function outputWorldEquidistantOption(center, scale) {
 		lngC_eq = worldValues(center.lng, scale);
 		latC_eq = worldValues(center.lat, scale);
 		
-		outputTEXT.append("<p class='outputText'>Distances are correct from or through the center - <span id='aeqd_str'>" + stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN) + "</span></br></p>");
+		outputTEXT.append("<p class='outputText'>Distances are correct through or from the center - <span id='aeqd_str'>" + stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN) + "</span></br></p>");
 			
 		outputTEXT.append("<p class='outputText'>Center latitude: <span id='latC_val'>"  + formatWorldLAT(latC_eq) + "</span></p>");
 		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='latC_eq' class='slider'></div></div>");
@@ -356,7 +346,7 @@ function outputWorldEquidistantOption(center, scale) {
 		});
 	}
 	else if ( activeWorldEqDistProj == "Two-point equidistant" ) {
-		outputTEXT.append("<p class='outputText'>Distances are correct from or through two arbitrary points - <span id='tpeqd_str'>" + stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN) + "</span></p>");
+		outputTEXT.append("<p class='outputText'>Distances are correct through or from two arbitrary points - <span id='tpeqd_str'>" + stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN) + "</span></p>");
 
 		outputTEXT.append("<p class='outputText'>First latitude: <span id='lat1_val'>"  + formatWorldLAT(lat1_eq) + "</span></p>");
 		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat1_eq' class='slider'></div></div>");

@@ -128,32 +128,6 @@ body {
 	font-size: small;
 }
 
-.selectmenu-box {
-	vertical-align: baseline;
-	width: auto;
-}
-.ui-selectmenu-button {
-	background: #ffffff;
-}
-
-.ui-selectmenu-text {
-    font-family: TextFont;
-	font-size: 12.5px;
-	font-weight: bold;
-	color: steelblue;
-}
-
-.ui-menu-item {
-    font-family: TextFont;
-	font-size: 12.5px;
-}
-
-.ui-widget-content
-.ui-state-focus {
-	background: #c4e3ee;
-	font-weight: bold;
-}
-
 .extend {
 	display: inline-block;
 	width: 3.5em;
@@ -206,7 +180,6 @@ legend {
 	font-size: 12px;
 }
 
-
 .results {
 	width: 53.5%;
 	margin-right: 1.5%;
@@ -224,6 +197,32 @@ legend {
 	text-align: center;
 	position: relative;
 	float:right;
+}
+
+.selectmenu-box {
+	vertical-align: baseline;
+	width: auto;
+}
+.ui-selectmenu-button {
+	background: #ffffff;
+}
+
+.ui-selectmenu-text {
+    font-family: TextFont;
+	font-size: 12.5px;
+	font-weight: bold;
+	color: steelblue;
+}
+
+.ui-menu-item {
+    font-family: TextFont;
+	font-size: 12.5px;
+}
+
+.ui-widget-content
+.ui-state-focus {
+	background: #c4e3ee;
+	font-weight: bold;
 }
 
 .sliderBox {
@@ -266,6 +265,12 @@ legend {
 	width:  0.5em;
 	height: 0.75em;
 	top:    -.3em;
+}
+
+input[name="pole_eq"] {
+	margin: 3px 3px 0px 10px;
+	width:  10.5px;
+	height: 10.5px;
 }
 
 canvas {
