@@ -128,6 +128,32 @@ body {
 	font-size: small;
 }
 
+.selectmenu-box {
+	vertical-align: baseline;
+	width: auto;
+}
+.ui-selectmenu-button {
+	background: #ffffff;
+}
+
+.ui-selectmenu-text {
+    font-family: TextFont;
+	font-size: 12.5px;
+	font-weight: bold;
+	color: steelblue;
+}
+
+.ui-menu-item {
+    font-family: TextFont;
+	font-size: 12.5px;
+}
+
+.ui-widget-content
+.ui-state-focus {
+	background: #c4e3ee;
+	font-weight: bold;
+}
+
 .extend {
 	display: inline-block;
 	width: 3.5em;

@@ -143,7 +143,7 @@ var listWorld = [
 
 // Set default displays for the 3 different world distortion categories
 var activeWorldEqAreaProj = "Equal Earth";
-var activeWorldEqDistProj = "Two-point equidistant";
+var activeWorldEqDistProj = "Oblique azimuthal equidistant";
 var activeWorldComproProj = "Natural Earth";
 
 // Set default point values for equidistant world map projections
@@ -159,23 +159,8 @@ function printWorld(property, center, scale, currentlyDragging) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
 	
-	//formating slider steps and the central meridian
-	var lng, steps_cm;
-	if ( document.getElementById("roundCM").checked || scale < 1.15 ) {
-		lng      = Math.round(center.lng);
-		lngC_eq  = Math.round(lngC_eq);
-		steps_cm = 1.;
-	}
-	else if ( scale < 1.32 ) {
-		lng      = Math.round(center.lng * 2.) / 2.;
-		lngC_eq  = Math.round(lngC_eq    * 2.) / 2.;
-		steps_cm = 0.5;
-	}
-	else {
-		lng      = Math.round(center.lng * 10.) / 10.;
-		lngC_eq  = Math.round(lngC_eq    * 10.) / 10.;
-		steps_cm = 0.1;
-	}
+	//formating central meridian
+	var lng = worldValues(center.lng, scale);
 
 	//formating the output text
 	if (property == 'Equalarea') {
@@ -196,207 +181,31 @@ function printWorld(property, center, scale, currentlyDragging) {
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
-		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);		
-		lngP_eq = lng;
+		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);
 
 		//output text
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
-
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'><span data-proj-name='Polar azimuthal equidistant'>" +
-			"<b>Polar azimuthal equidistant</b></span><span id='pole_str'>" + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN) +  "</span> - centered on a pole</span></p>");
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>Center pole: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='pole_eq' class='slider'></div></div>");
-		$( "#pole_eq" ).slider({
-		  min: -90.0,
-		  max:  90.0,
-		  step: 180,
-		  value: pole_eq,
-		  slide: function( event, ui ) {
-			  pole_eq = ui.value;
-			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
-			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  pole_eq = ui.value;
-			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
-			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Polar azimuthal equidistant", false);
-		  }
-		});
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Polar azimuthal equidistant\")'>Central meridian: <span id='lngP_val'>" + formatWorldLON(lngP_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngP_eq' class='slider'></div></div>");
-		$( "#lngP_eq" ).slider({
-		  min: -180.0,
-		  max:  180.0,
-		  step: steps_cm,
-		  value: lngP_eq,
-		  slide: function( event, ui ) {
-			  lngP_eq = ui.value;
-			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
-			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Polar azimuthal equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lngP_eq = ui.value;
-			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
-			  document.getElementById("pole_str").innerHTML = stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Polar azimuthal equidistant", false);
-		  }
-		});
-
-
-		outputTEXT.append("<p class='outputText'><br><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'><span data-proj-name='Oblique azimuthal equidistant'>" +
-			"<b>Oblique azimuthal equidistant</b></span><span id='aeqd_str'>" + stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN) + "</span> - centered on arbitrary point</span></p>");
-			
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>Center latitude: <span id='latC_val'>"  + formatWorldLAT(latC_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='latC_eq' class='slider'></div></div>");
-		$( "#latC_eq" ).slider({
-		  min: -90.0,
-		  max:  90.0,
-		  step: 0.01,
-		  value: latC_eq,
-		  slide: function( event, ui ) {
-			  latC_eq = ui.value;
-			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
-			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  latC_eq = ui.value;
-			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
-			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Oblique azimuthal equidistant", false);
-		  }
-		});
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Oblique azimuthal equidistant\")'>Center longitude: <span id='lngC_val'>" + formatWorldLON(lngC_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngC_eq' class='slider'></div></div>");
-		$( "#lngC_eq" ).slider({
-		  min: -180.0,
-		  max:  180.0,
-		  step: steps_cm,
-		  value: lngC_eq,
-		  slide: function( event, ui ) {
-			  lngC_eq = ui.value;
-			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
-			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Oblique azimuthal equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lngC_eq = ui.value;
-			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
-			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Oblique azimuthal equidistant", false);
-		  }
-		});	
-
-
-		outputTEXT.append("<p class='outputText'><br><span onmouseover='updateWorldMap(\"Two-point equidistant\")'><span data-proj-name='Two-point equidistant'>" +
-			"<b>Two-point equidistant</b></span><span id='tpeqd_str'>" + stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN) + "</span> - relative to two arbitrary points</span></p>");
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>First latitude: <span id='lat1_val'>"  + formatWorldLAT(lat1_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat1_eq' class='slider'></div></div>");
-		$( "#lat1_eq" ).slider({
-		  min: -90.0,
-		  max:  90.0,
-		  step: 0.01,
-		  value: lat1_eq,
-		  slide: function( event, ui ) {
-			  lat1_eq = ui.value;
-			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lat1_eq = ui.value;
-			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", false);
-		  }
-		});
-
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>First longitude: <span id='lng1_val'>" + formatWorldLON(lng1_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng1_eq' class='slider'></div></div>");
-		$( "#lng1_eq" ).slider({
-		  min: -180.0,
-		  max:  180.0,
-		  step: 0.01,
-		  value: lng1_eq,
-		  slide: function( event, ui ) {
-			  lng1_eq = ui.value;
-			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lng1_eq = ui.value;
-			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", false);
-		  }
+		
+		//making a select manue
+		outputTEXT.append("<div><div><select name='worldEquidistantMenu' id='worldEquidistantMenu'>" +
+			"<option value='Polar azimuthal equidistant'><b>Polar azimuthal equidistant</b></option>" +
+			"<option value='Oblique azimuthal equidistant'><b>Oblique azimuthal equidistant</b></option>" +
+			"<option value='Two-point equidistant'><b>Two-point equidistant</b></option></select></div><div id='worldEquidistantBox'></div>");
+		
+		var menu = $("#worldEquidistantMenu").selectmenu( {
+			width: 230,
+			select: function( event, ui ) {
+				activeWorldEqDistProj = ui.item.value;
+				outputWorldEquidistantOption(center, scale);
+				updateWorldMap(activeWorldEqDistProj);
+			}
 		});
 		
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>Second latitude: <span id='lat2_val'>"  + formatWorldLAT(lat2_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat2_eq' class='slider'></div></div>");
-		$( "#lat2_eq" ).slider({
-		  min: -90.0,
-		  max:  90.0,
-		  step: 0.01,
-		  value: lat2_eq,
-		  slide: function( event, ui ) {
-			  lat2_eq = ui.value;
-			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lat2_eq = ui.value;
-			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", false);
-		  }
-		});
+		//set the menu to activeWorldEqDistProj
+		menu.val(activeWorldEqDistProj);
+		menu.selectmenu("refresh");
 		
-		outputTEXT.append("<p class='outputText'><span onmouseover='updateWorldMap(\"Two-point equidistant\")'>Second longitude: <span id='lng2_val'>" + formatWorldLON(lng2_eq) + "</span></span></p>");
-		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng2_eq' class='slider'></div></div>");
-		$( "#lng2_eq" ).slider({
-		  min: -180.0,
-		  max:  180.0,
-		  step: 0.01,
-		  value: lng2_eq,
-		  slide: function( event, ui ) {
-			  lng2_eq = ui.value;
-			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", true);
-		  },
-		  stop: function( event, ui ) {
-			  lng2_eq = ui.value;
-			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
-			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
-			  
-			  addWorldMapPreview(center, "Two-point equidistant", false);
-		  }
-		});
+		outputWorldEquidistantOption(center, scale);
 	}
 	else {
 		// NOTE: property is equal to "Compromise" in this statement
@@ -416,6 +225,233 @@ function printWorld(property, center, scale, currentlyDragging) {
 		
 		worldCM(lng, outputTEXT);
 		outputTEXT.append("<p><b>Note:</b> Rectangular projections are not generally recommended for most world maps.</p>");
+	}
+}
+
+function outputWorldEquidistantOption(center, scale) {
+	var outputTEXT = $("#worldEquidistantBox").empty();
+	
+	//formating slider steps
+	var steps;
+	if ( document.getElementById("roundCM").checked || scale < 1.15 ) {
+		steps = 1.;
+	}
+	else if ( scale < 1.32 ) {
+		steps = 0.5;
+	}
+	else {
+		steps = 0.1;
+	}
+	
+	//formating output
+	if ( activeWorldEqDistProj == "Polar azimuthal equidistant" ) {
+		lngP_eq = worldValues(center.lng, scale);
+		
+		//formating pole name
+		var pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
+		
+		//creating the output
+		outputTEXT.append("<p class='outputText'>Distances are correct from or through the <span id='pole_str'>" + pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN) + "</span></br></p>");
+
+		outputTEXT.append("<p class='outputText'>Center latitude: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='pole_eq' class='slider'></div></div>");
+		$( "#pole_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: 180,
+		  value: pole_eq,
+		  slide: function( event, ui ) {
+			  pole_eq  = ui.value;
+			  pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
+			  
+			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
+			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  pole_eq  = ui.value;
+			  pole_str = pole_eq > 0 ? "North Pole" : "South Pole";
+			  
+			  document.getElementById("pole_val").innerHTML = formatWorldLAT(pole_eq);
+			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'>Central meridian: <span id='lngP_val'>" + formatWorldLON(lngP_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngP_eq' class='slider'></div></div>");
+		$( "#lngP_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: steps,
+		  value: lngP_eq,
+		  slide: function( event, ui ) {
+			  lngP_eq = ui.value;
+			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
+			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lngP_eq = ui.value;
+			  document.getElementById("lngP_val").innerHTML = formatWorldLON(lngP_eq);
+			  document.getElementById("pole_str").innerHTML = pole_str + " - " + stringLinks("aeqd", NaN, pole_eq, NaN, NaN, lngP_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+	}
+	else if ( activeWorldEqDistProj == "Oblique azimuthal equidistant" ) {
+		lngC_eq = worldValues(center.lng, scale);
+		latC_eq = worldValues(center.lat, scale);
+		
+		outputTEXT.append("<p class='outputText'>Distances are correct from or through the center - <span id='aeqd_str'>" + stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN) + "</span></br></p>");
+			
+		outputTEXT.append("<p class='outputText'>Center latitude: <span id='latC_val'>"  + formatWorldLAT(latC_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='latC_eq' class='slider'></div></div>");
+		$( "#latC_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: steps,
+		  value: latC_eq,
+		  slide: function( event, ui ) {
+			  latC_eq = ui.value;
+			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  latC_eq = ui.value;
+			  document.getElementById("latC_val").innerHTML = formatWorldLAT(latC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'>Center longitude: <span id='lngC_val'>" + formatWorldLON(lngC_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lngC_eq' class='slider'></div></div>");
+		$( "#lngC_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: steps,
+		  value: lngC_eq,
+		  slide: function( event, ui ) {
+			  lngC_eq = ui.value;
+			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lngC_eq = ui.value;
+			  document.getElementById("lngC_val").innerHTML = formatWorldLON(lngC_eq);
+			  document.getElementById("aeqd_str").innerHTML = stringLinks("aeqd", NaN, latC_eq, NaN, NaN, lngC_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+	}
+	else if ( activeWorldEqDistProj == "Two-point equidistant" ) {
+		outputTEXT.append("<p class='outputText'>Distances are correct from or through two arbitrary points - <span id='tpeqd_str'>" + stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN) + "</span></p>");
+
+		outputTEXT.append("<p class='outputText'>First latitude: <span id='lat1_val'>"  + formatWorldLAT(lat1_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat1_eq' class='slider'></div></div>");
+		$( "#lat1_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: steps,
+		  value: lat1_eq,
+		  slide: function( event, ui ) {
+			  lat1_eq = ui.value;
+			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lat1_eq = ui.value;
+			  document.getElementById("lat1_val").innerHTML = formatWorldLAT(lat1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+
+		outputTEXT.append("<p class='outputText'>First longitude: <span id='lng1_val'>" + formatWorldLON(lng1_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng1_eq' class='slider'></div></div>");
+		$( "#lng1_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: steps,
+		  value: lng1_eq,
+		  slide: function( event, ui ) {
+			  lng1_eq = ui.value;
+			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lng1_eq = ui.value;
+			  document.getElementById("lng1_val").innerHTML = formatWorldLON(lng1_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+		
+		outputTEXT.append("<p class='outputText'>Second latitude: <span id='lat2_val'>"  + formatWorldLAT(lat2_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLAT(-90.0)  + "</div><div class='sliderTextR'>" + formatWorldLAT(90.0)  + "</div><div id='lat2_eq' class='slider'></div></div>");
+		$( "#lat2_eq" ).slider({
+		  min: -90.0,
+		  max:  90.0,
+		  step: steps,
+		  value: lat2_eq,
+		  slide: function( event, ui ) {
+			  lat2_eq = ui.value;
+			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lat2_eq = ui.value;
+			  document.getElementById("lat2_val").innerHTML = formatWorldLAT(lat2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+		
+		outputTEXT.append("<p class='outputText'>Second longitude: <span id='lng2_val'>" + formatWorldLON(lng2_eq) + "</span></p>");
+		outputTEXT.append("<div class='sliderBox'><div class='sliderTextL'>" + formatWorldLON(-180.0) + "</div><div class='sliderTextR'>" + formatWorldLON(180.0) + "</div><div id='lng2_eq' class='slider'></div></div>");
+		$( "#lng2_eq" ).slider({
+		  min: -180.0,
+		  max:  180.0,
+		  step: steps,
+		  value: lng2_eq,
+		  slide: function( event, ui ) {
+			  lng2_eq = ui.value;
+			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, true);
+		  },
+		  stop: function( event, ui ) {
+			  lng2_eq = ui.value;
+			  document.getElementById("lng2_val").innerHTML = formatWorldLON(lng2_eq);
+			  document.getElementById("tpeqd_str").innerHTML = stringLinks("tpeqd", NaN, lat1_eq, lng1_eq, lat2_eq, lng2_eq, NaN);
+			  
+			  addWorldMapPreview(center, activeWorldEqDistProj, false);
+		  }
+		});
+	}
+	else {
+		outputTEXT.append("<p></p><p></p><p>Equidistant world map projection not avaliable</p><p></p><p></p>");
 	}
 }
 
@@ -1178,6 +1214,23 @@ function copyWKTstring(text) {
 
 	//Opening dialog window
 	ProjDialog.dialog( "open" );
+}
+
+/*Function that round values for world maps*/
+function worldValues(value, scale) {
+	var val;
+	
+	if ( document.getElementById("roundCM").checked || scale < 1.15 ) {
+		val = Math.round(value);
+	}
+	else if ( scale < 1.32 ) {
+		val = Math.round(value * 2.) / 2.;
+	}
+	else {
+		val = Math.round(value * 10.) / 10.;
+	}
+	
+	return val
 }
 
 /*Function that formats the central meridian value for world maps*/
