@@ -305,6 +305,36 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		sphere = {type : "Sphere"};
 	
 	grid = graticule();
+	
+	//Setting rectangle layer
+	var dlon = lonmax - lonmin,
+	    dlat = latmax - latmin,
+	    step = Math.min(dlon, dlat) / 15.0;
+	
+	//Prevents the polygon from collapsing
+	if (world && dlon > 359.99) {
+		var eps = 0.5/3600.;
+		lonmax += eps;
+		lonmax -= eps;
+	}
+	
+	//Building rectangle
+	var pt, rec_pts = [], rec_poly;
+	for (pt = lonmin; pt < lonmax; pt += step) {
+		rec_pts.push([pt, latmax]);
+	}
+	for (pt = latmax; pt > latmin; pt -= step) {
+		rec_pts.push([lonmax, pt]);
+	}
+	for (pt = lonmax; pt > lonmin; pt -= step) {
+		rec_pts.push([pt, latmin]);
+	}
+	for (pt = latmin; pt < latmax; pt += step) {
+		rec_pts.push([lonmin, pt]);
+	}
+	rec_pts.push([lonmin, latmax]);
+	
+	rec_poly = {type: "Feature", geometry: {type: "Polygon", coordinates: [rec_pts]}};
 
 	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
@@ -316,9 +346,10 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	$("#previewMap #projectionName").append(projectionString + "<br>");
 	
 	//Scaling projection on original coordinates
-	projection.scale(1).translate([0,0]);
+	projection.translate([0,0])
+			  .scale(1);
 	var max_width = document.getElementById('previewMap').offsetWidth, 
-		height, width, scaleFactor, X;
+		height, width, X;
 
 	//Computing scale factor and translation for world maps
 	if (world) {
@@ -355,39 +386,37 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 			projection.rotate([-lon0, 0])
 					  .fitSize([width, height], grid);
 		}
-	} 
+	}
 	//Computing scale factor and translation for other maps
 	else {
-		//Computing extent coordinates
-		var coord1 = projection([lonmin, latmax]),
-			coord2 = projection([lonmax, latmax]), 
-			coord3 = projection([lonmax, latmin]), 
-			coord4 = projection([lonmax, latmin]), 
-			coord5 = projection([(lonmax + lonmin) / 2, latmin]), 
-			coord6 = projection([(lonmax + lonmin) / 2, latmax]), 
-			coord7 = projection([lonmin, (latmin + latmax) / 2]), 
-			coord8 = projection([lonmax, (latmin + latmax) / 2]), 
-			coord9 = projection([(lonmax + 3 * lonmin) / 4, latmin]), 
-			coord10 = projection([(3 * lonmax + lonmin) / 4, latmin]), 
-			coord11 = projection([(lonmax + 3 * lonmin) / 4, latmax]), 
-			coord12 = projection([(3 * lonmax + lonmin) / 4, latmax]);
-
-		//Definding original width and height of the extent
-		width = Math.abs(Math.max(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]) - Math.min(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]));
-		height = Math.abs(Math.max(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1],coord9[1], coord10[1], coord11[1], coord12[1]) - Math.min(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1], coord9[1], coord10[1], coord11[1], coord12[1]));
+		var xmin =  Number.MAX_VALUE, 
+			xmax = -Number.MAX_VALUE, 
+			ymin =  Number.MAX_VALUE, 
+			ymax = -Number.MAX_VALUE, 
+			proj_pts;
 		
-		//scaling map on the width to be 1
-		scaleFactor = 1 / width;
+		//Project rectangle
+		for (var i = 0; i < rec_pts.length; i++)
+		{
+			proj_pts = projection(rec_pts[i]);
+			
+			xmin = Math.min(xmin, proj_pts[0]);
+			xmax = Math.max(xmax, proj_pts[0]);
+			ymin = Math.min(ymin, proj_pts[1]);
+			ymax = Math.max(ymax, proj_pts[1]);
+		}
 		
+		//Calculate size of rectangle
+		width  = Math.abs(xmax - xmin);
+		height = Math.abs(ymax - ymin);
+			
 		//Final scaling factor and translation parameters
 		X = Math.min(max_width / width, 0.66 * max_width / height);
-		width *= X;
+		width  *= X;
 		height *= X;
-		scaleFactor *= width;
-	
-		projection.scale(scaleFactor);
-		var coordTran = projection([lon0, (latmax + latmin) / 2]);
-		projection.translate([width / 2, height / 2 - coordTran[1]]);
+
+		projection.translate([width / 2, height / 2])
+				  .fitSize([width, height], rec_poly);
 	}
 	
 	//Setting data layer
@@ -433,4 +462,15 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	context.strokeStyle = "#555";
 	context.stroke();
 	context.globalAlpha = 1;
+	
+	// Style ractangle
+	if ( document.getElementById("showEextent").checked ) {
+		context.beginPath();
+		path(rec_poly);
+		context.lineWidth = 3;
+		context.globalAlpha = 0.25;
+		context.fillStyle = "#ff7b1a";
+		context.fill();
+		context.globalAlpha = 1;
+	}
 }

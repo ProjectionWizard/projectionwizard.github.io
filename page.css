@@ -104,11 +104,11 @@ body {
 }
 
 #ang_ops {
-	margin-top: -10px;
+	margin-top: -15px;
 }
 
-#round_ops {
-	margin-top: -10px;
+#check_ops {
+	margin-top: -15px;
 }
 
 #buttons {
@@ -128,7 +128,7 @@ body {
 	font-size: small;
 }
 
-.extend {
+.extent {
 	display: inline-block;
 	width: 3.5em;
 }

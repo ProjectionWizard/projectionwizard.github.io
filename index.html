@@ -64,8 +64,8 @@
 					</fieldset>
 					<fieldset>
 						<legend><h4>&nbsp;Output&nbsp;</h4></legend>
-						<div id="round_ops">
-							<input type="checkbox" id="roundCM" name="roundCM" value="roundCM" />
+						<div id="check_ops">
+							<input type="checkbox" id="roundCM" name="roundCM" />
 							Round the central meridian value
 						</div>
 						<p>Geographic coordinates:&nbsp;&nbsp;
@@ -81,6 +81,13 @@
 								<option value="ft">Intl. Foot</option>
 							</select>
 						</p>
+					</fieldset>
+					<fieldset>
+						<legend><h4>&nbsp;Preview map&nbsp;</h4></legend>
+						<div id="check_ops">
+							<input type="checkbox" id="showEextent" name="showEextent" />
+							Show geographic extent
+						</div>
 					</fieldset>
 				</div>
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
@@ -162,8 +169,8 @@
 						<li>Preview map updates were added when a user hovers over projection's name with the cursor on the world lists.</li>
 						<li>PROJ string values were rounded to seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
 						<li>WKT strings are provided for each proposed projection.</li>
-						<li>A <i>Customize</i> button was added. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to nearest degree, specify the geographic coordinate type for their output strings, and select between meters and international feet for linear units.</li>
-						<li>Continuous updates to the output, preview map, and extend inputs was added during individual vertex or whole rectangle dragging.</li>
+						<li>A <i>Customize</i> button was added. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to the nearest degree, specify the geographic coordinate type for their output strings, select between meters and international feet for linear units, and display geographic extent on the preview map.</li>
+						<li>Continuous updates to the output, preview map, and extent inputs was added during individual vertex or whole rectangle dragging.</li>
 						<li>The user interface, popup window, preview maps, third-party libraries, and help content was updated.</li>
 					</ul>
 					<p>This update was prepared in collaboration with <a target="_blank" href="https://github.com/jwasilgeo">@jwasilgeo</a> and <a target="_blank" href="https://github.com/jgravois">@jgravois.</a></p>
@@ -224,13 +231,13 @@
 					</form>
 
 					<h4 class="inputSection">Geographic Extent</h4>
-					<label class="extend" for="latmax">North: </label>
+					<label class="extent" for="latmax">North: </label>
 					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="latmin">South: </label>
+					<label class="extent" for="latmin">South: </label>
 					<input class="inputBox" type="text" id="latmin" value="-45.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="lonmax">East: </label>
+					<label class="extent" for="lonmax">East: </label>
 					<input class="inputBox" type="text" id="lonmax" value="90.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="lonmin">West: </label>
+					<label class="extent" for="lonmin">West: </label>
 					<input class="inputBox" type="text" id="lonmin" value="-90.000" onchange="changeInput()" size="18"/>
 
 					<div id="buttons">

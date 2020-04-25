@@ -181,8 +181,6 @@ function printWorld(property, center, scale, currentlyDragging) {
 		worldCM(lng, outputTEXT);
 	}
 	else if (property == 'Equidistant') {
-		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);
-
 		//output text
 		outputTEXT.append("<p><b>Equidistant world map projections</b></p>");
 		
@@ -206,6 +204,7 @@ function printWorld(property, center, scale, currentlyDragging) {
 		menu.selectmenu("refresh");
 		
 		outputWorldEquidistantOption(center, scale);
+		addWorldMapPreview(center, activeWorldEqDistProj, currentlyDragging);
 	}
 	else {
 		// NOTE: property is equal to "Compromise" in this statement
