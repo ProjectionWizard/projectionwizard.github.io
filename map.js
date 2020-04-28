@@ -18,12 +18,35 @@ var latmax, latmin, lonmax, lonmin;
 var previewMapProjection, previewMapLat0;
 
 /*Updating rectangle bounds*/
-function updateMapArea (N, S, E, W) {
+function updateMapArea (N, S, E, W, checkWMbounds) {
 	latmax = N;
 	latmin = S;
 	lonmax = E;
 	lonmin = W;
-	swapCoordinates();
+	
+	//when user changes the direction
+	var temp;
+	if (lonmin > lonmax) {
+		temp = lonmin;
+		lonmin = lonmax;
+		lonmax = temp;
+	}
+	if (latmax < latmin) {
+		temp = latmax;
+		latmax = latmin;
+		latmin = temp;
+	}
+
+	//check if values are out of WM bounds
+	if (checkWMbounds) {
+		// fixing North and South values
+		if (latmax > 85.5) {
+			latmax = 90.0;
+		}
+		if (latmin < -85.5) {
+			latmin = -90.0;
+		}
+	}
 }
 
 /*Reading geographic coordinates*/
@@ -92,21 +115,6 @@ function setInputBoxes() {
 	document.getElementById("lonmin").value = outputLON(lonmin, true);
 }
 
-function swapCoordinates() {
-	//when the user change the direction
-	var temp;
-	if (lonmin > lonmax) {
-		temp = lonmin;
-		lonmin = lonmax;
-		lonmax = temp;
-	}
-	if (latmax < latmin) {
-		temp = latmax;
-		latmax = latmin;
-		latmin = temp;
-	}
-}
-
 
 /*Updating rectangle*/
 function updateRectangle() {
@@ -142,7 +150,7 @@ function changeInput () {
 	var West  = readLON(document.getElementById("lonmin").value);
 
 	//Updating the rectangle
-	updateMapArea(North, South, East, West);
+	updateMapArea(North, South, East, West, false);
 	updateRectangle();
 
 	map.fitBounds(rectangle.getBounds());
@@ -154,7 +162,7 @@ function resetUI(map) {
 	//document.getElementById("Equalarea").checked = true;
 
 	//Updating the rectangle
-	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
+	updateMapArea(90.0, -90.0, 180.0, -180.0, false);
 	updateRectangle();
 
 	//Updating the map view
@@ -178,19 +186,12 @@ function fitSquare(map) {
 
 	//setting new bounds for the rectangle
 	var North = zoomCenter.lat + dLat;
-	if (North > 87.0)
-		North = 90.0;
-
 	var South = zoomCenter.lat - dLat;
-	if (South < -87.0)
-		South = -90.0;
-
-	var East = zoomCenter.lng + dLon;
-
-	var West = zoomCenter.lng - dLon;
+	var East  = zoomCenter.lng + dLon;
+	var West  = zoomCenter.lng - dLon;
 
 	// updating the bounds in the input form boxes
-	updateMapArea(North, South, East, West);
+	updateMapArea(North, South, East, West, true);
 	updateRectangle();
 }
 
@@ -239,7 +240,7 @@ function toggleAnchorVisibility () {
 
 /*ADDS A SELECTED AREA RECTANGLE*/
 function addRectangle (map) {
-	updateMapArea( 90.0, -90.0, 180.0, -180.0 );
+	updateMapArea(90.0, -90.0, 180.0, -180.0, false);
 
 	//Creating rectangle
 	rectangle = L.rectangle([[latmax, lonmax], [latmin, lonmin]]);
@@ -256,7 +257,7 @@ function addRectangle (map) {
 		var NE = newBounds.getNorthEast();
 
 		// updating the bounds
-		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
+		updateMapArea(NE.lat, SW.lat, NE.lng, SW.lng, true);
 
 		// update the rest of the UI
 		setInputBoxes();
@@ -292,17 +293,8 @@ function addRectangle (map) {
 		var SW = newBounds.getSouthWest();
 		var NE = newBounds.getNorthEast();
 
-		// fixing North and South values when the rectangle is dragged too far 
-		if (NE.lat > 87.0) {
-			NE.lat = 90.0;
-		}
-		
-		if (SW.lat < -87.0) {
-			SW.lat = -90.0;
-		}
-
 		// updating the bounds
-		updateMapArea( NE.lat, SW.lat, NE.lng, SW.lng );
+		updateMapArea(NE.lat, SW.lat, NE.lng, SW.lng, true);
 
 		// update the rest of the UI
 		setInputBoxes();
@@ -332,7 +324,7 @@ function addRectangle (map) {
 			oppositeCorner.lng = liveCorner.lng - 360.0;
 		}
 
-		updateMapArea(liveCorner.lat, oppositeCorner.lat, liveCorner.lng, oppositeCorner.lng);
+		updateMapArea(liveCorner.lat, oppositeCorner.lat, liveCorner.lng, oppositeCorner.lng, true);
 
 		// update Rectangle bounds *without* toggling edit mode
 		var SouthWest = new L.LatLng(latmin, lonmin),
