@@ -145,7 +145,6 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, 0]);
 	}
 	else if (projectionString == 'Transverse cylindrical equal area') {
-		var scale = 1.5;
 		return d3.geoTransverseCylindricalEqualArea()
 			.parallel(0)
 			.precision(.1)
@@ -313,9 +312,14 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	
 	//Prevents the polygon from collapsing
 	if (world && dlon > 359.99) {
-		var eps = 0.5/3600.;
-		lonmax += eps;
+		var eps = 1.5/3600.;
+		lonmin += eps;
 		lonmax -= eps;
+	}
+	if (world && dlat > 179.99) {
+		var eps = 1.5/3600.;
+		latmin += eps;
+		latmax -= eps;
 	}
 	
 	//Building rectangle
