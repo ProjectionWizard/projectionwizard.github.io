@@ -312,12 +312,12 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	
 	//Prevents the polygon from collapsing
 	if (world && dlon > 359.99) {
-		var eps = 1.5/3600.;
+		var eps = 2./3600.;
 		lonmin += eps;
 		lonmax -= eps;
 	}
 	if (world && dlat > 179.99) {
-		var eps = 1.5/3600.;
+		var eps = 2./3600.;
 		latmin += eps;
 		latmax -= eps;
 	}
@@ -397,17 +397,22 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 			xmax = -Number.MAX_VALUE, 
 			ymin =  Number.MAX_VALUE, 
 			ymax = -Number.MAX_VALUE, 
-			proj_pts;
+			pt, fit_pts = rec_pts.slice();
+		
+		//Making sure origin point(s) will also display
+		if ( document.getElementById("showCenter").checked ) {
+			fit_pts.push([lon0, lat0]);
+		}
 		
 		//Project rectangle
-		for (var i = 0; i < rec_pts.length; i++)
+		for (var i = 0; i < fit_pts.length; i++)
 		{
-			proj_pts = projection(rec_pts[i]);
+			pt = projection(fit_pts[i]);
 			
-			xmin = Math.min(xmin, proj_pts[0]);
-			xmax = Math.max(xmax, proj_pts[0]);
-			ymin = Math.min(ymin, proj_pts[1]);
-			ymax = Math.max(ymax, proj_pts[1]);
+			xmin = Math.min(xmin, pt[0]);
+			xmax = Math.max(xmax, pt[0]);
+			ymin = Math.min(ymin, pt[1]);
+			ymax = Math.max(ymax, pt[1]);
 		}
 		
 		//Calculate size of rectangle
@@ -420,7 +425,7 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		height *= X;
 
 		projection.translate([width / 2, height / 2])
-				  .fitSize([width, height], rec_poly);
+				  .fitSize([width, height], {type: 'Feature', geometry: {type: 'MultiPoint', coordinates: fit_pts}});
 	}
 	
 	//Setting data layer
@@ -476,5 +481,35 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		context.fillStyle = "#ff7b1a";
 		context.fill();
 		context.globalAlpha = 1;
+	}
+	
+	// Style origin point
+	if ( document.getElementById("showCenter").checked ) {
+		var origin = [], pt;
+		if (projectionString == 'Polar azimuthal equidistant') {
+			origin.push([lngP_eq, pole_eq]);
+		}
+		else if (projectionString == 'Oblique azimuthal equidistant') {
+			origin.push([lngC_eq, latC_eq]);			
+		}
+		else if (projectionString == 'Two-point equidistant') {
+			origin.push([lng1_eq, lat1_eq]);
+			origin.push([lng2_eq, lat2_eq]);
+		}
+		else {
+			origin.push([lon0, lat0]);
+		}
+		
+		//Drawing points
+		for (var i = 0; i < origin.length; i++)
+		{
+			pt = projection(origin[i]);
+
+			context.beginPath();
+			context.arc(pt[0], pt[1], 4, 0, 2 * Math.PI);
+			context.fillStyle = "#3388ff";
+			context.fill();
+			context.closePath();
+		}
 	}
 }
