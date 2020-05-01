@@ -516,7 +516,7 @@ function printSmallerArea(property, center, scale) {
 		outputTEXT.append("<p><b>Regional map projection with correct scale along some lines.</b></p>");
 
 		//case: close to poles
-		if (((center.lat > 67.5 && scale < 8) || center.lat > 70)) {
+		if (center.lat > 70) {
 			previewMapProjection = activeProjection = "Azimuthal equidistant";
 			previewMapLat0 = 90;
 			
@@ -524,7 +524,7 @@ function printSmallerArea(property, center, scale) {
 				stringLinks("aeqd", NaN, 90.0, NaN, NaN, center.lng, NaN) + 
 				" - distance correct along any line passing through the pole (i.e., meridian)<br>Central meridian: " + lng + "</p>");
 		}
-		else if ((center.lat < -67.5 && scale < 8) || center.lat < -70) {
+		else if (center.lat < -70) {
 			previewMapProjection = activeProjection = "Azimuthal equidistant";
 			previewMapLat0 = -90;
 			
