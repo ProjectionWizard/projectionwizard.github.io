@@ -48,15 +48,27 @@ function makeOutput(currentlyDragging) {
 		printWorld(distortion, center, scale, currentlyDragging);
 
 	} else if (scale < 6) {
-		//locking Conformal map
-		var radioConformal = document.getElementById("Conformal");
-		if (radioConformal.checked) {
-			document.getElementById("Equalarea").checked = true;
-			distortion = "Equalarea";
+		//Case: geographic extent is in the tropics
+		if ((Math.abs(latmax) < 23.43665) && (Math.abs(latmin) < 23.43665)) {
+			//unlocking conformal
+			var radioConformal = document.getElementById("Conformal");
+			if (radioConformal.disabled) {
+				radioConformal.disabled = false;
+				document.getElementById("Label2").style.color = "#000000";
+			}
 		}
-		radioConformal.disabled = true;
-		document.getElementById("Label2").style.color = "#BDBDBD";
-
+		//Case: geographic extent is out of the tropics
+		else {
+			//locking conformal map
+			var radioConformal = document.getElementById("Conformal");
+			if (radioConformal.checked) {
+				document.getElementById("Equalarea").checked = true;
+				distortion = "Equalarea";
+			}
+			radioConformal.disabled = true;
+			document.getElementById("Label2").style.color = "#BDBDBD";
+		}
+		
 		//locking compromise map
 		var radioCompromise = document.getElementById("Compromise");
 		if (radioCompromise.checked) {
@@ -448,53 +460,107 @@ function outputWorldEquidistantOption(center, scale) {
 function printHemisphere(property, center, scale) {
 	//cleaning the output
 	var outputTEXT = $("#result").empty();
-
-	//formating coordinates of the center
-	var lon = Math.round(center.lng * 100.) / 100., lat, lonS, latS;
-
-	if (center.lat > 85.) {
-		lat = 90.0;
-	} else if (center.lat < -85.) {
-		lat = -90.0;
-	} else {
-		lat = Math.round(center.lat * 100.) / 100.;
-	}
-
-	//formating coordinates of the center - strings
-	if  ( angUnit == "DMS" ){
-		if (lat < 0)
-			latS = Math.abs(lat) + "º S";
-		else
-			latS = lat + "º N";
+	
+	//Formating central meridian
+	var lon = Math.round(center.lng * 100.) / 100., lonStr, latStr;
+	
+	//Formating central meridian string
+	if ( angUnit == "DMS" ){
 		if (lon < 0)
-			lonS = Math.abs(lon) + "º W";
+			lonStr = Math.abs(lon) + "º W";
 		else
-			lonS = lon + "º E";
+			lonStr = lon + "º E";
 	} else {
-		latS = lat + "º";
-		lonS = lon + "º";
+		lonStr = lon + "º";
 	}
-
-	//formating center text
-	var center_text = "Center latitude: " + latS + "<br>Center longitude: " + lonS;
-
-	//formating the output text
-	if (property == 'Equalarea') {
-		previewMapProjection = activeProjection = "Azimuthal equal area";
-		previewMapLat0 = lat;
+	
+	//Formating the output text
+	if ((Math.abs(latmax) < 23.43665) && (Math.abs(latmin) < 23.43665)) {
+		//Defining std. parallel
+		var interval = (latmax - latmin) / 4.;
+		var latS1 = center.lat + interval, latS2 = center.lat - interval, latStd;
 		
-		outputTEXT.append("<p><b>Equal-area projection for maps showing a hemisphere</b></p>");
-		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert azimuthal equal-area projection</span>" +
-			stringLinks("laea", NaN, lat, NaN, NaN, lon, NaN) +
-			"<br>" + center_text + "</p>");
-	} else {
-		previewMapProjection = activeProjection = "Azimuthal equidistant";
-		previewMapLat0 = lat;
+		if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.)) {
+			latStd = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+		} else {
+			latStd = 0.;
+		}	
+		latStd = Math.round(latStd * 100.) / 100.;
 		
-		outputTEXT.append("<p><b>Equidistant projection for maps showing a hemisphere</b></p>");
-		outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Azimuthal equidistant</span>" +
-			stringLinks("aeqd", NaN, lat, NaN, NaN, lon, NaN) +
-			"<br>" + center_text + "</p>");
+		//Formating std. parallel string
+		if  ( angUnit == "DMS" ){
+			if (latStd < 0)
+				latStr = Math.abs(latStd) + "º S";
+			else
+				latStr = latStd + "º N";
+		} else {
+			latStr = latStd + "º";
+		}
+		
+		//Formating the output text
+		if (property == 'Equalarea') {
+			previewMapProjection = activeProjection = "Cylindrical equal area";
+			
+			outputTEXT.append("<p><b>Equal-area projection for maps showing the tropics</b></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Cylindrical equal-area</span>" + 
+				stringLinks("cea", NaN, NaN, latStd, NaN, lon, NaN) + "</p>");
+		} else if (property == "Conformal") {
+			previewMapProjection = activeProjection = "Mercator";
+			
+			outputTEXT.append("<p><b>Conformal projection for maps showing the tropics</b></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Mercator</span>" + 
+				stringLinks("merc", NaN, NaN, latStd, NaN, lon, NaN) + "</p>");
+		} else if (property == "Equidistant") {
+			previewMapProjection = activeProjection = "Equidistant cylindrical";
+			
+			outputTEXT.append("<p><b>Equidistant projection for maps showing the tropics</b></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Equidistant cylindrical</span>" + 
+				stringLinks("eqc", NaN, NaN, latStd, NaN, lon, NaN) + " - distance correct along meridians</p>");
+		}
+		outputTEXT.append("<p class='outputText'>Standard parallel: " + latStr + "</p>");
+		outputTEXT.append("<p class='outputText'>Central meridian: " + lonStr + "</p>");
+		
+		previewMapLat0 = 0;
+	}
+	else {
+		//Formating central latitude
+		var lat;
+		if (center.lat > 85.) {
+			lat = 90.0;
+		} else if (center.lat < -85.) {
+			lat = -90.0;
+		} else {
+			lat = Math.round(center.lat * 100.) / 100.;
+		}
+		
+		//Formating central latitude string
+		if  ( angUnit == "DMS" ){
+			if (lat < 0)
+				latStr = Math.abs(lat) + "º S";
+			else
+				latStr = lat + "º N";
+		} else {
+			latStr = lat + "º";
+		}
+		
+		//Formating the output text
+		if (property == 'Equalarea') {
+			previewMapProjection = activeProjection = "Azimuthal equal area";
+			
+			outputTEXT.append("<p><b>Equal-area projection for maps showing a hemisphere</b></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert azimuthal equal-area projection</span>" +
+				stringLinks("laea", NaN, lat, NaN, NaN, lon, NaN) + "</p>");
+		} else if (property == "Equidistant") {
+			previewMapProjection = activeProjection = "Azimuthal equidistant";
+			
+			outputTEXT.append("<p><b>Equidistant projection for maps showing a hemisphere</b></p>");
+			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Azimuthal equidistant</span>" +
+				stringLinks("aeqd", NaN, lat, NaN, NaN, lon, NaN) + "</p>");
+		}
+		outputTEXT.append("<p class='outputText'>Center latitude: " + latStr + "</p>");
+		outputTEXT.append("<p class='outputText'>Center longitude: "  + lonStr + "</p>");
+		
+		previewMapLat0 = lat;
 	}
 }
 
