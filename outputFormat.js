@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: April, 2020
+ * Date: May, 2020
  * 
  */
 
@@ -511,36 +511,62 @@ function printSmallerArea(property, center, scale) {
 	//reading central meridian
 	var lng = outputLON(center.lng, false);
 
+	//getting the height-to-width ratio
+	var ratio = (latmax - latmin) / dlon;
+	if (latmin > 0.0) {
+		ratio /= Math.cos (latmin * Math.PI / 180);
+	} else if (latmax < 0.0) {
+		ratio /= Math.cos (latmax * Math.PI / 180);
+	}
+	
 	//formating the output text
 	if (property == 'Equidistant') {
 		outputTEXT.append("<p><b>Regional map projection with correct scale along some lines.</b></p>");
-
+		
 		//case: close to poles
 		if (center.lat > 70) {
 			previewMapProjection = activeProjection = "Azimuthal equidistant";
 			previewMapLat0 = 90;
 			
-			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" + 
-				stringLinks("aeqd", NaN, 90.0, NaN, NaN, center.lng, NaN) + 
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" +
+				stringLinks("aeqd", NaN, 90.0, NaN, NaN, center.lng, NaN) +
 				" - distance correct along any line passing through the pole (i.e., meridian)<br>Central meridian: " + lng + "</p>");
 		}
 		else if (center.lat < -70) {
 			previewMapProjection = activeProjection = "Azimuthal equidistant";
 			previewMapLat0 = -90;
 			
-			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" + 
-				stringLinks("aeqd", NaN, -90.0, NaN, NaN, center.lng, NaN) + 
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Polar azimuthal equidistant</span>" +
+				stringLinks("aeqd", NaN, -90.0, NaN, NaN, center.lng, NaN) +
 				" - distance correct along any line passing through the pole (i.e., meridian)<br>Central meridian: " + lng + "</p>");
+		}
+		
+		//case: with an north-south extent
+		else if (ratio > 1.25) {
+			previewMapProjection = activeProjection = "Cassini";
+			previewMapLat0 = 0;
+			
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Cassini</span>" +
+				stringLinks("cass", NaN, NaN, NaN, NaN, center.lng, NaN) +
+				" - distance correct along any line perpendicular to the central meridian<br>Central meridian: " + lng + "</p>");
 		}
 		
 		//case: close to equator
 		else if (center.lat > -15. && center.lat < 15.) {
-			previewMapProjection = activeProjection = "Plate Carrée";
+			previewMapProjection = activeProjection = "Equidistant cylindrical";
 			previewMapLat0 = 0;
 			
-			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Plate Carrée</span>" + 
-				stringLinks("latlong", NaN, NaN, NaN, NaN, center.lng, NaN) + 
-				" (or equidistant cylindrical) - distance correct along meridians<br>Central meridian: " + lng + "</p>");
+			var interval = (latmax - latmin) / 4.;
+			var latS1 = center.lat + interval, latS2 = center.lat - interval, latS;
+			
+			if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.))
+				latS = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+			else
+				latS = 0.;
+			
+			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Equidistant cylindrical</span>" +
+				stringLinks("eqc", NaN, NaN, latS, NaN, center.lng, NaN) +
+				" - distance correct along meridians<br>Standard parallel: " + outputLAT(latS, false) + "<br>Central meridian: " + lng + "</p>");
 		}
 		
 		//case: between pole and equator
@@ -551,23 +577,22 @@ function printSmallerArea(property, center, scale) {
 			var latS1 = outputLAT(latmin + interval, false);
 			var latS2 = outputLAT(latmax - interval, false);
 			
-			// Updates the active projection
+			//updates the active projection
 			activeProjection = previewMapProjection = activeEqDistProj;
 			previewMapLat0 = center.lat;
-
+			
 			//formating the output
 			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'><span data-proj-name='Equidistant conic'><b>Equidistant conic</b></span>" +
 				stringLinks("eqdc", NaN, center.lat, latmin + interval, latmax - interval, center.lng, NaN) +
 				" - distance correct along meridians</span></p>");
 			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Equidistant conic\")'>Latitude of origin: " + latOr + "<br>Standard parallel 1: " + latS1 + "<br>Standard parallel 2: " + latS2 + "<br>Central meridian: " + lng + "</span></p>");
 			
-			outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><span data-proj-name='Azimuthal equidistant' ><b>Oblique azimuthal equidistant</b></span>" + 
+			outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><span data-proj-name='Azimuthal equidistant' ><b>Oblique azimuthal equidistant</b></span>" +
 				stringLinks("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) +
 				" - distance correct along any line passing through the center of the map (i.e., great circle)</span></p>");
 			outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</span></p>");
 		}
 		outputTEXT.append('<p><b>Note:</b> In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</p>');
-
 	} 
 	
 	//case: very large scale, Universal Polar Stereographic - North Pole
@@ -625,14 +650,7 @@ function printSmallerArea(property, center, scale) {
 	} 
 	
 	else {
-		//getting the height-to-width ratio
-		var ratio = (latmax - latmin) / dlon;
-		if (latmin > 0.0) {
-			ratio /= Math.cos (latmin * Math.PI / 180) 
-		} else if (latmax < 0.0) {
-			ratio /= Math.cos (latmax * Math.PI / 180) 
-		} 
-
+		//Different map formats
 		if (ratio > 1.25) {
 			//Regional maps with an north-south extent
 			printNSextent(property, center);
@@ -993,7 +1011,11 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 
 	// FORMATING PROJECTION
 	// PROJ string
-	PROJstr += prj;
+	if (prj == "latlong") {
+		PROJstr += "eqc";
+	} else {
+		PROJstr += prj;
+	}
 
 	// WKT string
 	switch (prj) {
@@ -1040,6 +1062,10 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		// Transverse Mercator
 		case "tmerc":
 			WKTstr += 'Transverse_Mercator\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Transverse_Mercator\\\"],';
+			break;
+		// Cassini
+		case "cass":
+			WKTstr += 'Cassini\\\",' + gcs_str + '</br>&nbsp;PROJECTION[\\\"Cassini\\\"],';
 			break;
 		// Mollweide
 		case "moll":
@@ -1163,6 +1189,8 @@ function stringLinks(prj, x0, lat0, lat1, lat2, lon0, k0) {
 		case "tcea":
 		// Transverse Mercator
 		case "tmerc":
+		// Cassini
+		case "cass":
 			if ( isNaN(k0) ) {
 				PROJstr += (" +lon_0=" + lon0);
 				WKTstr  += ('</br>&nbsp;PARAMETER[\\\"Central_Meridian\\\",' + lon0 + '],</br>&nbsp;PARAMETER[\\\"Scale_Factor\\\",1.0],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],');

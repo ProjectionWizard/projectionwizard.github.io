@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: April, 2020
+ * Date: May, 2020
  * 
  */
 
@@ -138,7 +138,7 @@ function pickProjection(lat0, lon0, projectionString) {
 		} else {
 			latS = 0.;
 		}
-				
+		
 		return d3.geoCylindricalEqualArea()
 			.parallel(latS)
 			.precision(.1)
@@ -149,6 +149,17 @@ function pickProjection(lat0, lon0, projectionString) {
 			.parallel(0)
 			.precision(.1)
 			.rotate([-lon0, 0, 90]);
+	}
+	else if (projectionString == 'Equidistant cylindrical') {
+		return d3.geoEquirectangular()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Cassini') {
+		return d3.geoEquirectangular()
+			.rotate([-lon0, 0, 90])
+			.angle(-90)
+			.precision(.1);
 	}
 	else if (projectionString == 'Equidistant conic') {
 		var interval = (latmax - latmin) / 6;
@@ -311,12 +322,12 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	    step = Math.min(dlon, dlat) / 15.0;
 	
 	//Prevents the polygon from collapsing
-	if (world && dlon > 359.99) {
+	if (dlon > 359.99) {
 		var eps = 2./3600.;
 		lonmin += eps;
 		lonmax -= eps;
 	}
-	if (world && dlat > 179.99) {
+	if (dlat > 179.99) {
 		var eps = 2./3600.;
 		latmin += eps;
 		latmax -= eps;
