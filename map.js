@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: April, 2020
+ * Date: May, 2020
  *
  */
 
@@ -489,6 +489,9 @@ function init() {
 	map = new L.Map('map', {
 		attributionControl: false,
 	}).setView([0,0], 0);
+
+	//Moving zoom controls to the right
+	map.zoomControl.setPosition('topright');
 
 	//Fit bounds button
 	$("#fit").button();

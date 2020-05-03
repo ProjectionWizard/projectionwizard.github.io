@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: April, 2020
+ * Date: May, 2020
  *
  */
 
@@ -24,7 +24,7 @@ body {
 
 #container {
 	max-width: 1024px;
-	margin-top: 35px;
+	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -69,15 +69,15 @@ body {
 
 #settings {
 	vertical-align: top;
-	margin-top: -29px;
-	margin-right: 0px;
+	margin-top: 0px;
+	margin-right: -26px;
 	float: right;
 }
 
 #help {
 	vertical-align: top;
-	margin-top: -29px;
-	margin-right: 29px;
+	margin-top: 26px;
+	margin-right: -26px;
 	float: right;
 }
 
