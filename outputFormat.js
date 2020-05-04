@@ -266,8 +266,8 @@ function outputWorldEquidistantOption(center, scale) {
 		
 		outputTEXT.append("<p class='outputText'>Center latitude: <span id='pole_val'>" + formatWorldLAT(pole_eq) + "</span></p>");	
 		outputTEXT.append("<div class='sliderBox'><form id='pole_eq'>" + 
-							"<input type='radio' name='pole_eq' id='North Pole' value='90'><label for='NP' style='font-size:11px;'>North Pole</label>" + 
-							"<input type='radio' name='pole_eq' id='South Pole' value='-90'><label for='SP' style='font-size:11px;'>South Pole</label>" + 
+							"<input type='radio' name='pole_eq' id='North Pole' value='90'><label for='North Pole' style='font-size:11px;'>North Pole</label>" + 
+							"<input type='radio' name='pole_eq' id='South Pole' value='-90'><label for='South Pole' style='font-size:11px;'>South Pole</label>" + 
 						"</form></div>");
 		$( "#pole_eq" ).change( function( ) {
 			pole_eq  = $('input[name=pole_eq]:checked').val();
