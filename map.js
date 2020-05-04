@@ -450,6 +450,11 @@ function init() {
 		NewDialog.dialog( "open" );
 	});
 
+	// update the d3js preview map not only when the settings dialog closes,
+	// but also when some of its checkboxes change
+	document.querySelector('#showEextent').addEventListener('change', updateRectangle);
+	document.querySelector('#showCenter').addEventListener('change', updateRectangle);
+
 	//Help button
 	$( "#dialog" ).dialog({ autoOpen: false });
 	$( "#help" ).button();
