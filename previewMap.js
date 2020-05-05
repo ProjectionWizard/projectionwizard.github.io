@@ -317,37 +317,42 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	grid = graticule();
 	
 	//Setting rectangle layer
-	var dlon = lonmax - lonmin,
-	    dlat = latmax - latmin,
-	    step = Math.min(dlon, dlat) / 15.0;
+	var lammax = lonmax,
+		lammin = lonmin,
+		phimax = latmax,
+		phimin = latmin;
+	
+	var dlam = lammax - lammin,
+		dphi = phimax - phimin,
+		step = Math.min(dlam, dphi) / 15.0;
 	
 	//Prevents the polygon from collapsing
-	if (dlon > 359.99) {
-		var eps = 2./3600.;
-		lonmin += eps;
-		lonmax -= eps;
+	if (dlam > 359.99) {
+		var eps = 5/3600.;
+		lammin += eps;
+		lammax -= eps;
 	}
-	if (dlat > 179.99) {
-		var eps = 2./3600.;
-		latmin += eps;
-		latmax -= eps;
+	if (dphi > 179.99) {
+		var eps = 5/3600.;
+		phimin += eps;
+		phimax -= eps;
 	}
 	
 	//Building rectangle
 	var pt, rec_pts = [], rec_poly;
-	for (pt = lonmin; pt < lonmax; pt += step) {
-		rec_pts.push([pt, latmax]);
+	for (pt = lammin; pt < lammax; pt += step) {
+		rec_pts.push([pt, phimax]);
 	}
-	for (pt = latmax; pt > latmin; pt -= step) {
-		rec_pts.push([lonmax, pt]);
+	for (pt = phimax; pt > phimin; pt -= step) {
+		rec_pts.push([lammax, pt]);
 	}
-	for (pt = lonmax; pt > lonmin; pt -= step) {
-		rec_pts.push([pt, latmin]);
+	for (pt = lammax; pt > lammin; pt -= step) {
+		rec_pts.push([pt, phimin]);
 	}
-	for (pt = latmin; pt < latmax; pt += step) {
-		rec_pts.push([lonmin, pt]);
+	for (pt = phimin; pt < phimax; pt += step) {
+		rec_pts.push([lammin, pt]);
 	}
-	rec_pts.push([lonmin, latmax]);
+	rec_pts.push([lammin, phimax]);
 	
 	rec_poly = {type: "Feature", geometry: {type: "Polygon", coordinates: [rec_pts]}};
 
