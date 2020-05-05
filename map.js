@@ -118,6 +118,9 @@ function setInputBoxes() {
 
 /*Updating rectangle*/
 function updateRectangle() {
+	//Getting angular unit
+	angUnit = $('input[name=ang_format]:checked').val();
+	
 	//update inputs
 	setInputBoxes();
 
@@ -450,8 +453,9 @@ function init() {
 		NewDialog.dialog( "open" );
 	});
 
-	// update the d3js preview map not only when the settings dialog closes,
-	// but also when some of its checkboxes change
+	//Update the output and/or extent input boxes immediately when settings change
+	document.querySelector('#ang_format').addEventListener('change', updateRectangle);
+	document.querySelector('#roundCM').addEventListener('change', updateRectangle);
 	document.querySelector('#showEextent').addEventListener('change', updateRectangle);
 	document.querySelector('#showCenter').addEventListener('change', updateRectangle);
 
