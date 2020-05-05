@@ -87,16 +87,12 @@
 					<fieldset>
 						<legend><h4>&nbsp;Preview map&nbsp;</h4></legend>
 						<div id="check_ops">
-							<label>
-								<input type="checkbox" id="showEextent" name="showEextent" />
-								Show geographic extent
-							</label>
+							<input type="checkbox" id="showEextent" name="showEextent" />
+							<label for="showEextent">Show geographic extent</label>
 						</div>
 						<div>
-							<label>
-								<input type="checkbox" id="showCenter" name="showCenter" />
-								Show projection's origin point(s)
-							</label>
+							<input type="checkbox" id="showCenter" name="showCenter" />
+							<label for="showCenter">Show projection's origin point(s)</label>
 						</div>
 					</fieldset>
 				</div>
@@ -104,8 +100,9 @@
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About this Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. There are a PROJ and WKT links next to each proposed projection that open a popup window with <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
-					<p>This tool is based on <a target="_blank" href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a target="_blank" href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a target="_blank" href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of proposed map projections with additional projection parameters if necessary. There are PROJ and WKT links next to each projection that open a popup window with <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with a suggested projection. The preview shows how the projected data will look using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
+					<p>This tool is based on <a target="_blank" href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a target="_blank" href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page.</p>
+					<p>When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a target="_blank" href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 
 
 					<h3>How to Use this Tool?</h3>
