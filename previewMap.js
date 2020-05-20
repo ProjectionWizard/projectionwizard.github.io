@@ -326,35 +326,81 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		dphi = phimax - phimin,
 		step = Math.min(dlam, dphi) / 15.0;
 	
-	//Prevents the polygon from collapsing
-	if (dlam > 359.99) {
-		var eps = 5/3600.;
-		lammin += eps;
-		lammax -= eps;
-	}
-	if (dphi > 179.99) {
-		var eps = 5/3600.;
-		phimin += eps;
-		phimax -= eps;
-	}
-	
-	//Building rectangle
 	var pt, rec_pts = [], rec_poly;
-	for (pt = lammin; pt < lammax; pt += step) {
-		rec_pts.push([pt, phimax]);
+	//Create two ractangles for world equidistant cases
+	if (projectionString == 'Polar azimuthal equidistant' || 
+		projectionString == 'Oblique azimuthal equidistant' ||
+		projectionString == 'Two-point equidistant') {
+		var rec1 = [], rec2 = [];
+		
+		//Building first rectangle
+		for (pt = lammin; pt < lon0; pt += step) {
+			rec1.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec1.push([lon0, pt]);
+		}
+		for (pt = lon0; pt > lammin; pt -= step) {
+			rec1.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec1.push([lammin, pt]);
+		}
+		rec1.push([lammin, phimax]);
+		
+		//Building second rectangle
+		for (pt = lon0; pt < lammax; pt += step) {
+			rec2.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec2.push([lammax, pt]);
+		}
+		for (pt = lammax; pt > lon0; pt -= step) {
+			rec2.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec2.push([lon0, pt]);
+		}
+		rec2.push([lon0, phimax]);
+
+		rec_poly = {
+			type: "FeatureCollection", features: [
+				{type: "Feature", geometry: {type: "Polygon", coordinates: [rec1]}},
+				{type: "Feature", geometry: {type: "Polygon", coordinates: [rec2]}}
+			]
+		};
 	}
-	for (pt = phimax; pt > phimin; pt -= step) {
-		rec_pts.push([lammax, pt]);
+	//Create only one ractangle for all other cases
+	else {
+		//Prevents the polygon from collapsing
+		if (dlam > 359.999) {
+			var eps = 1/3600.;
+			lammin += eps;
+			lammax -= eps;
+		}
+		if (dphi > 179.999) {
+			var eps = 1/3600.;
+			phimin += eps;
+			phimax -= eps;
+		}
+		
+		//Building rectangle
+		for (pt = lammin; pt < lammax; pt += step) {
+			rec_pts.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec_pts.push([lammax, pt]);
+		}
+		for (pt = lammax; pt > lammin; pt -= step) {
+			rec_pts.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec_pts.push([lammin, pt]);
+		}
+		rec_pts.push([lammin, phimax]);
+		
+		rec_poly = {type: "Feature", geometry: {type: "Polygon", coordinates: [rec_pts]}};
 	}
-	for (pt = lammax; pt > lammin; pt -= step) {
-		rec_pts.push([pt, phimin]);
-	}
-	for (pt = phimin; pt < phimax; pt += step) {
-		rec_pts.push([lammin, pt]);
-	}
-	rec_pts.push([lammin, phimax]);
-	
-	rec_poly = {type: "Feature", geometry: {type: "Polygon", coordinates: [rec_pts]}};
 
 	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);

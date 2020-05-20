@@ -443,7 +443,6 @@ function init() {
 			buttons : {
 				OK : function() {
 					$(this).dialog("close");
-					angUnit = $('input[name=ang_format]:checked').val();
 					updateRectangle();
 				}
 			}
