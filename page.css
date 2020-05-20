@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  *
  * Author: Bojan Savric
- * Date: April, 2020
+ * Date: May, 2020
  *
  */
 
@@ -24,17 +24,19 @@ body {
 
 #container {
 	max-width: 1024px;
+	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 #title {
 	font-family: TitleFont;
-	font-size: 26px;
-	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: left;
 	text-transform: uppercase;
-	vertical-align: bottom;
-	margin-bottom: 10px;
+	margin-top: 7px;
+	margin-bottom: 23px;
 }
 
 #inputUIarea {
@@ -48,11 +50,11 @@ body {
 
 .inputUI {
 	margin-left: 10px;
-	margin-top: -5px;
+	margin-top: 5px;
 	margin-bottom: 5px;
 	width: 200px;
 	float: left;
-	height: 450px;
+	height: 440px;
 	position: relative;
 }
 
@@ -60,17 +62,22 @@ body {
 	max-width: 123px;
 }
 
+.inputSection {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
 #settings {
 	vertical-align: top;
-	margin-top: -29px;
-	margin-right: 0px;
+	margin-top: 0px;
+	margin-right: -26px;
 	float: right;
 }
 
 #help {
 	vertical-align: top;
-	margin-top: -29px;
-	margin-right: 29px;
+	margin-top: 26px;
+	margin-right: -26px;
 	float: right;
 }
 
@@ -97,11 +104,11 @@ body {
 }
 
 #ang_ops {
-	margin-top: -10px;
+	margin-top: -15px;
 }
 
-#round_ops {
-	margin-top: -10px;
+#check_ops {
+	margin-top: -15px;
 }
 
 #buttons {
@@ -121,7 +128,7 @@ body {
 	font-size: small;
 }
 
-.extend {
+.extent {
 	display: inline-block;
 	width: 3.5em;
 }
@@ -173,7 +180,6 @@ legend {
 	font-size: 12px;
 }
 
-
 .results {
 	width: 53.5%;
 	margin-right: 1.5%;
@@ -191,6 +197,32 @@ legend {
 	text-align: center;
 	position: relative;
 	float:right;
+}
+
+.selectmenu-box {
+	vertical-align: baseline;
+	width: auto;
+}
+.ui-selectmenu-button {
+	background: #ffffff;
+}
+
+.ui-selectmenu-text {
+    font-family: TextFont;
+	font-size: 12.5px;
+	font-weight: bold;
+	color: steelblue;
+}
+
+.ui-menu-item {
+    font-family: TextFont;
+	font-size: 12.5px;
+}
+
+.ui-widget-content
+.ui-state-focus {
+	background: #c4e3ee;
+	font-weight: bold;
 }
 
 .sliderBox {
@@ -233,6 +265,12 @@ legend {
 	width:  0.5em;
 	height: 0.75em;
 	top:    -.3em;
+}
+
+input[name="pole_eq"] {
+	margin: 3px 3px 0px 10px;
+	width:  10.5px;
+	height: 10.5px;
 }
 
 canvas {

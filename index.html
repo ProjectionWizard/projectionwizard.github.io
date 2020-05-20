@@ -3,7 +3,7 @@
 	Map Projection Selection Tool
 
 	Author: Bojan Savric
-	Date: April, 2020
+	Date: May, 2020
 -->
 
 <!DOCTYPE html>
@@ -11,9 +11,9 @@
 	<head>
 		<title>Projection Wizard</title>
 		<!--JQUERY-UI-->
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.min.css" />
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.min.css" />
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
 		<!--Leaflet AND Leaflet.PM for editing -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
@@ -48,7 +48,6 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="title">Projection&nbsp;&nbsp;Wizard</div>
 			<div id="inputUIarea">
 				<img id="settings" src="figures/opts.png" height="22" align="left" title="Customize">
 				<div id="options_dialog" class="dialogtext" title="Projection Wizard Options">
@@ -65,9 +64,11 @@
 					</fieldset>
 					<fieldset>
 						<legend><h4>&nbsp;Output&nbsp;</h4></legend>
-						<div id="round_ops">
-							<input type="checkbox" id="roundCM" name="roundCM" value="roundCM" />
-							Round the central meridian value
+						<div id="check_ops">
+							<label>
+								<input type="checkbox" id="roundCM" name="roundCM" />
+								Round the central meridian value
+							</label>
 						</div>
 						<p>Geographic coordinates:&nbsp;&nbsp;
 							<select id="datum">
@@ -83,13 +84,25 @@
 							</select>
 						</p>
 					</fieldset>
+					<fieldset>
+						<legend><h4>&nbsp;Preview map&nbsp;</h4></legend>
+						<div id="check_ops">
+							<input type="checkbox" id="showEextent" name="showEextent" />
+							<label for="showEextent">Show geographic extent</label>
+						</div>
+						<div>
+							<input type="checkbox" id="showCenter" name="showCenter" />
+							<label for="showCenter">Show projection's origin point(s)</label>
+						</div>
+					</fieldset>
 				</div>
 				<img id="help" src="figures/help.png" height="22" align="left" title="Help">
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About this Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. There are a PROJ and WKT links next to each proposed projection that open a popup window with <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look and in most cases does not clip to the exact geographic extent specified by a user. The map preview is created using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
-					<p>This tool is based on <a target="_blank" href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a target="_blank" href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page. When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a target="_blank" href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of proposed map projections with additional projection parameters if necessary. There are PROJ and WKT links next to each projection that open a popup window with <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with a suggested projection. The preview shows how the projected data will look using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
+					<p>This tool is based on <a target="_blank" href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a target="_blank" href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page.</p>
+					<p>When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a target="_blank" href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 
 
 					<h3>How to Use this Tool?</h3>
@@ -103,7 +116,17 @@
 					<p><span class="ui-circle">a</span> The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, selecting approximately 80&#37; of the visible map.</p>
 					<p><span class="ui-circle">b</span> The <i>Select Entire World</i> button sets the rectangle size to the full extent.</p>
 					<p><span class="ui-circle">c</span> The <i>Show Entire World</i> button zooms out to the full extent.</p>
-					<p><span class="ui-circle">d</span> The <i>Customize</i> button allows the user to select a system of geographic coordinates and an angular unit format.</p><br>
+					<p><span class="ui-circle">d</span> The <i>Customize</i> button opens <i>Projection Wizard Options</i> dialog, which allows the user to modify the tool.</p><br>
+					
+					
+					<img src="figures/options.png" border=0.5 alt="Projection Wizard Options" style="float:right" width="230px">
+					<h3>Customizing this Tool</h3>
+					<p><i>Projection Wizard Options</i> dialog allows a user to modify the tool to better fit their needs. Options effect returned projection parameters, elements in the PROJ and WKT strings, and the map preview. One can:</p>
+					<p><span class="ui-circle">A</span> toggle between decimal degrees and DMS formats for angular units,</p>
+					<p><span class="ui-circle">B</span> round the central meridian value to the nearest degree,</p>
+					<p><span class="ui-circle">C</span> select a system of geographic coordinates for the output strings,</p>
+					<p><span class="ui-circle">D</span> select between meters and international feet for linear units in the strings, and</p>
+					<p><span class="ui-circle">E</span> display selected extent and/or projection's origin point(s) in the map preview.</p><br>
 
 
 					<h3>Selection Criteria Derived from the Geographic Extent</h3>
@@ -123,8 +146,8 @@
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p>
 
 					<p><b>The latitude of the mapped area of a landscape-oriented map:</b>
-					<br><i>Center at pole</i> &#8211; the central latitude is more than 70&#186; N or 70&#186; S, or more than 67.5&#186; N or 67.5&#186; S for showing between one sixth and one eighth of the full geographic extent.
-					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
+					<br><i>Center at pole</i> &#8211; the central latitude is more than 70&#186; N or 70&#186; S, or geographic area in a conic projection would otherwise expose an opening at a pole.
+					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S, or geographic area is within 23.43665&#186; N and 23.43665&#186; S for maps showing a hemisphere.
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p><br>
 
 
@@ -156,16 +179,23 @@
 					<ul class="dialogtext">
 						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
 						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
+						<li>Updated criteria for the latitude of the mapped area of a landscape-oriented map.</li>
+						<li><i>Projection for showing the tropics</i> category was added for hemisphere maps when geographic area is within 23.43665&#186; N and 23.43665&#186; S.</li>
 						<li>Additional suggestions were added to the list of appropriate map projections for the conformal property at very large map scales.</li>
+						<li>The Cassini projection was added to the list of appropriate map projections for the equdistant property and portrait-oriented maps.</li>
+						<li>The Plate Carrée projection was replaced with the equdistant cylindrical for a landscape-oriented map and geographic area along the equator.</li>
 						<li>The Equal Earth projection was added to the list of equal-area world map projections.</li>
 						<li>Projections that excessively bulge outwards and interrupted projections were removed from the world lists.</li>
-						<li>Sliders were added next to the parameters on the list of equidistant world projections, so user can now select arbitrary points.</li>
+						<li>The list of world equidistant projections is now given as a dropdown menu. For each projection in the menu, sliders (and radio buttons) were added next to the parameters, so user can now adjust arbitrary points.</li>
 						<li>Preview map updates were added when a user hovers over projection's name with the cursor on the world lists.</li>
-						<li>PROJ string values were rounded to seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
+						<li>Preview map is now clipped to the exact geographic area selected by a user.</li>
+						<li>Projection parameters for world projection are now rounded to entire degrees, to half degrees, and to thenths of degrees depending on the size of selected geographic area.</li>
+						<li>Projection parameters for maps showing a hemisphere and the tropics are now rounded to two decimal places.</li>
+						<li>PROJ string values were rounded to maximum seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
 						<li>WKT strings are provided for each proposed projection.</li>
-						<li>A <i>Customize</i> button was added. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to nearest degree, specify the geographic coordinate type for their output strings, and select between meters and international feet for linear units.</li>
-						<li>Continuous updates to the output, preview map, and extend inputs was added during individual vertex or whole rectangle dragging.</li>
-						<li>The user interface, popup window, preview maps, third-party libraries, and help content was updated.</li>
+						<li>A <i>Customize</i> button was added, which opens <i>Projection Wizard Options</i> dialog. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to the nearest degree, specify the geographic coordinate type for their output strings, select between meters and international feet for linear units, and display geographic extent and projection's origin point(s) in the map preview.</li>
+						<li>Continuous updates to the output, preview map, and extent inputs was added during individual vertex or whole rectangle dragging.</li>
+						<li>The user interface, popup windows, preview maps, third-party libraries, and help content were updated.</li>
 					</ul>
 					<p>This update was prepared in collaboration with <a target="_blank" href="https://github.com/jwasilgeo">@jwasilgeo</a> and <a target="_blank" href="https://github.com/jgravois">@jgravois.</a></p>
 
@@ -211,8 +241,9 @@
 
 				</div>
 				<div class="inputUI">
+					<div id="title">Projection&nbsp;Wizard</div>
 					<form id="distortion" onchange="makeOutput()">
-						<h4>Distortion Property</h4>
+						<h4 class="inputSection">Distortion Property</h4>
 						<input type="radio" name="distortion" id="Equalarea" value="Equalarea" checked="checked"/>
 						<label for="Equalarea">Equal-area<br></label>
 						<input type="radio" name="distortion" id="Conformal" value="Conformal"/>
@@ -223,14 +254,14 @@
 						<label id="Label4" for="Compromise">Compromise</label>
 					</form>
 
-					<h4>Geographic Extent</h4>
-					<label class="extend" for="latmax">North: </label>
+					<h4 class="inputSection">Geographic Extent</h4>
+					<label class="extent" for="latmax">North: </label>
 					<input class="inputBox" type="text" id="latmax" value="45.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="latmin">South: </label>
+					<label class="extent" for="latmin">South: </label>
 					<input class="inputBox" type="text" id="latmin" value="-45.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="lonmax">East: </label>
+					<label class="extent" for="lonmax">East: </label>
 					<input class="inputBox" type="text" id="lonmax" value="90.000" onchange="changeInput()" size="18"/>
-					<label class="extend" for="lonmin">West: </label>
+					<label class="extent" for="lonmin">West: </label>
 					<input class="inputBox" type="text" id="lonmin" value="-90.000" onchange="changeInput()" size="18"/>
 
 					<div id="buttons">

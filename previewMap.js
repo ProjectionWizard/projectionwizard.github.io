@@ -3,7 +3,7 @@
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: April, 2020
+ * Date: May, 2020
  * 
  */
 
@@ -138,18 +138,28 @@ function pickProjection(lat0, lon0, projectionString) {
 		} else {
 			latS = 0.;
 		}
-				
+		
 		return d3.geoCylindricalEqualArea()
 			.parallel(latS)
 			.precision(.1)
 			.rotate([-lon0, 0]);
 	}
 	else if (projectionString == 'Transverse cylindrical equal area') {
-		var scale = 1.5;
 		return d3.geoTransverseCylindricalEqualArea()
 			.parallel(0)
 			.precision(.1)
 			.rotate([-lon0, 0, 90]);
+	}
+	else if (projectionString == 'Equidistant cylindrical') {
+		return d3.geoEquirectangular()
+			.rotate([-lon0, 0])
+			.precision(.1);
+	}
+	else if (projectionString == 'Cassini') {
+		return d3.geoEquirectangular()
+			.rotate([-lon0, 0, 90])
+			.angle(-90)
+			.precision(.1);
 	}
 	else if (projectionString == 'Equidistant conic') {
 		var interval = (latmax - latmin) / 6;
@@ -305,6 +315,92 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 		sphere = {type : "Sphere"};
 	
 	grid = graticule();
+	
+	//Setting rectangle layer
+	var lammax = lonmax,
+		lammin = lonmin,
+		phimax = latmax,
+		phimin = latmin;
+	
+	var dlam = lammax - lammin,
+		dphi = phimax - phimin,
+		step = Math.min(dlam, dphi) / 15.0;
+	
+	var pt, rec_pts = [], rec_poly;
+	//Create two ractangles for world equidistant cases
+	if (projectionString == 'Polar azimuthal equidistant' || 
+		projectionString == 'Oblique azimuthal equidistant' ||
+		projectionString == 'Two-point equidistant') {
+		var rec1 = [], rec2 = [];
+		
+		//Building first rectangle
+		for (pt = lammin; pt < lon0; pt += step) {
+			rec1.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec1.push([lon0, pt]);
+		}
+		for (pt = lon0; pt > lammin; pt -= step) {
+			rec1.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec1.push([lammin, pt]);
+		}
+		rec1.push([lammin, phimax]);
+		
+		//Building second rectangle
+		for (pt = lon0; pt < lammax; pt += step) {
+			rec2.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec2.push([lammax, pt]);
+		}
+		for (pt = lammax; pt > lon0; pt -= step) {
+			rec2.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec2.push([lon0, pt]);
+		}
+		rec2.push([lon0, phimax]);
+
+		rec_poly = {
+			type: "FeatureCollection", features: [
+				{type: "Feature", geometry: {type: "Polygon", coordinates: [rec1]}},
+				{type: "Feature", geometry: {type: "Polygon", coordinates: [rec2]}}
+			]
+		};
+	}
+	//Create only one ractangle for all other cases
+	else {
+		//Prevents the polygon from collapsing
+		if (dlam > 359.999) {
+			var eps = 1/3600.;
+			lammin += eps;
+			lammax -= eps;
+		}
+		if (dphi > 179.999) {
+			var eps = 1/3600.;
+			phimin += eps;
+			phimax -= eps;
+		}
+		
+		//Building rectangle
+		for (pt = lammin; pt < lammax; pt += step) {
+			rec_pts.push([pt, phimax]);
+		}
+		for (pt = phimax; pt > phimin; pt -= step) {
+			rec_pts.push([lammax, pt]);
+		}
+		for (pt = lammax; pt > lammin; pt -= step) {
+			rec_pts.push([pt, phimin]);
+		}
+		for (pt = phimin; pt < phimax; pt += step) {
+			rec_pts.push([lammin, pt]);
+		}
+		rec_pts.push([lammin, phimax]);
+		
+		rec_poly = {type: "Feature", geometry: {type: "Polygon", coordinates: [rec_pts]}};
+	}
 
 	//Defining D3 projection
 	var projection = pickProjection(lat0, lon0, projectionString);
@@ -316,9 +412,10 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	$("#previewMap #projectionName").append(projectionString + "<br>");
 	
 	//Scaling projection on original coordinates
-	projection.scale(1).translate([0,0]);
+	projection.translate([0,0])
+			  .scale(1);
 	var max_width = document.getElementById('previewMap').offsetWidth, 
-		height, width, scaleFactor, X;
+		height, width, X;
 
 	//Computing scale factor and translation for world maps
 	if (world) {
@@ -355,39 +452,42 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 			projection.rotate([-lon0, 0])
 					  .fitSize([width, height], grid);
 		}
-	} 
+	}
 	//Computing scale factor and translation for other maps
 	else {
-		//Computing extent coordinates
-		var coord1 = projection([lonmin, latmax]),
-			coord2 = projection([lonmax, latmax]), 
-			coord3 = projection([lonmax, latmin]), 
-			coord4 = projection([lonmax, latmin]), 
-			coord5 = projection([(lonmax + lonmin) / 2, latmin]), 
-			coord6 = projection([(lonmax + lonmin) / 2, latmax]), 
-			coord7 = projection([lonmin, (latmin + latmax) / 2]), 
-			coord8 = projection([lonmax, (latmin + latmax) / 2]), 
-			coord9 = projection([(lonmax + 3 * lonmin) / 4, latmin]), 
-			coord10 = projection([(3 * lonmax + lonmin) / 4, latmin]), 
-			coord11 = projection([(lonmax + 3 * lonmin) / 4, latmax]), 
-			coord12 = projection([(3 * lonmax + lonmin) / 4, latmax]);
-
-		//Definding original width and height of the extent
-		width = Math.abs(Math.max(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]) - Math.min(coord1[0], coord2[0], coord3[0], coord4[0], coord5[0], coord6[0], coord7[0], coord8[0], coord9[0], coord10[0], coord11[0], coord12[0]));
-		height = Math.abs(Math.max(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1],coord9[1], coord10[1], coord11[1], coord12[1]) - Math.min(coord1[1], coord2[1], coord3[1], coord4[1], coord5[1], coord6[1], coord7[1], coord8[1], coord9[1], coord10[1], coord11[1], coord12[1]));
+		var xmin =  Number.MAX_VALUE, 
+			xmax = -Number.MAX_VALUE, 
+			ymin =  Number.MAX_VALUE, 
+			ymax = -Number.MAX_VALUE, 
+			pt, fit_pts = rec_pts.slice();
 		
-		//scaling map on the width to be 1
-		scaleFactor = 1 / width;
+		//Making sure origin point(s) will also display
+		if ( document.getElementById("showCenter").checked ) {
+			fit_pts.push([lon0, lat0]);
+		}
 		
+		//Project rectangle
+		for (var i = 0; i < fit_pts.length; i++)
+		{
+			pt = projection(fit_pts[i]);
+			
+			xmin = Math.min(xmin, pt[0]);
+			xmax = Math.max(xmax, pt[0]);
+			ymin = Math.min(ymin, pt[1]);
+			ymax = Math.max(ymax, pt[1]);
+		}
+		
+		//Calculate size of rectangle
+		width  = Math.abs(xmax - xmin);
+		height = Math.abs(ymax - ymin);
+			
 		//Final scaling factor and translation parameters
 		X = Math.min(max_width / width, 0.66 * max_width / height);
-		width *= X;
+		width  *= X;
 		height *= X;
-		scaleFactor *= width;
-	
-		projection.scale(scaleFactor);
-		var coordTran = projection([lon0, (latmax + latmin) / 2]);
-		projection.translate([width / 2, height / 2 - coordTran[1]]);
+
+		projection.translate([width / 2, height / 2])
+				  .fitSize([width, height], {type: 'Feature', geometry: {type: 'MultiPoint', coordinates: fit_pts}});
 	}
 	
 	//Setting data layer
@@ -433,4 +533,45 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	context.strokeStyle = "#555";
 	context.stroke();
 	context.globalAlpha = 1;
+	
+	// Style ractangle
+	if ( document.getElementById("showEextent").checked ) {
+		context.beginPath();
+		path(rec_poly);
+		context.lineWidth = 3;
+		context.globalAlpha = 0.25;
+		context.fillStyle = "#ff7b1a";
+		context.fill();
+		context.globalAlpha = 1;
+	}
+	
+	// Style origin point
+	if ( document.getElementById("showCenter").checked ) {
+		var origin = [], pt;
+		if (projectionString == 'Polar azimuthal equidistant') {
+			origin.push([lngP_eq, pole_eq]);
+		}
+		else if (projectionString == 'Oblique azimuthal equidistant') {
+			origin.push([lngC_eq, latC_eq]);			
+		}
+		else if (projectionString == 'Two-point equidistant') {
+			origin.push([lng1_eq, lat1_eq]);
+			origin.push([lng2_eq, lat2_eq]);
+		}
+		else {
+			origin.push([lon0, lat0]);
+		}
+		
+		//Drawing points
+		for (var i = 0; i < origin.length; i++)
+		{
+			pt = projection(origin[i]);
+
+			context.beginPath();
+			context.arc(pt[0], pt[1], 4, 0, 2 * Math.PI);
+			context.fillStyle = "#3388ff";
+			context.fill();
+			context.closePath();
+		}
+	}
 }
