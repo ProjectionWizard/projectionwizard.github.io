@@ -3,7 +3,7 @@
 	Map Projection Selection Tool
 
 	Author: Bojan Savric
-	Date: May, 2020
+	Date: June, 2020
 -->
 
 <!DOCTYPE html>
@@ -100,7 +100,7 @@
 				<div id="dialog" class="dialogtext" title="Projection Wizard">
 					<img src="figures/CartoLogo.png" align="right">
 					<h3>About this Tool</h3>
-					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of proposed map projections with additional projection parameters if necessary. There are PROJ and WKT links next to each projection that open a popup window with <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with a suggested projection. The preview shows how the projected data will look using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
+					<p><i>Projection Wizard</i> is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of proposed map projections with additional projection parameters if necessary. There are PROJ and WKT links next to each projection that open a popup window with a <a target="_blank" href="https://proj.org/">PROJ</a> or <a target="_blank" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">Well-Known Text</a> string available for copying to the clipboard. Both strings are used in many cartographic and GIS applications. <i>Projection Wizard</i> displays a map preview on the right side of the list with a suggested projection. The preview shows how the projected data will look using <a target="_blank" href="http://d3js.org/">D3</a>.</p>
 					<p>This tool is based on <a target="_blank" href="https://doi.org/10.3133/pp1395">John P. Snyder’s selection guideline</a> and on <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-319-51835-0_9">the extension to this guideline for world and hemisphere maps</a> written by the Cartography and Geovisualization Group at Oregon State University. <i>Projection Wizard&nbsp;v2.0</i> also takes into account the results of a study published by <a target="_blank" href="https://www.tandfonline.com/doi/full/10.1080/15230406.2015.1014425">&#352;avri&#269; <i>et al</i>. in 2015</a>. All publications related to <i>Projection Wizard</i> are listed at the bottom of this page.</p>
 					<p>When you publish a scholarly article that uses <i>Projection Wizard</i> or discusses its functionality, you are kindly asked to cite the following article: &#352;avri&#269;, B., Jenny, B. and Jenny, H. (2016). Projection Wizard – An online map projection selection tool. The Cartographic Journal, 53–2, p. 177–185. Doi: <a target="_blank" href="http://dx.doi.org/10.1080/00087041.2015.1131938">10.1080/00087041.2015.1131938</a>.</p><br>
 
@@ -116,24 +116,24 @@
 					<p><span class="ui-circle">a</span> The <i>Select Currently Visible Area</i> button adjusts the rectangle size to the current map view, selecting approximately 80&#37; of the visible map.</p>
 					<p><span class="ui-circle">b</span> The <i>Select Entire World</i> button sets the rectangle size to the full extent.</p>
 					<p><span class="ui-circle">c</span> The <i>Show Entire World</i> button zooms out to the full extent.</p>
-					<p><span class="ui-circle">d</span> The <i>Customize</i> button opens <i>Projection Wizard Options</i> dialog, which allows the user to modify the tool.</p><br>
+					<p><span class="ui-circle">d</span> The <i>Customize</i> button opens the <i>Projection Wizard Options</i> dialog, which allows the user to modify the tool.</p><br>
 					
 					
 					<img src="figures/options.png" border=0.5 alt="Projection Wizard Options" style="float:right" width="230px">
 					<h3>Customizing this Tool</h3>
-					<p><i>Projection Wizard Options</i> dialog allows a user to modify the tool to better fit their needs. Options effect returned projection parameters, elements in the PROJ and WKT strings, and the map preview. One can:</p>
+					<p>The <i>Projection Wizard Options</i> dialog allows you to modify the tool to better fit your needs. The options affect the projection parameters, elements in the PROJ and WKT strings, and the map preview. You can:</p>
 					<p><span class="ui-circle">A</span> toggle between decimal degrees and DMS formats for angular units,</p>
 					<p><span class="ui-circle">B</span> round the central meridian value to the nearest degree,</p>
 					<p><span class="ui-circle">C</span> select a system of geographic coordinates for the output strings,</p>
 					<p><span class="ui-circle">D</span> select between meters and international feet for linear units in the strings, and</p>
-					<p><span class="ui-circle">E</span> display selected extent and/or projection's origin point(s) in the map preview.</p><br>
+					<p><span class="ui-circle">E</span> display the selected extent and/or the projection's origin point(s) in the map preview.</p><br>
 
 
 					<h3>Selection Criteria Derived from the Geographic Extent</h3>
 					<p><b>The extent of the geographic area:</b>
-					<br><i>World map</i> &#8211; shows at least two thirds of the full extent
-					<br><i>Map showing a hemisphere</i> &#8211; shows between one sixth and two thirds of the full extent
-					<br><i>Map showing a continent or smaller areas</i> &#8211; shows less than one sixth of the full extent</p>
+					<br><i>World map</i> &#8211; shows at least two-thirds of the full extent
+					<br><i>Map showing a hemisphere</i> &#8211; shows between one-sixth and two-thirds of the full extent
+					<br><i>Map showing a continent or smaller areas</i> &#8211; shows less than one-sixth of the full extent</p>
 
 					<p><b>The predominant extent and the orientation of the area shown on the map:</b>
 					<br><i>An east-west extent, resulting in a landscape-oriented map</i> &#8211; the ratio between the central meridian and the longest parallel lengths is less than 0.8
@@ -175,7 +175,7 @@
 
 
 					<h3>Update History</h3>
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (Spring, 2020)</p>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
 					<ul class="dialogtext">
 						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
 						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
@@ -188,13 +188,13 @@
 						<li>Projections that excessively bulge outwards and interrupted projections were removed from the world lists.</li>
 						<li>The list of world equidistant projections is now given as a dropdown menu. For each projection in the menu, sliders (and radio buttons) were added next to the parameters, so user can now adjust arbitrary points.</li>
 						<li>Preview map updates were added when a user hovers over projection's name with the cursor on the world lists.</li>
-						<li>Preview map is now clipped to the exact geographic area selected by a user.</li>
-						<li>Projection parameters for world projection are now rounded to entire degrees, to half degrees, and to thenths of degrees depending on the size of selected geographic area.</li>
+						<li>The preview map is now clipped to the exact geographic area selected by a user.</li>
+						<li>Projection parameters for world projection are now rounded to entire degrees, to half degrees, and to tenths of degrees depending on the size of the selected geographic area.</li>
 						<li>Projection parameters for maps showing a hemisphere and the tropics are now rounded to two decimal places.</li>
-						<li>PROJ string values were rounded to maximum seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
+						<li>PROJ string values were rounded to a maximum of seven decimal places and datum or ellipsoid information and linear unit were added to the string.</li>
 						<li>WKT strings are provided for each proposed projection.</li>
-						<li>A <i>Customize</i> button was added, which opens <i>Projection Wizard Options</i> dialog. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to the nearest degree, specify the geographic coordinate type for their output strings, select between meters and international feet for linear units, and display geographic extent and projection's origin point(s) in the map preview.</li>
-						<li>Continuous updates to the output, preview map, and extent inputs was added during individual vertex or whole rectangle dragging.</li>
+						<li>A <i>Customize</i> button was added, which opens the <i>Projection Wizard Options</i> dialog. Users can now toggle between decimal degrees and DMS formats for angular units, round the central meridian value to the nearest degree, specify the geographic coordinate type for their output strings, select between meters and international feet for linear units, and display the geographic extent and the projection's origin point(s) in the map preview.</li>
+						<li>Continuous updates to the output, preview map, and extent inputs have been added during individual vertex or whole rectangle dragging.</li>
 						<li>The user interface, popup windows, preview maps, third-party libraries, and help content were updated.</li>
 					</ul>
 					<p>This update was prepared in collaboration with <a target="_blank" href="https://github.com/jwasilgeo">@jwasilgeo</a> and <a target="_blank" href="https://github.com/jgravois">@jgravois.</a></p>
