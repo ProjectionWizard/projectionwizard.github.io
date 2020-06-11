@@ -260,7 +260,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, -lat0]);
 	}
 	else if (projectionString == 'Two-point equidistant') {
-		return d3.geoTwoPointEquidistant([lon0, lat0],[lat2_eq, lng2_eq])
+		return d3.geoTwoPointEquidistant([lon0, lat0],[lng2_eq, lat2_eq])
 			.clipAngle(105);
 	}
 	else {
