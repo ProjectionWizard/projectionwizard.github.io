@@ -260,8 +260,25 @@ function pickProjection(lat0, lon0, projectionString) {
 			.rotate([-lon0, -lat0]);
 	}
 	else if (projectionString == 'Two-point equidistant') {
-		return d3.geoTwoPointEquidistant([lon0, lat0],[lng2_eq, lat2_eq])
-			.clipAngle(105);
+		var pt1 = [lon0, lat0],       // First point
+		    pt2 = [lng2_eq, lat2_eq]; // Second point
+		
+		// Clipping the area around the antipode
+		// https://github.com/d3/d3-geo-projection/issues/192#issuecomment-642398941
+		const eps = 1e-3, u = (d3.geoDistance(pt1, pt2) / 2) * (180 / Math.PI) + eps,
+			  ellipse = {
+				type: "Polygon",
+				coordinates: [ [
+					[ 180 - u,  eps],
+					[ 180 - u, -eps],
+					[-180 + u, -eps],
+					[-180 + u,  eps],
+					[ 180 - u,  eps]
+				  ]]
+			  };
+		
+		return d3.geoTwoPointEquidistant(pt1,pt2)
+				 .preclip(d3.geoClipPolygon(ellipse));
 	}
 	else {
 		// projection error condition
