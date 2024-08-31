@@ -773,8 +773,8 @@ function printSquareFormat(property, center) {
 		}
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 	}
-	//case: close to equator
-	else if (center.lat > -15. && center.lat < 15.) {
+	//case: close to equator and crossing it
+	else if (Math.abs(center.lat) < 15. && (latmax * latmin) <= 0) {
 		previewMapLat0 = 0;
 		if (property == "Conformal") {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Equatorial stereographic</span>"
