@@ -618,17 +618,17 @@ function printSmallerArea(property, center, scale) {
 		}
 		
 		//case: close to equator
-		else if (center.lat > -15. && center.lat < 15.) {
+		else if (Math.abs(center.lat) < 15.) {
 			previewMapProjection = activeProjection = "Equidistant cylindrical";
 			previewMapLat0 = 0;
 			
-			var interval = (latmax - latmin) / 4.;
-			var latS1 = center.lat + interval, latS2 = center.lat - interval, latS;
-			
-			if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.))
+			var latS;
+			//extent is touching or crossing equator
+			if ((latmax * latmin) <= 0 )
 				latS = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+			//extent is not crossing equator
 			else
-				latS = 0.;
+				latS = center.lat;
 			
 			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Equidistant cylindrical</span>" +
 				stringLinks("eqc", NaN, NaN, latS, NaN, center.lng, NaN) +
@@ -884,16 +884,16 @@ function printEWextent(property, center, scale) {
 	}
 	
 	//case: close to equator
-	else if (center.lat > -15. && center.lat < 15.) {
+	else if (Math.abs(center.lat) < 15.) {
 		previewMapLat0 = 0;
-		
-		var interval = (latmax - latmin) / 4.;
-		var latS1 = center.lat + interval, latS2 = center.lat - interval, latS;
 
-		if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.))
+		var latS;
+		//extent is touching or crossing equator
+		if ((latmax * latmin) <= 0 )
 			latS = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+		//extent is not crossing equator
 		else
-			latS = 0.;
+			latS = center.lat;
 
 		if (property == "Conformal") {
 			previewMapProjection = activeProjection = "Mercator";
