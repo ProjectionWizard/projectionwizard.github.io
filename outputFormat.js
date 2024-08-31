@@ -545,7 +545,7 @@ function printHemisphere(property, center, scale) {
 		
 		//Formating the output text
 		if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p><b>Equal-area projection for maps showing a hemisphere</b></p>");
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert azimuthal equal-area projection</span>" +
@@ -748,7 +748,7 @@ function printSquareFormat(property, center) {
 		previewMapProjection = activeProjection = "Stereographic";
 	} else if (property == 'Equalarea') {
 		outputTEXT.append("<p><b>Equal-area projection for regional maps in square format</b></p>");
-		previewMapProjection = activeProjection = "Azimuthal equal area";
+		previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 	}
 	//case: close to poles
 	if (center.lat > 75.) {
@@ -861,7 +861,7 @@ function printEWextent(property, center, scale) {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
@@ -876,7 +876,7 @@ function printEWextent(property, center, scale) {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
@@ -964,7 +964,7 @@ function printEWextent(property, center, scale) {
 			
 			//When the fan of the selected extent exposes a cone opening at a pole
 			else {
-				previewMapProjection = activeProjection = "Azimuthal equal area";
+				previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 				
 				//Case when the fan of the selected extent spans less than 180deg around a pole
 				if (conicTest == 0) {

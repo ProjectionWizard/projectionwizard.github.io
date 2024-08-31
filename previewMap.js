@@ -95,7 +95,7 @@ function addMapPreview(center, currentlyDragging) {
 /* Setting a new projection with D3 */
 function pickProjection(lat0, lon0, projectionString) {
 	//Definding D3 projection
-	if (projectionString == 'Azimuthal equal area') {
+	if (projectionString == 'Lambert azimuthal equal area') {
 		return d3.geoAzimuthalEqualArea()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
