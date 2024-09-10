@@ -1,9 +1,9 @@
 <!--
-	PROJECTION WIZARD v2.0
+	PROJECTION WIZARD v2.1
 	Map Projection Selection Tool
 
 	Author: Bojan Savric
-	Date: June, 2020
+	Date: September, 2024
 -->
 
 <!DOCTYPE html>
@@ -143,7 +143,7 @@
 
 					<p><b>The latitude of the mapped area of a square-shaped map:</b>
 					<br><i>Center at pole</i> &#8211; the central latitude is more than 75&#186; N or 75&#186; S
-					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
+					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S and extent crosses equator
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p>
 
 					<p><b>The latitude of the mapped area of a landscape-oriented map:</b>
@@ -176,7 +176,16 @@
 
 
 					<h3>Update History</h3>
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.1</b> (September, 2024)</p>
+					<ul class="dialogtext">
+						<li>Equatorial case for square-shaped maps is now limited to extents that cross the equator.</li>
+						<li>Calculation of a standard parallel parameter for cylindrical projections has been fixed.</li>
+						<li>Central meridian parameter is now normalized to the range of [-180, 180].</li>
+						<li>Lambert azimuthal equal area's name has been corrected.</li>
+						<li>The help content was updated.</li>
+					</ul>
+					
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
 					<ul class="dialogtext">
 						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
 						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>

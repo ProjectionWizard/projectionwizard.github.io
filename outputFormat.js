@@ -1,9 +1,9 @@
 /*
- * PROJECTION WIZARD v2.0
+ * PROJECTION WIZARD v2.1
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: May, 2020
+ * Date: September, 2024
  * 
  */
 
