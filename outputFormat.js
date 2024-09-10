@@ -17,6 +17,9 @@ function makeOutput(currentlyDragging) {
 	var distortion = $('input[name=distortion]:checked').val();
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
+
+	//Normalizing central meridian value
+	center.lng = normalizeLON(center.lng, 0.);
 	
 	// rounding central meridian
 	if (document.getElementById("roundCM").checked)
@@ -1004,8 +1007,11 @@ function checkConicOK(lat0, lon0, projectionString) {
 		ymin =  Number.MAX_VALUE,
 		ymax = -Number.MAX_VALUE,
 		test_pts, res = 1;
-		
-	test_pts = [[lon0, -90.],[lon0, 90.],[lonmin,latmin],[lonmax,latmax]];
+	
+	test_pts = [[lon0, -90.],
+	            [lon0, 90.],
+	            [normalizeLON(lonmin, lon0), latmin],
+	            [normalizeLON(lonmax, lon0), latmax]];
 	
 	//Projecting sample pts
 	for (var i = 0; i < test_pts.length; i++)

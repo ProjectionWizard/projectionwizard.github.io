@@ -334,10 +334,10 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	grid = graticule();
 	
 	//Setting rectangle layer
-	var lammax = lonmax,
-		lammin = lonmin,
-		phimax = latmax,
-		phimin = latmin;
+	var lammax = normalizeLON(lonmax, lon0),
+	    lammin = normalizeLON(lonmin, lon0),
+	    phimax = latmax,
+	    phimin = latmin;
 	
 	var dlam = lammax - lammin,
 		dphi = phimax - phimin,

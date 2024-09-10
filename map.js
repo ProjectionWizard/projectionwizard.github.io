@@ -107,6 +107,17 @@ function outputLON(lon, ui_bool) {
 	return Math.round(lon * 1e7) / 1e7 + "º";
 }
 
+/* Normalizing longitude values */
+function normalizeLON(lon, lon0) {
+	while (lon < (lon0 - 180.0)) {
+		lon += 360.0;
+	}
+	while (lon > (lon0 + 180.0)) {
+		lon -= 360.0;
+	}
+	return lon;
+}
+
 /*Updating input boxes*/
 function setInputBoxes() {
 	document.getElementById("latmax").value = outputLAT(latmax, true);
@@ -210,13 +221,8 @@ function showCoords(event) {
 	//LONGITUDE STRING
 	var lam = event.latlng.lng;
 
-	while (lam < -180.0) {
-		lam += 360.0;
-	}
-	while (lam > 180.0) {
-		lam -= 360.0;
-	}
-
+	//Normalizing longitude value
+	lam = normalizeLON(lam, 0.);
 	stringPos += outputLON(lam, true);
 
 	//CHANGING ATTRIBUTION CONTROL
