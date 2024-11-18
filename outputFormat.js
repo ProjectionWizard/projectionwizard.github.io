@@ -733,7 +733,7 @@ function printSmallerArea(property, center, scale) {
 	}
 	if (scale > 260) {
 		//general note for maps showing a smaller area
-		outputTEXT.append("<p class='outputText'>_________________________________________<br>For maps at this scale, you can also use the state’s official projection. Most countries use a conformal projection for their official large-scale maps. You can search for official projections by area of interest in the <a target='_blank' href='http://www.epsg-registry.org/'>EPSG Geodetic Parameter Registry</a>.</p>");
+		outputTEXT.append("<p class='outputText'>_________________________________________<br>For maps at this scale, you can also use the state’s official projection. Most countries use a conformal projection for their official large-scale maps. You can search for official projections by area of interest in the <a target='_blank' href='https://epsg.org/'>EPSG Geodetic Parameter Dataset</a>.</p>");
 	}
 }
 
