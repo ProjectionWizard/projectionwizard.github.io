@@ -1,9 +1,9 @@
 <!--
-	PROJECTION WIZARD v2.0
+	PROJECTION WIZARD v2.1
 	Map Projection Selection Tool
 
 	Author: Bojan Savric, Jacob Wasilkowski
-	Date: June, 2020
+	Date: November, 2024
 -->
 
 <!DOCTYPE html>
@@ -143,7 +143,7 @@
 
 					<p><b>The latitude of the mapped area of a square-shaped map:</b>
 					<br><i>Center at pole</i> &#8211; the central latitude is more than 75&#186; N or 75&#186; S
-					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
+					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S and extent crosses equator
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p>
 
 					<p><b>The latitude of the mapped area of a landscape-oriented map:</b>
@@ -171,12 +171,21 @@
 						<li>To reduce overall area distortion for the conformal projections, one can also apply a scale factor <i>k</i>. Various values for <i>k</i> are applied and the area distortion patterns along the center and at the border of the map are compared.</li>
 						<li>To reduce overall distortion for the equal-area projections (not for the azimuthal projections), one can also compress the map in the north-south direction (with a factor <i>s</i>) and expand the map in the east-west direction (with a factor 1 / <i>s</i>). The factor <i>s</i> can be determined with a trial-and-error approach, comparing the distortion patterns along the center and at the border of the map.</li>
 						<li>In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</li>
-						<li>When mapping a specific country or state, the cartographer can also use the state's official projection. Often this projection not only minimizes the distortion of the mapped area, but it may also simplify the cartographer's work. A majority of the state's base data is available with the official projection. Most countries use a conformal projection for their official large-scale maps, which is preferred for surveying, navigation, and military use. One can search for official projections by area of interest in the <a target="_blank" href="http://www.epsg-registry.org/">EPSG Geodetic Parameter Registry</a>.</li>
+						<li>When mapping a specific country or state, the cartographer can also use the state's official projection. Often this projection not only minimizes the distortion of the mapped area, but it may also simplify the cartographer's work. A majority of the state's base data is available with the official projection. Most countries use a conformal projection for their official large-scale maps, which is preferred for surveying, navigation, and military use. One can search for official projections by area of interest in the <a target="_blank" href="https://epsg.org/">EPSG Geodetic Parameter Dataset</a>.</li>
 					</ul><br><br>
 
 
 					<h3>Update History</h3>
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.1</b> (September, 2024)</p>
+					<ul class="dialogtext">
+						<li>Equatorial case for square-shaped maps is now limited to extents that cross the equator.</li>
+						<li>Calculation of a standard parallel parameter for cylindrical projections has been fixed.</li>
+						<li>Central meridian parameter is now normalized to the range of [-180, 180].</li>
+						<li>Lambert azimuthal equal area's name has been corrected.</li>
+						<li>The help content was updated.</li>
+					</ul>
+					
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
 					<ul class="dialogtext">
 						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
 						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>

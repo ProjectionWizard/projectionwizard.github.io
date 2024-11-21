@@ -1,9 +1,9 @@
 /*
- * PROJECTION WIZARD v2.0
+ * PROJECTION WIZARD v2.1
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: May, 2020
+ * Date: September, 2024
  * 
  */
 
@@ -17,6 +17,9 @@ function makeOutput(currentlyDragging) {
 	var distortion = $('input[name=distortion]:checked').val();
 	//getting a center of the map
 	var center = rectangle.getBounds().getCenter();
+
+	//Normalizing central meridian value
+	center.lng = normalizeLON(center.lng, 0.);
 	
 	// rounding central meridian
 	if (document.getElementById("roundCM").checked)
@@ -545,7 +548,7 @@ function printHemisphere(property, center, scale) {
 		
 		//Formating the output text
 		if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p><b>Equal-area projection for maps showing a hemisphere</b></p>");
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Lambert azimuthal equal-area projection</span>" +
@@ -618,17 +621,17 @@ function printSmallerArea(property, center, scale) {
 		}
 		
 		//case: close to equator
-		else if (center.lat > -15. && center.lat < 15.) {
+		else if (Math.abs(center.lat) < 15.) {
 			previewMapProjection = activeProjection = "Equidistant cylindrical";
 			previewMapLat0 = 0;
 			
-			var interval = (latmax - latmin) / 4.;
-			var latS1 = center.lat + interval, latS2 = center.lat - interval, latS;
-			
-			if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.))
+			var latS;
+			//extent is touching or crossing equator
+			if ((latmax * latmin) <= 0 )
 				latS = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+			//extent is not crossing equator
 			else
-				latS = 0.;
+				latS = center.lat;
 			
 			outputTEXT.append("<p><span data-proj-name='" + activeProjection + "'>Equidistant cylindrical</span>" +
 				stringLinks("eqc", NaN, NaN, latS, NaN, center.lng, NaN) +
@@ -730,7 +733,7 @@ function printSmallerArea(property, center, scale) {
 	}
 	if (scale > 260) {
 		//general note for maps showing a smaller area
-		outputTEXT.append("<p class='outputText'>_________________________________________<br>For maps at this scale, you can also use the state’s official projection. Most countries use a conformal projection for their official large-scale maps. You can search for official projections by area of interest in the <a target='_blank' href='http://www.epsg-registry.org/'>EPSG Geodetic Parameter Registry</a>.</p>");
+		outputTEXT.append("<p class='outputText'>_________________________________________<br>For maps at this scale, you can also use the state’s official projection. Most countries use a conformal projection for their official large-scale maps. You can search for official projections by area of interest in the <a target='_blank' href='https://epsg.org/'>EPSG Geodetic Parameter Dataset</a>.</p>");
 	}
 }
 
@@ -748,7 +751,7 @@ function printSquareFormat(property, center) {
 		previewMapProjection = activeProjection = "Stereographic";
 	} else if (property == 'Equalarea') {
 		outputTEXT.append("<p><b>Equal-area projection for regional maps in square format</b></p>");
-		previewMapProjection = activeProjection = "Azimuthal equal area";
+		previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 	}
 	//case: close to poles
 	if (center.lat > 75.) {
@@ -773,8 +776,8 @@ function printSquareFormat(property, center) {
 		}
 		outputTEXT.append("<p class='outputText'>Central meridian: " + lng + "</p>");
 	}
-	//case: close to equator
-	else if (center.lat > -15. && center.lat < 15.) {
+	//case: close to equator and crossing it
+	else if (Math.abs(center.lat) < 15. && (latmax * latmin) <= 0) {
 		previewMapLat0 = 0;
 		if (property == "Conformal") {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Equatorial stereographic</span>"
@@ -861,7 +864,7 @@ function printEWextent(property, center, scale) {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, 90.0, NaN, NaN, center.lng, NaN) + "</p>");
@@ -876,7 +879,7 @@ function printEWextent(property, center, scale) {
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar stereographic</span>" + 
 				stringLinks("stere", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
 		} else if (property == 'Equalarea') {
-			previewMapProjection = activeProjection = "Azimuthal equal area";
+			previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 			
 			outputTEXT.append("<p class='outputText'><span data-proj-name='" + activeProjection + "'>Polar Lambert azimuthal equal-area</span>" + 
 				stringLinks("laea", NaN, -90.0, NaN, NaN, center.lng, NaN) + "</p>");
@@ -884,16 +887,16 @@ function printEWextent(property, center, scale) {
 	}
 	
 	//case: close to equator
-	else if (center.lat > -15. && center.lat < 15.) {
+	else if (Math.abs(center.lat) < 15.) {
 		previewMapLat0 = 0;
-		
-		var interval = (latmax - latmin) / 4.;
-		var latS1 = center.lat + interval, latS2 = center.lat - interval, latS;
 
-		if ((latS1 > 0. && latS2 > 0.) || (latS1 < 0. && latS2 < 0.))
+		var latS;
+		//extent is touching or crossing equator
+		if ((latmax * latmin) <= 0 )
 			latS = Math.max(Math.abs(latmax), Math.abs(latmin)) / 2.;
+		//extent is not crossing equator
 		else
-			latS = 0.;
+			latS = center.lat;
 
 		if (property == "Conformal") {
 			previewMapProjection = activeProjection = "Mercator";
@@ -964,7 +967,7 @@ function printEWextent(property, center, scale) {
 			
 			//When the fan of the selected extent exposes a cone opening at a pole
 			else {
-				previewMapProjection = activeProjection = "Azimuthal equal area";
+				previewMapProjection = activeProjection = "Lambert azimuthal equal area";
 				
 				//Case when the fan of the selected extent spans less than 180deg around a pole
 				if (conicTest == 0) {
@@ -1004,8 +1007,11 @@ function checkConicOK(lat0, lon0, projectionString) {
 		ymin =  Number.MAX_VALUE,
 		ymax = -Number.MAX_VALUE,
 		test_pts, res = 1;
-		
-	test_pts = [[lon0, -90.],[lon0, 90.],[lonmin,latmin],[lonmax,latmax]];
+	
+	test_pts = [[lon0, -90.],
+	            [lon0, 90.],
+	            [normalizeLON(lonmin, lon0), latmin],
+	            [normalizeLON(lonmax, lon0), latmax]];
 	
 	//Projecting sample pts
 	for (var i = 0; i < test_pts.length; i++)

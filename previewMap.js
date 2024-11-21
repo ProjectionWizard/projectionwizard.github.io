@@ -1,9 +1,9 @@
 /*
- * PROJECTION WIZARD v2.0
+ * PROJECTION WIZARD v2.1
  * Map Projection Selection Tool
  * 
  * Author: Bojan Savric, Jacob Wasilkowski
- * Date: May, 2020
+ * Date: September, 2024
  * 
  */
 
@@ -95,7 +95,7 @@ function addMapPreview(center, currentlyDragging) {
 /* Setting a new projection with D3 */
 function pickProjection(lat0, lon0, projectionString) {
 	//Definding D3 projection
-	if (projectionString == 'Azimuthal equal area') {
+	if (projectionString == 'Lambert azimuthal equal area') {
 		return d3.geoAzimuthalEqualArea()
 			.clipAngle(180 - 1e-3)
 			.precision(.1)
@@ -334,10 +334,10 @@ function continueDrawingCanvasMap(world110m, world50m, lat0, lon0, projectionStr
 	grid = graticule();
 	
 	//Setting rectangle layer
-	var lammax = lonmax,
-		lammin = lonmin,
-		phimax = latmax,
-		phimin = latmin;
+	var lammax = normalizeLON(lonmax, lon0),
+	    lammin = normalizeLON(lonmin, lon0),
+	    phimax = latmax,
+	    phimin = latmin;
 	
 	var dlam = lammax - lammin,
 		dphi = phimax - phimin,
