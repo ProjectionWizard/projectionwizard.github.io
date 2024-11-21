@@ -222,7 +222,7 @@ function pickProjection(lat0, lon0, projectionString) {
 			.precision(.1);
 	}
 	else if (projectionString == 'Natural Earth') {
-		return d3.geoNaturalEarth()
+		return d3.geoNaturalEarth1()
 			.rotate([-lon0, 0])
 			.precision(.1);
 	}

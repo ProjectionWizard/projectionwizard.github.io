@@ -2,8 +2,8 @@
 	PROJECTION WIZARD v2.1
 	Map Projection Selection Tool
 
-	Author: Bojan Savric
-	Date: September, 2024
+	Author: Bojan Savric, Jacob Wasilkowski
+	Date: November, 2024
 -->
 
 <!DOCTYPE html>
@@ -12,29 +12,29 @@
 		<title>Projection Wizard</title>
 		<!--JQUERY-UI-->
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.min.css" />
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
 		<!--Leaflet AND Leaflet.PM for editing -->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-		<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     		crossorigin=""/>
+	 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     		crossorigin=""></script>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@2.1.0/dist/leaflet.pm.css" />
 		<!-- <script src="https://unpkg.com/leaflet.pm@2.1.0/dist/leaflet.pm.min.js"></script> -->
 		<!-- until https://github.com/codeofsumit/leaflet.pm/pull/464 is merged -->
 		<script src="lib/leaflet.pm.min.js"></script>
 
 		<!--D3-->
-		<script src="https://d3js.org/d3.v5.js"></script>
-		<script src="https://d3js.org/d3-array.v1.min.js"></script>
-		<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
-		<script src="https://d3js.org/d3-geo.v1.min.js"></script>
-		<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-		<script src="lib/d3-geo-polygon.min.js"></script>
-		<script src="https://unpkg.com/topojson-client@3"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo-polygon@1"></script>
+		<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   		<script src="lib/transverseCylindricalEqualArea.js" ></script>
-		<!--[if lte IE 8]>
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
-		<![endif]-->
+
 		<meta charset="utf-8" />
 		<meta name="description" content="Projection Wizard is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The Projection Wizard is based on John P. Snyder’s selection guideline and on the extension to this guideline for world and hemisphere maps written by the Cartography and Geovisualization Group at Oregon State University. If available, there is a PROJ.4 link next to each proposed projection that opens a popup window with a PROJ.4 library code available for copying to the clipboard. The Projection Wizard displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look. The map preview is created using D3. How to choose a map projection? What map projection should I use? How to select an appropriate map projection?" />
 		<meta name="keywords" content="Projection Wizard, Map Projection Selection Tool, choose a map projection, " />
