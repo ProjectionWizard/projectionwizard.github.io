@@ -1,9 +1,9 @@
 <!--
-	PROJECTION WIZARD v2.0
+	PROJECTION WIZARD v2.1
 	Map Projection Selection Tool
 
-	Author: Bojan Savric
-	Date: June, 2020
+	Author: Bojan Savric, Jacob Wasilkowski
+	Date: November, 2024
 -->
 
 <!DOCTYPE html>
@@ -12,29 +12,29 @@
 		<title>Projection Wizard</title>
 		<!--JQUERY-UI-->
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.min.css" />
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
 		<!--Leaflet AND Leaflet.PM for editing -->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-		<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     		crossorigin=""/>
+	 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     		crossorigin=""></script>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@2.1.0/dist/leaflet.pm.css" />
 		<!-- <script src="https://unpkg.com/leaflet.pm@2.1.0/dist/leaflet.pm.min.js"></script> -->
 		<!-- until https://github.com/codeofsumit/leaflet.pm/pull/464 is merged -->
 		<script src="lib/leaflet.pm.min.js"></script>
 
 		<!--D3-->
-		<script src="https://d3js.org/d3.v5.js"></script>
-		<script src="https://d3js.org/d3-array.v1.min.js"></script>
-		<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
-		<script src="https://d3js.org/d3-geo.v1.min.js"></script>
-		<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-		<script src="lib/d3-geo-polygon.min.js"></script>
-		<script src="https://unpkg.com/topojson-client@3"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3-geo-polygon@1"></script>
+		<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   		<script src="lib/transverseCylindricalEqualArea.js" ></script>
-		<!--[if lte IE 8]>
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
-		<![endif]-->
+
 		<meta charset="utf-8" />
 		<meta name="description" content="Projection Wizard is a web application that helps cartographers select an appropriate projection for their map. Depending on the extent and the distortion property of the map, the application returns a list of appropriate map projections with additional projection parameters if necessary. The Projection Wizard is based on John P. Snyder’s selection guideline and on the extension to this guideline for world and hemisphere maps written by the Cartography and Geovisualization Group at Oregon State University. If available, there is a PROJ.4 link next to each proposed projection that opens a popup window with a PROJ.4 library code available for copying to the clipboard. The Projection Wizard displays a map preview on the right side of the list with appropriate projections. The preview shows how the projected data will look. The map preview is created using D3. How to choose a map projection? What map projection should I use? How to select an appropriate map projection?" />
 		<meta name="keywords" content="Projection Wizard, Map Projection Selection Tool, choose a map projection, " />
@@ -143,7 +143,7 @@
 
 					<p><b>The latitude of the mapped area of a square-shaped map:</b>
 					<br><i>Center at pole</i> &#8211; the central latitude is more than 75&#186; N or 75&#186; S
-					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S
+					<br><i>Center along equator</i> &#8211; the central latitude is between 15&#186; N and 15&#186; S and extent crosses equator
 					<br><i>Center away from pole or equator</i> &#8211; all other central latitude values</p>
 
 					<p><b>The latitude of the mapped area of a landscape-oriented map:</b>
@@ -171,12 +171,21 @@
 						<li>To reduce overall area distortion for the conformal projections, one can also apply a scale factor <i>k</i>. Various values for <i>k</i> are applied and the area distortion patterns along the center and at the border of the map are compared.</li>
 						<li>To reduce overall distortion for the equal-area projections (not for the azimuthal projections), one can also compress the map in the north-south direction (with a factor <i>s</i>) and expand the map in the east-west direction (with a factor 1 / <i>s</i>). The factor <i>s</i> can be determined with a trial-and-error approach, comparing the distortion patterns along the center and at the border of the map.</li>
 						<li>In some rare cases, it is useful to retain scale along great circles in regional and large-scale maps. Map readers can make precise measurements along these lines that retain scale. It is important to remember that no projection is able to correctly display all distances and that only some distances are retained correctly by these "equidistant" projections.</li>
-						<li>When mapping a specific country or state, the cartographer can also use the state's official projection. Often this projection not only minimizes the distortion of the mapped area, but it may also simplify the cartographer's work. A majority of the state's base data is available with the official projection. Most countries use a conformal projection for their official large-scale maps, which is preferred for surveying, navigation, and military use. One can search for official projections by area of interest in the <a target="_blank" href="http://www.epsg-registry.org/">EPSG Geodetic Parameter Registry</a>.</li>
+						<li>When mapping a specific country or state, the cartographer can also use the state's official projection. Often this projection not only minimizes the distortion of the mapped area, but it may also simplify the cartographer's work. A majority of the state's base data is available with the official projection. Most countries use a conformal projection for their official large-scale maps, which is preferred for surveying, navigation, and military use. One can search for official projections by area of interest in the <a target="_blank" href="https://epsg.org/">EPSG Geodetic Parameter Dataset</a>.</li>
 					</ul><br><br>
 
 
 					<h3>Update History</h3>
-					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
+					<p class="outputText"><b>Projection Wizard&nbsp;&nbsp;2.1</b> (November, 2024)</p>
+					<ul class="dialogtext">
+						<li>Equatorial case for square-shaped maps is now limited to extents that cross the equator.</li>
+						<li>Calculation of a standard parallel parameter for cylindrical projections has been fixed.</li>
+						<li>Central meridian parameter is now normalized to the range of [-180, 180].</li>
+						<li>Lambert azimuthal equal area's name has been corrected.</li>
+						<li>The third-party libraries, web links, and help content were updated.</li>
+					</ul>
+					
+					<p class="outputText"><br><b>Projection Wizard&nbsp;&nbsp;2.0</b> (June, 2020)</p>
 					<ul class="dialogtext">
 						<li>The extent of the geographic area is determined based on spherical surface equations.</li>
 						<li>The predominant extent is computed with the ratio between the central meridian and the longest parallel lengths on a sphere.</li>
@@ -238,7 +247,7 @@
 					<p>Šavrič, B., Jenny, B. and Jenny, H. (2014). <a target="_blank" href="https://www.researchgate.net/publication/281067096_Projection_Wizard_Map_Projection_Selection_Tool">Map projection selection tool</a>. </br>Presentation at the 34th Annual Meeting NACIS 2014, Pittsburgh, Pennsylvania, October 8–11.</p>
 					<p>Snyder, J. P. (1987). Map Projections – A Working Manual. Professional Paper 1395. </br>Washington, DC: US Geological Survey. Doi: <a target="_blank" href="https://doi.org/10.3133/pp1395">10.3133/pp1395</a></p>
 					
-					<p>Featured by <a target="_blank" href="http://www.gislounge.com/map-projection-tool/?utm_source=twitterfeed&utm_medium=twitter&utm_campaign=Feed%3A+gislounge+%28GIS+Lounge%29">GIS Lounge</a> and <a target="_blank" href="http://googlemapsmania.blogspot.com/2015/06/the-magnificent-maps-of-week.html">Maps Mania</a>.</p><br>
+					<p>Featured by <a target="_blank" href="https://www.geographyrealm.com/map-projection-tool/">Geography Realm (GIS Lounge)</a>, <a target="_blank" href="http://googlemapsmania.blogspot.com/2015/06/the-magnificent-maps-of-week.html">Maps Mania</a> and <a target="_blank" href="https://freetech4teach.teachermade.com/2023/03/projection-wizard-see-how-maps-distort/">TeacherMade</a>.</p><br>
 
 				</div>
 				<div class="inputUI">
@@ -274,7 +283,7 @@
 						</button>
 					</div>
 					<div id="credits">
-						&copy; 2020 <a target="_blank" href="https://bojansavric.projectionwizard.org">Bojan &#352;avri&#269;</a><br>
+						&copy; 2024 <a target="_blank" href="https://bojansavric.projectionwizard.org">Bojan &#352;avri&#269;</a><br>
 						Maps created with <a href="http://leafletjs.com/">Leaflet</a> and <a href="http://d3js.org/">D3</a>. Tiles: &copy; Esri.
 					</div>
 				</div>
